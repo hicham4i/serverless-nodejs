@@ -9,6 +9,7 @@
   "dependencies": {
     "@middy/core": "^1.5.0",
     "@middy/http-json-body-parser": "^1.5.0",
+    "shopify-api-node": "^3.6.5",
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {

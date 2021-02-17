@@ -1,0 +1,674 @@
+<div x-data="alpineInstance()" x-init="fecthData()">
+    <!-- begin: bundle -->
+    <div class="my_flex">
+
+        <template x-for="product in products" :key="product.id">
+            <div class="small_img">
+                <img class="imgcdn" style="border-radius:5px" :src="product.images[0].src.replace('.jpg', '_1080x.jpg')"
+                    :alt="product.title" />
+                <div class="myflex_mobile">
+                    <div class="my_title" x-text="product.title"></div>
+                    <div class="myflex_mobile2">
+                        <div class="my_subtitle" x-html="product.body_html"></div>
+                        <div>
+                            <button x-on:click="add_to_cart(product);" class="add_button">
+                                <i class="fas fa-plus"></i>
+                                Add
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </template>
+    </div>
+    <!-- end: bundle -->
+    <!-- begin: cart -->
+    <div x-show="show" class="cart">
+
+        <template x-for="product in cart" :key="product.id">
+            <div class="small_img2 animated fadeInLeft">
+                <div class="myimg">
+                    <img class="imgcdn2" style="border-radius:5px"
+                        :src="product.images[0].src.replace('.jpg', '_1080x.jpg')" :alt="product.title" />
+                </div>
+
+
+                <div class="my_title2" x-text="product.title"></div>
+                <div class="buttons">
+                    <button x-on:click="add_to_cart(product);" class="add_button2">
+                        <i class="fas fa-plus"></i>
+                    </button>
+
+                    <button style="color:grey" x-on:click="remove_from_cart(product);" class="add_button2">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+
+        </template>
+
+
+        <div class="empty_meal">
+            <template x-for="index in [1,2,3,4,5,6] " :key="index">
+                <div x-show="cart.length < index" class="meal ">
+                    <div class="circle"> </div>
+                    MEAL <span x-text="index"></span>
+                </div>
+            </template>
+        </div>
+
+    </div>
+    <!-- end: cart -->
+
+    <!-- begin: cart mobile-->
+    <div x-show.transition.duration.300ms.origin.bottom.scale.30="show2" @click.away="show2 = false" class=" cart2">
+
+        <template x-for="product in cart" :key="product.id">
+            <div class="small_img2">
+                <div class="myimg">
+                    <img class="imgcdn2" style="border-radius:5px"
+                        :src="product.images[0].src.replace('.jpg', '_1080x.jpg')" :alt="product.title" />
+                </div>
+
+
+                <div class="my_title2" x-text="product.title"></div>
+                <div class="buttons">
+                    <button x-on:click="add_to_cart(product);" class="add_button2">
+                        <i class="fas fa-plus"></i>
+                    </button>
+
+                    <button style="color:grey" x-on:click="remove_from_cart(product);" class="add_button2">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+
+        </template>
+
+
+        <div class="empty_meal duration-1000">
+            <template x-for="index in [1,2,3,4,5,6] " :key="index">
+                <div x-show="cart.length < index" class="meal ">
+                    <div class="circle"> </div>
+                    MEAL <span x-text="index"></span>
+                </div>
+            </template>
+        </div>
+
+
+    </div>
+    <!-- end: cart mobile-->
+
+    <button @click="show2 = !show2" :aria-expanded="show2 ? 'true' : 'false'" :class="{ 'active': show2 }"
+        class="count_meal">
+        <p x-show="cart.length < 6 || cart.length > 6" style="color:red" x-text="count"></p>
+        <p x-show="cart.length == 6" style="color:green" x-text="count"></p>
+        <div>/6</div>
+    </button>
+    <div class="count_mealbis">
+        <p x-show="cart.length < 6 || cart.length > 6" style="color:red" x-text="count"></p>
+        <p x-show="cart.length == 6" style="color:green" x-text="count"></p>
+        <div>/6</div>
+    </div>
+    <div class="next">
+        <button :disabled="cart.length !== 6" x-on:click="send_to_cart()" class="next_button">NEXT</button>
+        <div x-show="cart.length < 6" class="count_meal2">
+            <div class="messageCart">Add </div>
+            <div style="color:red" class="count" x-text="6-count"></div>
+            <div> meal to continu</div>
+        </div>
+        <div x-show="cart.length == 6" style="color:green" class="messageCart">All set!</div>
+        <div x-show="cart.length > 6" class="count_meal3">
+            <div class="messageCart">Remove </div>
+            <div style="color:red" class="count" x-text="Math.abs(6-count)"></div>
+            <div> meals to continu</div>
+        </div>
+    </div>
+
+
+</div>
+<style>
+    .animated {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+
+    /*Fadeìnleft*/
+
+    @-webkit-keyframes fadeInLeft {
+        0% {
+            opacity: 0;
+            -webkit-transform: translateX(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            -webkit-transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeInLeft {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .fadeInLeft {
+        -webkit-animation-name: fadeInLeft;
+        animation-name: fadeInLeft;
+    }
+
+    /*FadeOutLeft*/
+    @-webkit-keyframes fadeOutLeft {
+        0% {
+            opacity: 1;
+            -webkit-transform: translateX(0);
+        }
+
+        100% {
+            opacity: 0;
+            -webkit-transform: translateX(-20px);
+        }
+    }
+
+    @keyframes fadeOutLeft {
+        0% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+    }
+
+    .fadeOutLeft {
+        -webkit-animation-name: fadeOutLeft;
+        animation-name: fadeOutLeft;
+    }
+
+    .empty_meal {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+
+    .separator {
+        width: 1%;
+        border-left: grey solid 1px;
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+
+    .flex_cal {
+        display: flex;
+        font-size: 12px;
+        line-height: 2vh;
+        position: relative;
+        top: 5vh;
+    }
+
+    .subtitle {
+        font-style: italic;
+        position: relative;
+        top: -4vh;
+    }
+
+    .my_subtitle {
+        padding-left: 2vw;
+    }
+
+    .circle {
+        border-radius: 32px;
+        border: 1px solid #f2f2f2;
+        background-color: #d9d9d9;
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+        margin: 1rem;
+    }
+
+    .meal {
+        background-color: #f2f2f2;
+        width: 25vw;
+        padding: 2%;
+        margin: 4%;
+        height: 14vh;
+        text-align: center;
+        line-height: 14vh;
+        z-index: -1;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        z-index: -1;
+    }
+
+    .count_meal2 {
+        display: flex;
+        width: 12vw;
+        justify-content: space-evenly;
+    }
+
+    .count_meal3 {
+        display: flex;
+        width: 15vw;
+        justify-content: space-evenly;
+    }
+
+    .count_meal {
+        display: flex;
+        display: none;
+    }
+
+    .count_mealbis {
+        border-radius: 25px;
+        padding-left: 1vw;
+        display: flex;
+        position: fixed;
+        right: 12vw;
+        bottom: 11vh;
+        background-color: white;
+        width: 4vw;
+        height: 4vh;
+        line-height: 4vh;
+    }
+
+    .next_button {
+        background-color: green;
+        color: white;
+        width: 22vw;
+        border: none;
+
+
+    }
+
+    .next_button:disabled {
+        background-color: gray;
+        color: white;
+        width: 22vw;
+        border: none;
+
+
+    }
+
+    .next {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        height: 12vh;
+        width: 27vw;
+        border-left: 1px solid #d9d9d9;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+
+    }
+
+    .site-nav {
+        margin: 0;
+    }
+
+    .page-container {
+        position: unset;
+        transform: unset;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .myimg {
+        width: 6vw;
+        height: 11vh;
+    }
+
+    .my_title {
+        height: 10vh;
+        font-weight: 600;
+        padding-left: 2vw;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+
+    .my_title2 {
+        font-weight: 600;
+        font-size: 10px;
+        font-family: system-ui;
+        font-style: italic;
+        padding: 2%;
+        width: 15vw;
+    }
+
+    .add_button {
+        background-color: green;
+        width: 6vw;
+        height: 6vh;
+        color: White;
+        text-align: center;
+        line-height: 6vh;
+        position: relative;
+        left: 55%;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 1vh;
+        outline-style: solid;
+    }
+
+    .add_button2 {
+        width: 4vw;
+        height: 4vh;
+        color: green;
+        text-align: center;
+        line-height: 4vh;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 1vh;
+        background-color: transparent;
+
+    }
+
+    .small_img {
+        flex-basis: 23%;
+        align-self: end;
+        margin-left: 2%;
+        margin-bottom: 2%;
+        border: 1px solid #ededed;
+        box-shadow: 0 1px 0 0 #ededed;
+        border-radius: 5px;
+
+
+    }
+
+    .small_img2 {
+        border: 1px solid #ededed;
+        box-shadow: 0 1px 0 0 #ededed;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        padding: 2%;
+        margin: 4%;
+        background-color: white;
+        height: 14vh;
+    }
+
+    .cart {
+        background-color: #fafafa;
+        border-left: 1px solid #d9d9d9;
+        width: 27vw;
+        height: 81vh;
+        position: fixed;
+        top: 8vh;
+        right: 0;
+        overflow: auto;
+    }
+
+    .cart2 {
+        background-color: #fafafa;
+        border-left: 1px solid #d9d9d9;
+        width: 27vw;
+        height: 66vh;
+        position: fixed;
+        top: 8vh;
+        right: 0;
+        overflow: auto;
+    }
+
+    .my_flex {
+        display: flex;
+        flex-flow: row wrap;
+        align-content: center;
+        justify-content: flex-start;
+        padding-left: 1vw;
+        padding-right: 1vw;
+        padding-top: 1vw;
+        height: 100%;
+        width: 73vw;
+    }
+
+    .site-footer {
+        display: none;
+    }
+
+    @media only screen and (max-width: 768px) {
+
+        /* For mobile phones: */
+
+        .cart2 {
+            display: block;
+        }
+
+        .myimg {
+            width: 15vw;
+            height: unset;
+        }
+
+        .my_title2 {
+            width: 60vw;
+        }
+
+        .meal {
+            width: 91vw;
+        }
+
+        .count_meal2 {
+            width: 40vw;
+        }
+
+        .count_meal3 {
+            width: 48vw;
+        }
+
+        .count_mealbis {
+            display: none;
+        }
+
+        .count_meal {
+            border-radius: 20px;
+            padding-left: 7vw;
+            display: flex;
+            position: fixed;
+            right: 42vw;
+            bottom: 9vh;
+            background-color: white;
+            width: 20vw;
+            height: 6vh;
+            line-height: 4vh;
+            border: 1px solid #8080803b;
+            z-index: 15;
+        }
+
+
+        .myflex_mobile2 {
+            display: flex;
+            width: 62vw;
+            align-items: flex-end;
+            height: 13vh;
+        }
+
+        .myflex_mobile {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .my_subtitle {
+            padding-left: 1vw;
+            line-height: 18vh;
+            padding-right: 1vw;
+        }
+
+        .flex_cal {
+            position: unset;
+            font-size: 8px;
+            line-height: 1vh;
+        }
+
+        .subtitle {
+            position: unset;
+            font-size: 11px;
+            width: 40vw;
+        }
+
+        .my_title {
+            width: 50vw;
+            font-size: 10px;
+            height: 2vh;
+            line-height: 10px;
+        }
+
+        .add_button {
+            width: 15vw;
+            height: 4vh;
+            line-height: 4vh;
+            position: unset;
+            font-size: 13px;
+        }
+
+        .site-header__logo {
+            margin: 0;
+            width: 70vw;
+        }
+
+        .imgcdn {
+            width: 35%;
+        }
+
+        .imgcdn2 {
+            max-width: 88%;
+        }
+
+        .small_img {
+            display: flex;
+            align-items: center;
+        }
+
+
+
+        .my_flex {
+            width: 100vw;
+            height: 84vh;
+            overflow: scroll;
+            flex-flow: column;
+            flex-direction: column;
+            padding-top: 2vh;
+        }
+
+        .cart {
+            background-color: #fafafa;
+            border-left: 1px solid #d9d9d9;
+            width: 100vw;
+            position: fixed;
+            top: 22vh;
+            height: 59vh;
+            z-index: 4;
+            left: 0;
+            overflow: auto;
+            display: none;
+        }
+
+        .cart2 {
+            background-color: #fafafa;
+            border-left: 1px solid #d9d9d9;
+            width: 100vw;
+            position: fixed;
+            top: 22vh;
+            height: 66vh;
+            z-index: 4;
+            left: 0;
+            overflow: auto;
+        }
+
+        .next {
+            position: fixed;
+            right: 0px;
+            bottom: 0;
+            background-color: white;
+            height: 12vh;
+            width: 100vw;
+            border-left: 1px solid #d9d9d9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 16;
+            border: 1px solid #8080803b;
+        }
+    }
+</style>
+<script>
+    count = 0;
+
+    function alpineInstance() {
+        return {
+
+            fecthData() {
+                fetch('/collections/frontpage/products.json')
+                    .then(response => response.json())
+                    .then(data => this.products = data.products)
+            },
+            add_to_cart(product) {
+                const newProduct = JSON.parse(JSON.stringify(product));
+                this.cart.push(newProduct);
+                console.log(this.cart);
+                console.log(this.products);
+                this.count++;
+            },
+            remove_from_cart(product) {
+                this.cart = this.cart.filter(p => p !== product);
+                this.count--;
+            },
+            send_to_cart() {
+                const properties = {}
+                this.cart.forEach((product, index) => {
+                    properties['product ' + (index + 1)] = product.title
+                })
+                properties._ids = this.cart.map(product => product.id)
+                const formData = {
+                    items: [{
+                        quantity: 1,
+                        id: 38019037724854,
+                        properties,
+                    }]
+                }
+                console.log(formData);
+
+                fetch('/cart/add.js', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                }).then(response => {
+                    console.log(response);
+                    window.location.href = '/cart'
+                })
+            },
+            products: [],
+            cart: [],
+            count,
+            show: true,
+            show2: false,
+        }
+    }
+</script>
