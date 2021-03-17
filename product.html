@@ -1,0 +1,31 @@
+<div class="headerproduct">
+    <div class="headerproductleft">
+        <div class="titleproduct">Beef Kefta</div>
+        <div class="subtitle">This is the Beef Kefta subtitle</div>
+        <div class="tags">
+            <div class="tag">High Protein</div>
+            <div class="tag">Soy Free</div>
+            <div class="tag">Gluten Free</div>
+        </div>
+    </div>
+    <div class="headerproductright">
+        <div class="close" x-on:click="isDialogOpen = false">✖</div>
+        <button x-on:click="add_to_cart(product);addAnimation($event)" class="add_button">
+            <i style="font-size:10px" class="fas fa-plus"></i>
+              <i style="font-size:10px" class="fas fa-check"></i>
+              <span>Add</span>
+        </button>
+    </div>
+</div>
+<div class="detailproduct">
+    <div class="flex_cal">
+        <div class="cal">410 <br>Cals</div>
+        <div class="separator"></div>
+        <div class="carb">23g <br>Carb</div>
+    </div>
+    <div class="hide">
+        <p style="padding-left:1vw">Our Asian beef is inspired by Korean cuisine, the beef is marinated in a sweet and
+            spicy blend, served with
+            spaghetti and a mix of sautéed veggies.</p>
+    </div>
+</div>

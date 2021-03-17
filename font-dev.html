@@ -12,9 +12,36 @@
         </div>
          
     </template>
-    
+    <div class="myheader">
+        <div class="mylogo"> 
+            <img   src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/new-logo.png?v=1590561749"
+            alt="logo" />
+        </div>
+        <div class="myheader-2">
+            <div style="color:#db4027">Plan</div>
+            <div class="header-arrow-ok"><i class="fas fa-chevron-right"></i></div>
+            
+            <div style="color:#db4027">Day</div>
+            <div class="header-arrow-ok"><i class="fas fa-chevron-right"></i></div>
+            <div style="font-weight: bolder;">Meals</div>
+            <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
+            <div>Checkout</div>
+        </div>
+        <div style="color:#db4027" class="support">
+            <i class="fa fa-question-circle" aria-hidden="true"></i>
+            Customer support</div>
+    </div>
+
+    <div class="myheader-mob">
+        <div><i style="position:unset" class="fas fa-chevron-left"></i></div>
+        <div style="color:#db4027">Choose 6 meals</div>
+        <div style="color:#db4027" >
+            <i class="fa fa-question-circle" aria-hidden="true"></i>
+        </div>
+    </div>
     <!-- begin: bundle -->
       <div class="my_flex" :class="{ 'menu-dopweb-blur': isDialogOpen }">
+        
   
           <template x-for="product in products" :key="product.id">
               <div class="small_img" @click="openProductDetail(product)">
@@ -60,7 +87,7 @@
       <!-- end: popup -->
       <!-- begin: cart -->
       <div x-show="show" class="cart" :class="{ 'menu-dopweb-blur': isDialogOpen }">
-  
+          <div class="dateSection"> My delivery for: <span style="font-weight: bolder;">Friday, Feb 19</span></div>
           <template x-for="product in cart" :key="product.id">
               <div class="small_img2 animated fadeInLeft">
                   <div class="myimg">
@@ -187,6 +214,65 @@
   </div>
   <style>
 
+      .myheader-mob{
+          display: none;
+      }
+
+      .header-arrow-ok{
+        padding-left: 15px;
+    padding-right: 15px;
+        color: #db4027;
+        font-size: 12px;
+      }
+
+      .header-arrow-nok{
+        padding-left: 15px;
+    padding-right: 15px;
+    font-size: 12px;
+    color:#8080807d;
+      }
+
+      .mylogo{
+          width: 15%;
+          position: relative;
+    top: 5px;
+    height: 35px;
+      }
+
+      .myheader{
+          display: flex;
+          position: fixed;
+        background-color: white;
+          justify-content: space-between;
+        border-bottom: 1px solid #dee2e6;
+        line-height: 44px;
+        width: calc(100vw - 344px);
+        font-family: Helvetica;
+        padding-left: 3vw;
+        padding-right: 1vw;
+        z-index: 9999;
+      }
+
+      .myheader-2{
+          display: flex;
+      }
+
+      .dateSection{
+        background-color: white;
+    height: 45px;
+    margin: 1px;
+    border: .5px solid #f2f2f2;
+    font-weight: 500;
+    font-family: Helvetica;
+    font-size:13px;
+    line-height: 58px;
+    padding-left: 1vw;
+      }
+
+#shopify-section-header{
+    display: none;
+}
+
       #leftarrow{
         position:fixed;
         left:5%;
@@ -209,9 +295,7 @@
           margin-top: 3px;
       }
   
-  .header-items__item{
-      font-size:12px;
-  }
+  
   
   /* For add animation */
   .add_button{
@@ -907,9 +991,9 @@
           background-color: #fafafa;
           border-left: 1px solid #d9d9d9;
           width: 344px;
-          height: 82vh;
+          height: 91vh;
           position: fixed;
-          top: 58px;
+          top: 0px;
           right: 0;
           overflow: auto;
           max-width: 344px;
@@ -933,7 +1017,7 @@
           justify-content: flex-start;
           padding-left: 1vw;
           padding-right: 1vw;
-          padding-top: 2vh;
+          padding-top: 8vh;
           padding-bottom: 2vh;
           height: 100%;
           width: calc(100vw - 344px);
@@ -952,18 +1036,14 @@
           .add_button{
               left: 50%;
           }
-          .header-items__item{
-      font-size:11px;
-  }
+          
       }
   
       @media only screen and (max-width: 1200px) {
           .small_img{
               flex-basis: 31%;
           }
-          .header-items__item{
-      font-size:10px;
-  }
+          
       }
   
       @media only screen and (max-width: 991px) {
@@ -974,6 +1054,22 @@
       @media only screen and (max-width: 768px) {
   
           /* For mobile phones: */
+
+          .myheader{
+              display: none;
+          }
+
+          .myheader-mob{
+              padding-left: 3vw;
+              padding-right: 3vw;
+              display: flex;
+              justify-content: space-between;
+              line-height: 44px;
+              font-size: 19px;
+              font-family: Helvetica;
+              font-weight: bolder;
+              border-bottom: 1px solid #dee2e6;
+          }
 
         .fa-chevron-left {
             position: relative;
@@ -1255,20 +1351,8 @@
               margin-bottom: unset;
           }
   
-          .site-header__logo {
-              margin: 0;
-              width: 70vw;
-          }
   
-          .site-header__mobile-nav {
-              height: 4vh;
-          }
-  
-          .site-header {
-              height: 4vh;
-              width: 60vw;
-              border: none;
-          }
+ 
   
           .main_content {
               padding-top: 6vh;
@@ -1291,14 +1375,14 @@
   
           .my_flex {
               width: 100vw;
-              height: 85vh;
+              height: 82vh;
+              padding-top:1vh;
               overflow: scroll;
               scroll-behavior: smooth;
               flex-flow: column;
               flex-direction: column;
               padding-right: 3vw;
-              padding-top: 9vh;
-              padding-bottom: 10vh;
+              padding-bottom: 14vh;
           }
   
           .cart {
@@ -1322,25 +1406,7 @@
               border: 1px solid #8080803b;
               max-width: unset;
           }
-  
-  
-          header .cart-dropdown-box {
-              width: 100vw;
-              left: -78Vw;
-          }
-  
-          .pageheader__contents {
-              padding-right: unset;
-          }
-  
-          .shopify-section--header {
-              width: 100vw;
-              position: fixed;
-          }
-          
-          .header-items {
-              padding-right: 7vw;
-          }
+
         
         .all_meals {
           background-color: #fafafa;
