@@ -19,6 +19,8 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
     apiKey: '34d26fea5cad741d17f510329d887bae',
     password: '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'
   });
+  
+
   const line_items = [];
   event.body.line_items.forEach(line_item => {
     const ids = line_item.properties.find(property => property.name === '_ids')?.value;
@@ -34,8 +36,12 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
     const cart_order = getOrderParam(ids,quantity);
     line_items.push(...cart_order);
   })
+  let parsednote = JSON.parse(event.body.note as string);
+
   const param = {
-    line_items
+    line_items,
+    note:event.body.note,
+    tags:parsednote.date + ' ' + parsednote.month
   }
   console.log(param);
   const res = await shopify.order.create(param);

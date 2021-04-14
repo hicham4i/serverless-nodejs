@@ -1,199 +1,28 @@
-<!DOCTYPE html>
-<html lang="${shortLanguage}">
-  <head>
 <link rel="stylesheet" href="https://unpkg.com/tailwindcss@1.2.0/dist/tailwind.min.css">
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-
-<style>
-    #titleplan{
-        font-weight: 600;    letter-spacing: .166rem;
-        padding-bottom: 2vh;
-    }
-
-    .date{
-        border: 1px solid #dee2e6;
-        width: 30vw;
-        height: 50px;
-    }
-    
-    .date:hover {
-        margin-left: 5px;
-    }
-
-    .date:focus {
-        outline: 0;
-        box-shadow: 0 0 0 0.2rem rgb(222 14 14 / 45%);
-    }
-
-    .date-selected {
-        background-color: red;
-    }
-    #datepicker{
-        color:black;
-        padding-top: 5vh;
-        overflow: auto;
-        max-height: 300px;
-    }
-    .first_part {
-        padding-top: 2vh;
-        font-size: 1.25rem;
-        font-weight: 300;
-        line-height: 1.5;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-
-    }
-
-    .mycontainer {
-        padding-top: 60px;
-        width: 100vw;
-        height: 100vh;
-        font-family: Helvetica;
-
-
-    }
-
-    .myheader-mob {
-        display: none;
-    }
-
-
-    .header-arrow-nok {
-        padding-left: 15px;
-        padding-right: 15px;
-        font-size: 12px;
-        color: #8080807d;
-    }
-
-    .mylogo {
-        width: 15%;
-        position: relative;
-        top: 17px;
-        height: 35px;
-        max-width: 200px;
-    }
-
-    .myheader {
-        display: flex;
-        position: fixed;
-        top: 0;
-        background-color: white;
-        justify-content: space-between;
-        border-bottom: 1px solid #dee2e6;
-        line-height: 60px;
-        height: 60px;
-        width: 100vw;
-        font-family: Helvetica;
-        padding-left: 3vw;
-        padding-right: 1vw;
-        z-index: 9999;
-    }
-
-    .reading-width {
-        margin-left: unset;
-        margin-right: unset;
-    }
-
-    .content-main {
-        padding: unset;
-    }
-
-    .container {
-        margin-left: unset;
-        margin-right: unset;
-        max-width: unset;
-        width: unset;
-    }
-
-    .myheader-2 {
-        display: flex;
-    }
-
-    #shopify-section-header {
-        display: none;
-    }
-
-    #shopify-section-announcement {
-        display: none;
-    }
-
-    .feature-page-title {
-        display: none;
-    }
-
-    #shopify-section-footer {
-        display: none;
-    }
-
-    @media only screen and (max-width: 768px) {
-
-        /* For mobile phones: */
-
-
-        .first_part {
-            padding: 5vw;
-        }
-
-        #titleplan {
-            display: none;
-        }
-
-        .mycontainer {
-            padding-top: 30px;
-        }
-
-        .myheader {
-            display: none;
-        }
-
-        .myheader-mob {
-            position: fixed;
-            top: 0;
-            width: 100vw;
-            padding-left: 3vw;
-            padding-right: 3vw;
-            display: flex;
-            justify-content: space-between;
-            line-height: 44px;
-            height: 44px;
-            font-size: 19px;
-            font-family: Helvetica;
-            font-weight: bolder;
-            border-bottom: 1px solid #dee2e6;
-            background-color: white;
-        }
-
-        #descplan {
-            text-align: center;
-            margin-bottom: 2vh;
-        }
-
-    }
-</style>
-</head>
-<body>
-    <div x-data="alpineInstance()">
+    <div x-data="alpineInstance()" x-init="setDate()">
         <div class="myheader">
-            <div class="mylogo"><img src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/new-logo.png?v=1590561749"
-                    alt="logo"></div>
+            <div class="mylogo">
+                <a href="/"> 
+                    <img src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191" alt="logo" />
+                </a>
+            </div>
             <div class="myheader-2">
-                <div>Plan</div>
+                <div><a href="/pages/plan">Plan</a></div>
                 <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-                <div style="font-weight: bolder;">Day</div>
+                <div >Day</div>
                 <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
                 <div>Meals</div>
                 <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-                <div>Checkout</div>
+                <div style="font-weight: bolder;">Cart</div>
             </div>
-            <div style="color: #db4027;" class="support">
-                <i class="fa fa-question-circle" aria-hidden="true"></i> Customer support</div>
+            <div @click="show_support()" style="color:#111409" class="support">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                Customer support</div>
         </div>
         <div class="myheader-mob">
-            <div><i style="position:unset" class="fas fa-chevron-left"></i></div>
-            <div style="color:#db4027">Choose a Delivery Day</div>
-            <div style="color:#db4027">
+            <div><a href="/pages/plan"><i style="position:unset" class="fas fa-chevron-left"></i></a></div>
+            <div style="color:#111409">Choose a Delivery Day</div>
+            <div style="color:#111409">
                 <i class="fa fa-question-circle" aria-hidden="true"></i>
             </div>
         </div>
@@ -202,35 +31,525 @@
                 <h2 id="titleplan">CHOOSE A DELIVERY DAY</h2>
                 <div><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
                 <div id="datepicker">
-                    <div x-data="{ dates: [1,2,3,4,5,6,7,8,9,10] }">
+                    <div>
                         <ul style="list-style: none;">
-                            <template x-for="item in dates">
-                                <li @click="testDate()"  :class="{ 'date-selected': dateSelect }" class="date" x-text="item"></li>
+                            <template x-for="date in dates" :key="date">
+                                <li  x-ref="date" x-on:selectchange.window="$refs.date.focus()" @click="selectDate(date)"  :class="{ 'date-selected': date.selected }" class="date" >
+                                    <span class="myli" :class="{'select':date.selected}"> </span>
+                                    <span  class="myli" style ="font-weight: 600;"x-text="date.day"></span>
+                                    <span class="myli">,</span>
+                                    <span class="myli" x-text="date.month"></span>
+                                    <span class="myli" x-text="date.date"></span></li>
                             </template>
                         </ul>
                     </div>
                 </div>
-                <div>Scroll for more delivery dates</div>
+                <div id="scroll">Scroll for more delivery dates</div>
                 <div><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
-                <button>NEXT</button>
-                <div>First Delivery Date: xx, xx xx</div>
+                <button @click="saveDate()" id="next">NEXT</button>
+                <div id="myinfo">First Delivery Date:
+                    <span x-text="dateSelected.day"></span>,
+                    <span x-text="dateSelected.month"></span>
+                    <span x-text="dateSelected.date"></span></div>
             </div>
-        
+            <div class="faq_part">
+                <h2 id="common">COMMON QUESTIONS</h2>
+                <div>
+                    <ul>
+    
+                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
+    
+                            <button type="button" class="w-full  py-6 text-left button_faq"
+                                @click="selected !== 1 ? selected = 1 : selected = null">
+                                <div class="flex items-center justify-between">
+                                    <span class="title_faq">
+                                        Should I v3? </span>
+                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </button>
+    
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
+                                x-ref="container1"
+                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+                                <div class="answer">
+                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
+                                        security and usability for v2.</p>
+                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
+                                        their traffic, and for use cases in which it is not appropriate to show a
+                                        challenge to the user.</p>
+                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
+                                        higher-friction challenge, whereas more common actions like sign-in, searches,
+                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
+                                        reCAPTCHA v3 developer guide.</p>
+                                </div>
+                            </div>
+    
+                        </li>
+                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
+    
+                            <button type="button" class="w-full  py-6 text-left button_faq"
+                                @click="selected !== 1 ? selected = 1 : selected = null">
+                                <div class="flex items-center justify-between">
+                                    <span class="title_faq">
+                                        Shoudsdds fsffsfs? </span>
+                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </button>
+    
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
+                                x-ref="container1"
+                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+                                <div class="answer">
+                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
+                                        security and usability for v2.</p>
+                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
+                                        their traffic, and for use cases in which it is not appropriate to show a
+                                        challenge to the user.</p>
+                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
+                                        higher-friction challenge, whereas more common actions like sign-in, searches,
+                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
+                                        reCAPTCHA v3 developer guide.</p>
+                                </div>
+                            </div>
+    
+                        </li>
+                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
+    
+                            <button type="button" class="w-full  py-6 text-left button_faq"
+                                @click="selected !== 1 ? selected = 1 : selected = null">
+                                <div class="flex items-center justify-between">
+                                    <span class="title_faq">
+                                        Should ot going away? </span>
+                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </button>
+    
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
+                                x-ref="container1"
+                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+                                <div class="answer">
+                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
+                                        security and usability for v2.</p>
+                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
+                                        their traffic, and for use cases in which it is not appropriate to show a
+                                        challenge to the user.</p>
+                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
+                                        higher-friction challenge, whereas more common actions like sign-in, searches,
+                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
+                                        reCAPTCHA v3 developer guide.</p>
+                                </div>
+                            </div>
+    
+                        </li>
+                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
+    
+                            <button type="button" class="w-full  py-6 text-left button_faq"
+                                @click="selected !== 1 ? selected = 1 : selected = null">
+                                <div class="flex items-center justify-between">
+                                    <span class="title_faq">
+                                        Should I use reCAPTCHA v2 or v3? </span>
+                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </button>
+    
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
+                                x-ref="container1"
+                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+                                <div class="answer">
+                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
+                                        security and usability for v2.</p>
+                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
+                                        their traffic, and for use cases in which it is not appropriate to show a
+                                        challenge to the user.</p>
+                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
+                                        higher-friction challenge, whereas more common actions like sign-in, searches,
+                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
+                                        reCAPTCHA v3 developer guide.</p>
+                                </div>
+                            </div>
+    
+                        </li>
+    
+                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
+    
+                            <button type="button" class="w-full py-6 text-left button_faq"
+                                @click="selected !== 2 ? selected = 2 : selected = null">
+                                <div class="flex items-center justify-between">
+                                    <span class="title_faq">
+                                        I'd like to run automated tests with reCAPTCHA. What should I do? </span>
+                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </button>
+    
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
+                                x-ref="container2"
+                                x-bind:style="selected == 2 ? 'max-height: ' + $refs.container2.scrollHeight + 'px' : ''">
+                                <div class="answer">
+                                    <p>For reCAPTCHA v3, create a separate key for testing environments. Scores may not
+                                        be accurate as reCAPTCHA v3 relies on seeing real traffic.</p>
+                                    <p>For reCAPTCHA v2, use the following test keys. You will always get No CAPTCHA and
+                                        all verification requests will pass.</p>
+                                </div>
+                            </div>
+    
+                        </li>
+    
+    
+                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
+    
+                            <button type="button" class="w-full py-6 text-left button_faq"
+                                @click="selected !== 3 ? selected = 3 : selected = null">
+                                <div class="flex items-center justify-between">
+                                    <span class="title_faq">
+                                        Can I run reCAPTCHA v2 and v3 on the same page? </span>
+                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </button>
+    
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
+                                x-ref="container3"
+                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
+                                <div class="answer">
+                                    <p>To do this, load the v3 site key as documented, and then explicitly render v2
+                                        using grecaptcha.render.</p>
+                                    <p>You are allowed to hide the badge as long as you include the reCAPTCHA branding
+                                        visibly in the user flow. Please include the following text:</p>
+                                    <p>Yes, please use "www.recaptcha.net" in your code in circumstances when
+                                        "www.google.com" is not accessible.</p>
+                                    <ul>
+                                        <li>First, replace &lt;script src="https://www.google.com/recaptcha/api.js"
+                                            async defer&gt;&lt;/script&gt; with &lt;script
+                                            src="https://www.recaptcha.net/recaptcha/api.js" async
+                                            defer&gt;&lt;/script&gt;</li>
+                                        <li>After that, apply the same to everywhere else that uses
+                                            "www.google.com/recaptcha/" on your site.</li>
+                                    </ul>
+                                    <p>After that, apply the same to everywhere else that uses
+                                        "www.google.com/recaptcha/" on your site.</p>
+                                </div>
+                            </div>
+    
+                        </li>
+    
+                    </ul>
+                </div>
+    
+    
+            </div>
         </div>
     </div>
+    <style>
+          #gorgias-chat-container {
+        display: none
+    }
+    .support{
+        cursor: pointer;
+    }
+            /*remove minimal template css*/
+        .myli{
+            padding:2px;
+            padding-top: 3%;
+        }
+            .select{
+                background-color: #111409;
+                width: 8px;
+                height: 100%;
+                margin-right:10px;
+            }
+    .wrapper{
+        max-width: unset;
+        margin:unset;
+        padding:unset;
+    }
+        .button_faq {
+        border: unset;
+        border-radius: unset;
+        border-bottom: solid 1px #8080805e;
+        padding-left: unset;
+    }
+
+    .button_faq:hover {
+        color: #111409;
+    }
+
+    #common {
+    text-align: center;
+        padding-bottom: 4vh;
+        font-size: 20px;
+        font-weight: bolder;
+        font-family: Helvetica;
+    }
+          .faq_part {
+        padding-left: 10vw;
+        padding-right: 10vw;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+    }
+    .max-h-0 {
+        max-height: 0;
+    }
+        #myinfo{
+            font-size:12px;
+            padding-top:2vh;
+        }
+        #next{
+            background-color: #111409;
+        color: white;
+        width: 30%;
+        border-radius: 10px;
+        margin-top: 3vh;
+        }
+        #scroll{
+            padding-top:3vh;
+             font-size: 12px;
+             letter-spacing: 1px;
+        }
+        #titleplan{
+            font-weight: 600;    letter-spacing: .166rem;
+            padding-bottom: 2vh;
+            font-family: 'HELVETICA';
+        }
+    
+        .date{
+            border: 1px solid #dee2e6;
+            width: 30vw;
+            height: 50px;
+            font-size: 16px;
+            padding-left: 15px;
+            cursor: pointer;
+            display: flex;
+        }
+        
+        .date:hover {
+            margin-left: 5px;
+        }
+
+        .date:focus {
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgb(222 14 14 / 45%);
+        }
+    
+        .date-selected {
+            background-color: #8080801f;
+            margin-left: 5px;
+            padding-left:unset;
+        }
+        #datepicker{
+            color:black;
+            padding-top: 5vh;
+            overflow: auto;
+            max-height: 300px;
+        }
+        .first_part {
+            padding-top: 2vh;
+            font-size: 1.25rem;
+            font-weight: 300;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+    
+    
+        }
+    
+        .mycontainer {
+            padding-top: 60px;
+            width: 100vw;
+            height: 100vh;
+            font-family: Helvetica!important;
+    
+    
+        }
+    
+        .myheader-mob {
+            display: none;
+        }
+    
+    
+        .header-arrow-nok {
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 12px;
+            color: #8080807d;
+        }
+    
+        .mylogo {
+            width: 12%;
+            position: relative;
+            top: 17px;
+            height: 35px;
+            max-width: 200px;
+        }
+    
+        .myheader {
+            display: flex;
+            position: fixed;
+            top: 0;
+            background-color: white;
+            justify-content: space-between;
+            border-bottom: 1px solid #dee2e6;
+            line-height: 60px;
+            height: 60px;
+            width: 100vw;
+            font-family: Helvetica;
+            padding-left: 3vw;
+            padding-right: 1vw;
+            z-index: 9999;
+        }
+    
+        .reading-width {
+            margin-left: unset;
+            margin-right: unset;
+        }
+    
+        .content-main {
+            padding: unset;
+        }
+    
+        .container {
+            margin-left: unset;
+            margin-right: unset;
+            max-width: unset;
+            width: unset;
+        }
+    
+        .myheader-2 {
+            display: flex;
+        }
+    
+        #shopify-section-header {
+            display: none;
+        }
+    
+        #shopify-section-announcement {
+            display: none;
+        }
+    
+        .feature-page-title {
+            display: none;
+        }
+    
+        #shopify-section-footer {
+            display: none;
+        }
+    
+        @media only screen and (max-width: 768px) {
+    
+            /* For mobile phones: */
+   
+            .faq_part {
+            padding-right: 5vw;
+            padding-left: 5vw;
+        }
+            .date{
+                width: 90vw;
+            }
+
+            #next{
+                width: 100%;
+            }
+            
+            .first_part {
+                padding: 5vw;
+            }
+    
+            #titleplan {
+                display: none;
+            }
+    
+            .mycontainer {
+                padding-top: 30px;
+                font-family: Helvetica;
+            }
+    
+            .myheader {
+                display: none;
+            }
+    
+            .myheader-mob {
+                position: fixed;
+                top: 0;
+                width: 100vw;
+                padding-left: 3vw;
+                padding-right: 3vw;
+                display: flex;
+                justify-content: space-between;
+                line-height: 44px;
+                height: 44px;
+                font-size: 19px;
+                font-family: Helvetica;
+                font-weight: bolder;
+                border-bottom: 1px solid #dee2e6;
+                background-color: white;
+            }
+    
+            #descplan {
+                text-align: center;
+                margin-bottom: 2vh;
+            }
+    
+        }
+    </style>
     <script>
-        const dateSelect = false;
+
+        const dateOfToday = new Date();
+         dateSelected = Object;
+        let plan = sessionStorage.getItem('plan') ;
+        if (!plan) {
+            window.location.href="/pages/plan"
+        }
     
         function alpineInstance() {
             return {
-                testDate() {
-                    this.dateSelect = true;
-                    console.log(dateSelect);
+                show_support() {
+                console.log("chat");
+                const chat = document.getElementById("gorgias-chat-container");
+                if (chat) {
+
+                    chat.style.display = "block";
+                }
+            },
+                saveDate() {
+                    sessionStorage.setItem('date', JSON.stringify(this.dateSelected));
+                    window.location.href="/collections/menu-individual";
+                    console.log(this.dateSelected);
                 },
-                dateSelect,
+                setDate() {
+                    let options = { weekday: 'long'};
+                    let options2 = {month: 'long'};
+
+                    dateOfToday.setDate(dateOfToday.getDate() + 4);
+                    
+                    
+
+                    for (let x = 0; x < 11; x++) {
+                        dateOfToday.setDate(dateOfToday.getDate() + 1);
+                        if (dateOfToday.getDay() == 6) 
+                            dateOfToday.setDate(dateOfToday.getDate() + 2);
+                        if (dateOfToday.getDay() == 0) 
+                            dateOfToday.setDate(dateOfToday.getDate() + 1);
+                        myday = new Intl.DateTimeFormat('en-US', options).format(dateOfToday);
+                        mymonth = new Intl.DateTimeFormat('en-US', options2).format(dateOfToday);
+                        date = (
+                        {
+                            day: myday,
+                            month: mymonth,
+                            date: dateOfToday.getDate(),
+                            selected: false
+                        });
+                        if (x == 0)
+                            this.dateSelected = date;
+                        this.dates.push(date);
+                    }
+                },
+                selectDate(date) {
+                    for (const item in this.dates) {
+                        this.dates[item].selected = false;
+                    }
+                    date.selected = true;
+                    this.dateSelected = date;
+                },
+                dates: [],
             }
         }
     </script>
-</body>
-</html>
-
