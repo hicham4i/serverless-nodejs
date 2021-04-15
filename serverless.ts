@@ -1,30 +1,30 @@
-import type { AWS } from '@serverless/typescript';
+import type { AWS } from "@serverless/typescript";
 
-import { hello } from './src/functions';
+import { hello, getProducts } from "./src/functions";
 
 const serverlessConfiguration: AWS = {
-  service: 'mykosherchef',
-  frameworkVersion: '2',
+  service: "mykosherchef",
+  frameworkVersion: "2",
   custom: {
     webpack: {
-      webpackConfig: './webpack.config.js',
-      includeModules: true
-    }
+      webpackConfig: "./webpack.config.js",
+      includeModules: true,
+    },
   },
-  plugins: ['serverless-webpack'],
+  plugins: ["serverless-webpack"],
   provider: {
-    name: 'aws',
-    runtime: 'nodejs12.x',
+    name: "aws",
+    runtime: "nodejs12.x",
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
     environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
     },
-    lambdaHashingVersion: '20201221',
+    lambdaHashingVersion: "20201221",
   },
-  functions: { hello }
-}
+  functions: { hello, getProducts },
+};
 
 module.exports = serverlessConfiguration;
