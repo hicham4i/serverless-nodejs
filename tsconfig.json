@@ -8,7 +8,9 @@
     "removeComments": true,
     "sourceMap": true,
     "target": "ES2019",
-    "outDir": "lib"
+    "outDir": "lib",
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts"],
   "exclude": [

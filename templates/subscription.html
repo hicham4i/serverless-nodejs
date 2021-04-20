@@ -1,11 +1,7 @@
 <div id="customer-portal-root"></div>
 
 <div x-data="alpineInstance()" x-init="getSubscriptionToken()">
-  <p x-text="customerId"></p>
-  <p x-text="jwt"></p>
-  <p x-text="boldCustomerId"></p>
-  <p x-text="accessToken"></p>
-  <template x-for="subscription in subscriptions" :key="subscription.bold_platform_subscription_id">
+  <!-- <template x-for="subscription in subscriptions" :key="subscription.bold_platform_subscription_id">
     <div>
       <p>Sub id: <span x-text="subscription.bold_platform_subscription_id"></span></p>
       <template x-for="line_item in subscription.line_items" :key="line_item.id">
@@ -14,7 +10,7 @@
         </div>
       </template>
       <p>Products: <span x-text="subscription.note"></span></p>
-    </div>
+    </div> -->
 </div>
 
 <script>
@@ -67,62 +63,80 @@
           })
           .then((data) => {
             console.log("data", data);
-            return data
+            return data;
           });
       },
       getSubscriptions() {
-        this.authentifiedRequest(`customers/${this.boldCustomerId}/subscriptions`)
-          .then((data) => {
-            this.subscriptions = data.subscriptions;
-            console.log("subs", this.subscriptions);
-            this.subscriptions.forEach(sub => {
-              this.getSubscriptionInfo(sub.bold_platform_subscription_id).then(data => {
+        this.authentifiedRequest(
+          `customers/${this.boldCustomerId}/subscriptions`
+        ).then((data) => {
+          this.subscriptions = data.subscriptions;
+          console.log("subs", this.subscriptions);
+          this.subscriptions.forEach((sub) => {
+            this.getSubscriptionInfo(sub.bold_platform_subscription_id).then(
+              (data) => {
                 console.log("DATA SUB", data);
                 sub.note = data.note;
-                this.subscriptions = this.subscriptions.map(s => {
-                  if (s.bold_platform_subscription_id === sub.bold_platform_subscription_id) {
+                this.subscriptions = this.subscriptions.map((s) => {
+                  if (
+                    s.bold_platform_subscription_id ===
+                    sub.bold_platform_subscription_id
+                  ) {
                     return sub;
                   }
                   return s;
                 });
-              })
-
-            })
+              }
+            );
           });
+        });
       },
       getSubscriptionInfo(subscriptionId) {
-        return this.authentifiedRequest(`subscriptions/${subscriptionId}/orders`).then(data => {
+        return this.authentifiedRequest(
+          `subscriptions/${subscriptionId}/orders`
+        ).then((data) => {
           const orders = data.subscription_orders;
           const firstOrder = orders[0].order;
-          const orderId = parseInt(firstOrder.platform_id, 10);
-          return this.getProducts(orderId)
-        })
+          return this.getProducts(subscriptionId, firstOrder);
+        });
       },
       awsAPIRequest(endpoint, body) {
-        console.log('BODY', body);
-        return fetch(`https://ok1v95fy85.execute-api.us-east-1.amazonaws.com/dev/${endpoint}`, {
-          method: "POST",
-          body: JSON.stringify(body)
-        })
-        .then((response) => {
+        console.log("BODY", body);
+        return fetch(
+          `https://ok1v95fy85.execute-api.us-east-1.amazonaws.com/dev/${endpoint}`,
+          {
+            method: "POST",
+            body: JSON.stringify(body),
+          }
+        )
+          .then((response) => {
             if (response.ok) {
               return response.json();
             }
           })
           .then((data) => {
             console.log("data", data);
-            return data
+            return data;
           });
       },
-      getProducts(orderId) {
-        console.log('ORDER ID', orderId)
-        return this.awsAPIRequest('getProducts', {
-          orderId: orderId
-        }).then(data => {
-          console.log("products", data);
-          return data;
-        })
-      }
+      getProducts(subscriptionId, firstOrder) {
+        const orderId = parseInt(firstOrder.platform_id, 10);
+        console.log("ORDER ID", orderId);
+        return this.awsAPIRequest("getProducts", {
+          orderId: orderId,
+        }).then((products) => {
+          console.log("products", products);
+          this.replaceProductDiv(subscriptionId, products, firstOrder);
+          return products;
+        });
+      },
+      replaceProductDiv(subscriptionId, products, firstOrder) {
+        const boldPlatformId = firstOrder.bold_platform_subscription_id;
+        console.log("boldPlatformId", boldPlatformId);
+        const el = document.getElementById(`${boldPlatformId}_products_panel`);
+        console.log("EL", el);
+        el.textContent = JSON.stringify(products);
+      },
     };
   }
 </script>
