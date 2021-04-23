@@ -37,6 +37,7 @@ const handler: TypedEventHandler<{
   const test = await frontBoldApi.getSubscription(subscriptionId);
   console.log("test", test);
   const ids = body.ids;
+  console.log("ids", ids);
   if (ids && ids.length > 0) {
     const subscription = await backBoldApi.partialUpdateSubscription(
       subscriptionId,
