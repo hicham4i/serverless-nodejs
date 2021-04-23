@@ -5,6 +5,9 @@ import {
   getProducts,
   boldWebhookSubscriptionCreated,
   boldWebhookSubscriptionOrderCreated,
+  showAllProducts,
+  tagBoldSubscription,
+  updateProducts,
 } from "./src/functions";
 
 const serverlessConfiguration: AWS = {
@@ -32,8 +35,11 @@ const serverlessConfiguration: AWS = {
   functions: {
     shopifyWebhook,
     getProducts,
+    updateProducts,
     boldWebhookSubscriptionCreated,
     boldWebhookSubscriptionOrderCreated,
+    showAllProducts,
+    tagBoldSubscription,
   },
 };
 

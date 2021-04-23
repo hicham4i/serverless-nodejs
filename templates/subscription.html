@@ -1,16 +1,22 @@
-<div id="customer-portal-root"></div>
+<div class="section-header">
+  <h1 class="section-header--title">{{ page.title }}</h1>
+</div>
 
-<div x-data="alpineInstance()" x-init="getSubscriptionToken()">
-  <!-- <template x-for="subscription in subscriptions" :key="subscription.bold_platform_subscription_id">
-    <div>
-      <p>Sub id: <span x-text="subscription.bold_platform_subscription_id"></span></p>
-      <template x-for="line_item in subscription.line_items" :key="line_item.id">
-        <div>
-          <p>Subscription: <span x-text="line_item.product_name"></span></p>
-        </div>
-      </template>
-      <p>Products: <span x-text="subscription.note"></span></p>
-    </div> -->
+<div class="rte">
+  {{ page.content }}
+  <div id="customer-portal-root"></div>
+  <div x-data="alpineInstance()" x-init="getSubscriptionToken()">
+    <!-- <template x-for="subscription in subscriptions" :key="subscription.bold_platform_subscription_id">
+      <div>
+        <p>Sub id: <span x-text="subscription.bold_platform_subscription_id"></span></p>
+        <template x-for="line_item in subscription.line_items" :key="line_item.id">
+          <div>
+            <p>Subscription: <span x-text="line_item.product_name"></span></p>
+          </div>
+        </template>
+        <p>Products: <span x-text="subscription.note"></span></p>
+      </div> -->
+  </div>
 </div>
 
 <script>
@@ -23,6 +29,7 @@
       boldCustomerId: "",
       accessToken: "",
       subscriptions: [],
+      shopIdentifier: "",
       getSubscriptionToken() {
         window.BOLD.subscriptions.getJWT((data) => {
           // handle data...
@@ -72,10 +79,13 @@
         ).then((data) => {
           this.subscriptions = data.subscriptions;
           console.log("subs", this.subscriptions);
-          this.subscriptions.forEach((sub) => {
-            this.getSubscriptionInfo(sub.bold_platform_subscription_id).then(
-              (data) => {
-                console.log("DATA SUB", data);
+          this.subscriptions.forEach((sub, index) => {
+            this.getSubscriptionInfo(
+              sub.bold_platform_subscription_id,
+              index
+            ).then((data) => {
+              console.log("DATA SUB", data);
+              if (data && data.note) {
                 sub.note = data.note;
                 this.subscriptions = this.subscriptions.map((s) => {
                   if (
@@ -87,24 +97,22 @@
                   return s;
                 });
               }
-            );
+            });
           });
         });
       },
-      getSubscriptionInfo(subscriptionId) {
-        return this.authentifiedRequest(
-          `subscriptions/${subscriptionId}/orders`
-        ).then((data) => {
-          const orders = data.subscription_orders;
-          const firstOrder = orders[0].order;
-          return this.getProducts(subscriptionId, firstOrder);
-        });
+      getSubscriptionInfo(subscriptionId, index) {
+        return this.getProducts(subscriptionId, index);
       },
       awsAPIRequest(endpoint, body) {
         console.log("BODY", body);
         return fetch(
-          `https://ok1v95fy85.execute-api.us-east-1.amazonaws.com/dev/${endpoint}`,
+          `https://8a99monbk5.execute-api.us-east-1.amazonaws.com/prod/${endpoint}`,
           {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
             method: "POST",
             body: JSON.stringify(body),
           }
@@ -119,24 +127,65 @@
             return data;
           });
       },
-      getProducts(subscriptionId, firstOrder) {
-        const orderId = parseInt(firstOrder.platform_id, 10);
-        console.log("ORDER ID", orderId);
+      getProducts(subscriptionId, index) {
+        console.log("subscriptionId", subscriptionId);
         return this.awsAPIRequest("getProducts", {
-          orderId: orderId,
-        }).then((products) => {
-          console.log("products", products);
-          this.replaceProductDiv(subscriptionId, products, firstOrder);
-          return products;
+          subscriptionId,
+          token: this.accessToken,
+          shopUrl: "dailycious.com",
+        }).then((res) => {
+          const note = res.note;
+          console.log("note", note);
+          if (!note) {
+            return undefined;
+          }
+          const parsedNote = JSON.parse(note);
+          const products = parsedNote.ids;
+          if (products && products.length) {
+            setTimeout(() => {
+              this.replaceProductDiv(subscriptionId, products, index);
+              return note;
+            }, 2000);
+          }
         });
       },
-      replaceProductDiv(subscriptionId, products, firstOrder) {
-        const boldPlatformId = firstOrder.bold_platform_subscription_id;
-        console.log("boldPlatformId", boldPlatformId);
-        const el = document.getElementById(`${boldPlatformId}_products_panel`);
+      replaceProductDiv(subscriptionId, products, index) {
+        const divs = document.querySelectorAll("div.details-section");
+        console.log("divs", products, divs, index);
+        const el = divs[index * 5 + 4];
         console.log("EL", el);
-        el.textContent = JSON.stringify(products);
+        if (el) {
+          const elToReplace = el.querySelector("div");
+          const template =
+            `<a href="/pages/change-subscription?subid=${subscriptionId}">Update Products</a>` +
+            products.map((id) => `<p> id: ${id} </p>`).join(" ");
+          elToReplace.outerHTML = template;
+        }
+        //
       },
     };
   }
 </script>
+
+<style>
+  .products-panel-wrap {
+    display: none;
+  }
+  .next-order-date-edit-resume-button {
+    display: none;
+  }
+  .bsub-link {
+    display: none;
+  }
+  .section-header {
+    padding-top: 80px;
+    padding-left: 15px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .rte {
+    max-width: 1200px;
+    margin: auto;
+  }
+</style>

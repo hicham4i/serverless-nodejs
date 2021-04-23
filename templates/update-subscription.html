@@ -1,4 +1,10 @@
-<div x-data="alpineInstance()" x-init="fecthData()">
+<div id="loader"></div>
+<div
+  id="myDiv"
+  style="display: none"
+  x-data="alpineInstance()"
+  x-init="myFunction(),getSubscriptionToken(),fecthData()"
+>
   <div
     x-show.transition.in.duration.500ms.origin.top.center.opacity.out.duration.200ms.origin.bottom.center.opacity="isDialogOpen"
     @click="isDialogOpen = false"
@@ -35,17 +41,8 @@
         />
       </a>
     </div>
-    <div class="myheader-2">
-      <div style="color: #111409"><a href="/pages/plan">Plan</a></div>
-      <div class="header-arrow-ok"><i class="fas fa-chevron-right"></i></div>
-
-      <div style="color: #111409"><a href="/pages/day">Day</a></div>
-      <div class="header-arrow-ok"><i class="fas fa-chevron-right"></i></div>
-      <div style="font-weight: bolder">Meals</div>
-      <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-      <div>Cart</div>
-    </div>
-    <div @click="show_support()" style="color: #111409" class="support">
+    <div class="myheader-2">Change your next order</div>
+    <div @click="show_support()" style="color: #3a6351" class="support">
       <i class="fa fa-question-circle" aria-hidden="true"></i>
       Customer support
     </div>
@@ -53,11 +50,12 @@
 
   <div class="myheader-mob">
     <div>
-      <a href="/pages/day"></a
-      ><i style="position: unset" class="fas fa-chevron-left"></i>
+      <a href="/pages/day"
+        ><i style="position: unset" class="fas fa-chevron-left"></i
+      ></a>
     </div>
-    <div style="color: #111409">Choose <span x-text="plan"></span> meals</div>
-    <div style="color: #111409">
+    <div style="color: #3a6351">Choose <span x-text="plan"></span> meals</div>
+    <div style="color: #3a6351">
       <i class="fa fa-question-circle" aria-hidden="true"></i>
     </div>
   </div>
@@ -123,12 +121,68 @@
   <!-- begin: cart -->
   <div x-show="show" class="cart" :class="{ 'menu-dopweb-blur': isDialogOpen }">
     <div class="dateSection">
+      Meal plan:
+      <div x-show="plan == 4">$13,50 / meal</div>
+      <div x-show="plan == 6">$12,50 / meal</div>
+      <div x-show="plan == 10">$12,00 / meal</div>
+      <div x-show="plan == 12">$11,50 / meal</div>
+    </div>
+    <div class="planSection">
+      <div
+        @click="changePlan(4)"
+        :class="{ 'planselect': plan==4 }"
+        class="nplan"
+      >
+        4
+        <div x-show="plan == 4" class="selectplan"></div>
+      </div>
+      <div
+        @click="changePlan(6)"
+        :class="{ 'planselect': plan==6 }"
+        class="nplan"
+      >
+        6
+        <div x-show="plan == 6" class="selectplan"></div>
+      </div>
+      <div
+        @click="changePlan(10)"
+        :class="{ 'planselect': plan==10 }"
+        class="nplan"
+      >
+        10
+        <div x-show="plan == 10" class="selectplan"></div>
+      </div>
+      <div
+        @click="changePlan(12)"
+        :class="{ 'planselect': plan==12 }"
+        style="border-right: solid 1px #80808042"
+        class="nplan"
+      >
+        12
+        <div x-show="plan == 12" class="selectplan"></div>
+      </div>
+    </div>
+    <div class="dateSection">
       My delivery for:
       <span style="font-weight: bolder">
         <span x-text="date.day"></span>,
         <span x-text="date.month"></span>
         <span x-text="date.date"></span>
       </span>
+    </div>
+    <div class="dateSection">
+      <div>Meals in my delivery:</div>
+      <div
+        @click="clearCart()"
+        style="
+          text-decoration: underline;
+          color: #3a6351;
+          font-weight: bolder;
+          cursor: pointer;
+        "
+      >
+        Clear all
+      </div>
     </div>
     <template x-for="product in cart" :key="product.id">
       <div class="small_img2 animated fadeInLeft">
@@ -215,12 +269,68 @@
     </button>
     <div class="all_meals">
       <div class="dateSection">
+        Meal plan:
+        <div x-show="plan == 4">$13,50 / meal</div>
+        <div x-show="plan == 6">$12,50 / meal</div>
+        <div x-show="plan == 10">$12,00 / meal</div>
+        <div x-show="plan == 12">$11,50 / meal</div>
+      </div>
+      <div class="planSection">
+        <div
+          @click="changePlan(4)"
+          :class="{ 'planselect': plan==4 }"
+          class="nplan"
+        >
+          4
+          <div x-show="plan == 4" class="selectplan"></div>
+        </div>
+        <div
+          @click="changePlan(6)"
+          :class="{ 'planselect': plan==6 }"
+          class="nplan"
+        >
+          6
+          <div x-show="plan == 6" class="selectplan"></div>
+        </div>
+        <div
+          @click="changePlan(10)"
+          :class="{ 'planselect': plan==10 }"
+          class="nplan"
+        >
+          10
+          <div x-show="plan == 10" class="selectplan"></div>
+        </div>
+        <div
+          @click="changePlan(12)"
+          :class="{ 'planselect': plan==12 }"
+          style="border-right: solid 1px #80808042"
+          class="nplan"
+        >
+          12
+          <div x-show="plan == 12" class="selectplan"></div>
+        </div>
+      </div>
+      <div class="dateSection">
         My delivery for:
         <span style="font-weight: bolder">
           <span x-text="date.day"></span>,
           <span x-text="date.month"></span>
           <span x-text="date.date"></span>
         </span>
+      </div>
+      <div class="dateSection">
+        <div>Meals in my delivery:</div>
+        <div
+          @click="clearCart()"
+          style="
+            text-decoration: underline;
+            color: #3a6351;
+            font-weight: bolder;
+            cursor: pointer;
+          "
+        >
+          Clear all
+        </div>
       </div>
       <template class="prod" x-for="product in cart" :key="product.id">
         <div class="small_img2">
@@ -402,15 +512,107 @@
   </div>
 </div>
 <style>
+  /* Center the loader */
+  #loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 120px;
+    height: 120px;
+    margin: -76px 0 0 -76px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Add animation to "page content" */
+  .animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s;
+  }
+
+  @-webkit-keyframes animatebottom {
+    from {
+      bottom: -100px;
+      opacity: 0;
+    }
+    to {
+      bottom: 0px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes animatebottom {
+    from {
+      bottom: -100px;
+      opacity: 0;
+    }
+    to {
+      bottom: 0;
+      opacity: 1;
+    }
+  }
+
+  #myDiv {
+    display: none;
+  }
+  .planselect {
+    background-color: #d2f3e4;
+  }
+
+  .selectplan {
+    background-color: #3a6351;
+    height: 4px;
+    width: 100%;
+    position: relative;
+    top: -5px;
+  }
+
+  .nplan {
+    width: 23%;
+    height: 6vh;
+    border: solid 1px #80808042;
+    text-align: center;
+    line-height: 6vh;
+    border-right: unset;
+    cursor: pointer;
+  }
+
   .support {
     cursor: pointer;
   }
+
   /*remove minimal template css*/
   .wrapper {
     max-width: unset;
     margin: unset;
     padding: unset;
   }
+
   #gorgias-chat-container {
     display: none;
   }
@@ -422,7 +624,7 @@
   .header-arrow-ok {
     padding-left: 15px;
     padding-right: 15px;
-    color: #111409;
+    color: #3a6351;
     font-size: 12px;
   }
 
@@ -456,6 +658,7 @@
 
   .myheader-2 {
     display: flex;
+    letter-spacing: 2px;
   }
 
   .dateSection {
@@ -468,6 +671,23 @@
     font-size: 13px;
     line-height: 45px;
     padding-left: 1vw;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1vw;
+  }
+
+  .planSection {
+    background-color: white;
+    height: 10vh;
+    margin: 1px;
+    border: 0.5px solid #f2f2f2;
+    font-weight: 500;
+    font-family: Helvetica;
+    font-size: 13px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
   }
 
   #shopify-section-header {
@@ -607,13 +827,13 @@
   }
 
   /*.add_button:active span {
-    padding-right: 3vw;
-  }
-  
-  .add_button:active span:after {
-    opacity: 1;
+      padding-right: 3vw;
+    }
     
-  }*/
+    .add_button:active span:after {
+      opacity: 1;
+      
+    }*/
 
   .close {
     width: 2vw;
@@ -690,10 +910,10 @@
   }
 
   /* .menu-dopweb-blur {
-      background-color: rgb(191 191 191)!important;
-      opacity: 0.5;
-   
-  }*/
+        background-color: rgb(191 191 191)!important;
+        opacity: 0.5;
+     
+    }*/
 
   .titleproduct {
     display: block;
@@ -703,7 +923,7 @@
     font-size: 13px;
     line-height: 1rem;
     letter-spacing: 1px;
-    color: #111409;
+    color: #3a6351;
   }
 
   .popup .titleproduct {
@@ -874,7 +1094,6 @@
 
   .info {
     padding: 5%;
-    margin-top: 10vh;
   }
 
   .empty_meal_start {
@@ -974,27 +1193,27 @@
 
   .gradient1 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 84%, #d9d9d9 84%);
+    background: linear-gradient(90deg, #3a6351 84%, #d9d9d9 84%);
   }
 
   .gradient2 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 68%, #d9d9d9 68%);
+    background: linear-gradient(90deg, #3a6351 68%, #d9d9d9 68%);
   }
 
   .gradient3 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 52%, #d9d9d9 52%);
+    background: linear-gradient(90deg, #3a6351 52%, #d9d9d9 52%);
   }
 
   .gradient4 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 36%, #d9d9d9 36%);
+    background: linear-gradient(90deg, #3a6351 36%, #d9d9d9 36%);
   }
 
   .gradient5 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 20%, #d9d9d9 20%);
+    background: linear-gradient(90deg, #3a6351 20%, #d9d9d9 20%);
   }
 
   .border_count {
@@ -1026,7 +1245,7 @@
     letter-spacing: 2px;
     color: white;
     appearance: none;
-    background-color: #111409;
+    background-color: #3a6351;
     cursor: pointer;
     outline: none;
     height: 44px;
@@ -1126,7 +1345,7 @@
 
   .add_button {
     max-width: unset;
-    background-color: #111409;
+    background-color: #3a6351;
     width: 6vw;
     height: 5vh;
     min-height: unset;
@@ -1150,7 +1369,7 @@
   .add_button2 {
     width: 4vw;
     height: 4vh;
-    color: #111409;
+    color: #3a6351;
     text-align: center;
     line-height: 4vh;
     font-size: 16px;
@@ -1252,21 +1471,13 @@
 
   @media only screen and (max-width: 768px) {
     /* For mobile phones: */
-
-    .all_meals {
-      padding-top: 47px;
-    }
-
     .prod {
       padding-top: 20px;
     }
 
     .dateSection {
-      top: 6vh;
-      left: 0;
-      padding-left: 15vw;
-      position: absolute;
-      width: 100%;
+      padding-left: 4vw;
+      padding-right: 4vw;
     }
 
     .myheader {
@@ -1333,10 +1544,10 @@
     }
 
     /*.menu-dopweb-blur {
-              background-color: transparent!important;
-      opacity: unset;
-   
-  }*/
+                background-color: transparent!important;
+        opacity: unset;
+     
+    }*/
 
     .close {
       width: 6vw;
@@ -1402,8 +1613,8 @@
       width: 6px;
       height: 6px;
       transform: rotate(225deg);
-      border-right: 2px solid #111409;
-      border-bottom: 2px solid #111409;
+      border-right: 2px solid #3a6351;
+      border-bottom: 2px solid #3a6351;
       animation: arrow-wave 1s infinite;
       animation-direction: alternate;
 
@@ -1557,7 +1768,7 @@
       font-size: 0.8rem;
       line-height: 1rem;
       letter-spacing: 1.8px;
-      color: #111409;
+      color: #3a6351;
       padding-left: 3vw;
     }
 
@@ -1636,25 +1847,176 @@
     }
   }
 </style>
+<script src="//fast.wistia.net/labs/fresh-url/v1.js" async></script>
 <script>
   let productDetail = Object;
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  let date = JSON.parse(sessionStorage.getItem("date") || "{}");
-  let zipcode = localStorage.getItem("zipcode");
-  let plan = sessionStorage.getItem("plan");
-  if (!zipcode) {
-    window.location.href = "/pages/zipcode";
-  }
-  if (!date) {
-    window.location.href = "/pages/day";
-  }
-  if (!plan) {
-    window.location.href = "/pages/plan";
-  }
+  let cart = [];
+  let zipcode = {};
+  let date = {};
+  let plan;
+
   count = cart.length;
+
+  var myVar;
+
+  function myFunction() {
+    myVar = setTimeout(showPage, 5000);
+  }
+
+  function showPage() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("myDiv").style.display = "block";
+  }
 
   function alpineInstance() {
     return {
+      success: "not yet",
+      test: "test alipine",
+      jwt: "",
+      customerId: "",
+      boldCustomerId: "",
+      accessToken: "",
+      subscriptions: [],
+      getSubscriptionToken() {
+        window.BOLD.subscriptions.getJWT((data) => {
+          // handle data...
+          console.log("data", data);
+          this.success = data.success;
+          if (this.success) {
+            this.jwt = data.value.jwt;
+            this.customerId = data.value.customerId;
+            fetch(
+              `https://sub.boldapps.net/api/customer/login?platform_customer_id=${this.customerId}&customer_jwt=${this.jwt}&shop_url=dailycious.com`
+            )
+              .then((response) => {
+                if (response.ok) {
+                  return response.json();
+                }
+              })
+              .then((apiKeys) => {
+                console.log("apiKeys", apiKeys);
+                this.boldCustomerId = apiKeys.customer.bold_platform_id;
+                this.accessToken = apiKeys.subscriptionsWebToken;
+                this.getSubscriptions();
+              });
+          }
+        });
+      },
+      authentifiedRequest(endpoint) {
+        const headers = new Headers();
+        headers.append("Authorization", `Bearer ${this.accessToken}`);
+        headers.append("accept", "application/json");
+        return fetch(
+          `https://sub.boldapps.net/api/customer/${endpoint}?shop_url=dailycious.com`,
+          {
+            headers,
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            console.log("data", data);
+            return data;
+          });
+      },
+      getSubscriptions() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("subid");
+        if (!id) {
+          window.location.href = "/";
+        }
+        this.authentifiedRequest(`subscriptions/${id}`).then((data) => {
+          const subscription = data.subscription;
+          console.log("sub", subscription);
+
+          this.getSubscriptionInfo(
+            subscription.bold_platform_subscription_id
+          ).then((data) => {
+            let options = { weekday: "long" };
+            let options2 = { month: "long" };
+            const date = new Date(subscription.next_order_datetime);
+            date.setDate(date.getDate() + 5);
+            const myday = new Intl.DateTimeFormat("en-US", options).format(
+              date
+            );
+            const mymonth = new Intl.DateTimeFormat("en-US", options2).format(
+              date
+            );
+            this.date = {
+              day: myday,
+              month: mymonth,
+              date: date.getDate(),
+              selected: false,
+            };
+            console.log("DATE :", this.date);
+            console.log("subscription", data);
+            subscription.note = data.note;
+            console.log("sub with note,", subscription);
+            const parsednote = JSON.parse(subscription.note);
+            const ids = parsednote.ids;
+            console.log("ID: ", ids);
+            ids.forEach((id) => {
+              const product = this.products.find(
+                (product) => product.variants[0].id === id
+              );
+              console.log(product);
+              if (product) {
+                this.insert_to_cart(product);
+              }
+            });
+            this.plan = this.cart.length;
+          });
+        });
+      },
+      getSubscriptionInfo(subscriptionId) {
+        return this.authentifiedRequest(
+          `subscriptions/${subscriptionId}/orders`
+        ).then((data) => {
+          const orders = data.subscription_orders;
+          const firstOrder = orders[0].order;
+          return this.getProducts(subscriptionId, firstOrder);
+        });
+      },
+      awsAPIRequest(endpoint, body) {
+        console.log("BODY", body);
+        return fetch(
+          `https://ok1v95fy85.execute-api.us-east-1.amazonaws.com/dev/${endpoint}`,
+          {
+            method: "POST",
+            body: JSON.stringify(body),
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            console.log("data", data);
+            return data;
+          });
+      },
+      getProducts(subscriptionId, firstOrder) {
+        const orderId = parseInt(firstOrder.platform_id, 10);
+        console.log("ORDER ID", orderId);
+        return this.awsAPIRequest("getProducts", {
+          orderId: orderId,
+        }).then((products) => {
+          console.log("products", products);
+          return products;
+        });
+      },
+      clearCart() {
+        console.log("clear");
+        this.cart = [];
+        this.count = 0;
+      },
+      changePlan(desired_plan) {
+        this.plan = desired_plan;
+      },
       show_support() {
         console.log("chat");
         const chat = document.getElementById("gorgias-chat-container");
@@ -1725,6 +2087,7 @@
         properties["_deliveryDate"] = date;
         properties["Delivery Date"] = `${date.day}, ${date.month} ${date.date}`;
         //TODO: put in real zip code
+        const zipcode = "90210";
         properties["_zipcode"] = zipcode;
         this.cart.forEach((product, index) => {
           properties["Product " + (index + 1)] = product.title;
@@ -1796,18 +2159,25 @@
             console.log("Issue");
         }
         console.log(formData);
-        fetch("/cart/add.js", {
+        fetch("/cart/clear.js", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
         }).then((response) => {
-          console.log(response);
-          localStorage.removeItem("cart");
-          sessionStorage.removeItem("date");
-          sessionStorage.removeItem("plan");
-          window.location.href = "/cart";
+          fetch("/cart/add.js", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }).then((response) => {
+            console.log(response);
+            localStorage.removeItem("cart");
+            sessionStorage.removeItem("date");
+            sessionStorage.removeItem("plan");
+            window.location.href = "/cart";
+          });
         });
       },
       products: [],

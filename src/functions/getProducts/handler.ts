@@ -4,40 +4,41 @@ import "source-map-support/register";
 import {
   formatJSONResponseError,
   formatJSONResponseCors,
+  TypedEventHandler,
 } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
+import { BoldAPI } from "@libs/boldApi";
+import { env } from "../../env";
 
 // import schema from "./schema";
-import * as Shopify from "shopify-api-node";
 
-// const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
-const handler = async (event) => {
+// TODO check this weird bug where body is note parsed;
+const handler: TypedEventHandler<{
+  shopIdentifier: string;
+  shopUrl: string;
+  subscriptionId: number;
+  token: string;
+}> = async (event) => {
   console.log("EVENT:", JSON.stringify(event));
-
-  const shopify = new Shopify({
-    shopName: "mykosherchef",
-    apiKey: "34d26fea5cad741d17f510329d887bae",
-    password: "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",
-  });
   const body = event.body;
-  console.log("BODY", body);
-  const parsedBody = JSON.parse(body);
-  console.log("TYPE OF BODY", typeof body);
-  console.log("TYPE OF PARSEDBODY", typeof parsedBody);
-  console.log("PARSEDBODY", parsedBody);
-  const orderId = parsedBody.orderId;
-  console.log("ORDER ID", orderId);
-  if (!orderId) {
+  const subscriptionId = body.subscriptionId;
+  const token = body.token;
+  console.log("ORDER ID", subscriptionId);
+  if (!subscriptionId || !token) {
     return formatJSONResponseError({
-      message: "OK",
-      event,
+      message: "no id or token",
     });
   }
-  const order = await shopify.order.get(orderId);
-  console.log(order);
-  const note = order.note;
+  const shopIdentifier = body.shopIdentifier || "27393687639";
+  const shopUrl = body.shopUrl || "dailycious.com";
+  const frontBoldApi = new BoldAPI(token, shopUrl, true);
+  const backBoldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier, false);
+  const test = await frontBoldApi.getSubscription(subscriptionId);
+  console.log("test", test);
+  const subscription = await backBoldApi.getSubscription(subscriptionId);
+  console.log("subscription", subscription);
   return formatJSONResponseCors({
-    note,
+    note: subscription.note,
   });
 };
 

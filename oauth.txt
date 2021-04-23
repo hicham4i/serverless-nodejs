@@ -1,0 +1,14 @@
+https://mykosherchef.myshopify.com/admin/oauth/authorize?client_id=6c31e25bfc77f6983d8c7aa21e804c68&scope=write_orders, read_orders,read_customers,write_customers,read_own_subscription_contracts,write_own_subscription_contracts,read_all_subscription_contracts&redirect_uri=http://localhost:8081/auth&state=1618947656&grant_options[]=
+
+
+http://localhost:8081/auth?code=88f0c117c38d8c282ea66d273a83f8de&hmac=b62f143c29cf175c26b3dbc2ed6b60886269cf1c0474ba4d21cd8992fe11b758&host=bXlrb3NoZXJjaGVmLm15c2hvcGlmeS5jb20vYWRtaW4&shop=mykosherchef.myshopify.com&state=1618947656&timestamp=1619097299
+{
+    "access_token": "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",
+    "scope": "write_orders,read_customers"
+}
+
+https://apps.boldapps.net/accounts/dashboard/authorize?client_id=CvgWBQYwZWwTqkkaF2wFPP9I5HfaK8ig&scope=read_products,read_price_rulesets,write_price_rulesets,read_price_order_conditions,write_price_order_conditions,read_subscriptions,write_subscriptions,read_subscription_groups,write_subscription_groups,read_shop,
+read_shop_settings,write_shop_settings,read_activity_logs,write_activity_logs,read_webhooks,write_webhooks,read_customers,write_customers&redirect_uri=http://localhost:8000/
+
+http://localhost:8000/?code=EzdaWVNfikVJ6ItIgl8ezRHyNVeWHClGr 
+

@@ -8,7 +8,7 @@ export default {
     {
       http: {
         method: "post",
-        path: "boldWebhookSubscriptionCreated",
+        path: "tagBoldSubscription",
       },
     },
   ],

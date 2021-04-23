@@ -13,11 +13,29 @@ export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<
   APIGatewayProxyResult
 >;
 
+export type TypedEventHandler<S> = Handler<
+  Omit<APIGatewayProxyEvent, "body"> & {
+    body: S;
+  },
+  APIGatewayProxyResult
+>;
+
 export const formatJSONResponse = (response: Record<string, unknown>) => {
   console.log("RESPONSE SENT:", response);
   return {
     statusCode: 200,
     body: JSON.stringify(response),
+  };
+};
+
+export const formatHTMLResponse = (html: string): APIGatewayProxyResult => {
+  console.log("RESPONSE SENT:", html);
+  return {
+    statusCode: 200,
+    body: html,
+    headers: {
+      "Content-Type": "text/html",
+    },
   };
 };
 

@@ -7,8 +7,9 @@ export default {
   events: [
     {
       http: {
-        method: "post",
-        path: "boldWebhookSubscriptionCreated",
+        method: "get",
+        path: "getProducts",
+        cors: true,
       },
     },
   ],

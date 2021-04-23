@@ -1,5 +1,4 @@
 export default {
-  timeout: 30,
   handler: `${__dirname
     .split(process.cwd())[1]
     .substring(1)
@@ -8,7 +7,7 @@ export default {
     {
       http: {
         method: "post",
-        path: "getProducts",
+        path: "updateProducts",
         cors: true,
       },
     },
