@@ -1,14 +1,6 @@
 import type { AWS } from "@serverless/typescript";
 
-import {
-  shopifyWebhook,
-  getProducts,
-  boldWebhookSubscriptionCreated,
-  boldWebhookSubscriptionOrderCreated,
-  showAllProducts,
-  tagBoldSubscription,
-  updateProducts,
-} from "./src/functions";
+import { functions } from "./src/functions";
 
 const serverlessConfiguration: AWS = {
   org: "mathisob",
@@ -34,15 +26,7 @@ const serverlessConfiguration: AWS = {
     },
     lambdaHashingVersion: "20201221",
   },
-  functions: {
-    shopifyWebhook,
-    getProducts,
-    updateProducts,
-    boldWebhookSubscriptionCreated,
-    boldWebhookSubscriptionOrderCreated,
-    showAllProducts,
-    tagBoldSubscription,
-  },
+  functions,
 };
 
 module.exports = serverlessConfiguration;
