@@ -1,0 +1,109 @@
+{
+    "resource": "/boldWebhookSubscriptionCreated",
+    "path": "/boldWebhookSubscriptionCreated",
+    "httpMethod": "POST",
+    "headers": {
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "CA",
+        "Content-Type": "application/json",
+        "Host": "8a99monbk5.execute-api.us-east-1.amazonaws.com",
+        "User-Agent": "GuzzleHttp/6.3.3 curl/7.52.1 PHP/7.2.34",
+        "Via": "1.1 9e25cde80ebbb4b50393d0f96c5d8e2f.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "pWA8hDISUMmPHLoTgmsnONAGgWk3HWnCtoWHv8jk5NvQmrJWzn2S2A==",
+        "X-Amzn-Trace-Id": "Root=1-6082de8b-57704dde7f60e83714d665c0",
+        "X-Bold-Signature": "1ebec79efc080c8fb1971e799b557797bff5b99f1983c2f06fba0babb7b1af02",
+        "X-Forwarded-For": "34.95.16.54, 64.252.182.139",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "CA"
+        ],
+        "Content-Type": [
+            "application/json"
+        ],
+        "Host": [
+            "8a99monbk5.execute-api.us-east-1.amazonaws.com"
+        ],
+        "User-Agent": [
+            "GuzzleHttp/6.3.3 curl/7.52.1 PHP/7.2.34"
+        ],
+        "Via": [
+            "1.1 9e25cde80ebbb4b50393d0f96c5d8e2f.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "pWA8hDISUMmPHLoTgmsnONAGgWk3HWnCtoWHv8jk5NvQmrJWzn2S2A=="
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-6082de8b-57704dde7f60e83714d665c0"
+        ],
+        "X-Bold-Signature": [
+            "1ebec79efc080c8fb1971e799b557797bff5b99f1983c2f06fba0babb7b1af02"
+        ],
+        "X-Forwarded-For": [
+            "34.95.16.54, 64.252.182.139"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "0diqm3",
+        "resourcePath": "/boldWebhookSubscriptionCreated",
+        "httpMethod": "POST",
+        "extendedRequestId": "ePe10GWVIAMFgXw=",
+        "requestTime": "23/Apr/2021:14:49:47 +0000",
+        "path": "/prod/boldWebhookSubscriptionCreated",
+        "accountId": "735902564930",
+        "protocol": "HTTP/1.1",
+        "stage": "prod",
+        "domainPrefix": "8a99monbk5",
+        "requestTimeEpoch": 1619189387554,
+        "requestId": "152d0a81-529a-4c83-b32d-e9277a1c8335",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "sourceIp": "34.95.16.54",
+            "principalOrgId": null,
+            "accessKey": null,
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "GuzzleHttp/6.3.3 curl/7.52.1 PHP/7.2.34",
+            "user": null
+        },
+        "domainName": "8a99monbk5.execute-api.us-east-1.amazonaws.com",
+        "apiId": "8a99monbk5"
+    },
+    "body": "{\"properties_array\": {\"original_rrule\": null,\"adjusted_rrule\": null},\"id\": 239815,\"customer\": null,\"shop_id\": 7921,\"next_order_datetime\": \"2021-04-30T07:00:00Z\",\"next_payment_datetime\": \"2021-04-30T07:00:00Z\",\"next_processing_datetime\": \"2021-04-30T07:00:00Z\",\"subscription_status\": \"active\",\"payment_method_token\": \"gid://shopify/CustomerPaymentMethod/92fe705915e28ad55556e99a59a865da\",\"payment_gateway_public_id\": null,\"payment_rrule\": \"DTSTART;TZID=America/Los_Angeles:20210423T000000\\nRRULE:FREQ=WEEKLY\",\"payment_rrule_text\": \"Weekly\",\"order_rrule\": \"DTSTART;TZID=America/Los_Angeles:20210423T000000\\nRRULE:FREQ=WEEKLY\",\"order_rrule_text\": \"Weekly\",\"last_payment_datetime\": null,\"last_order_datetime\": null,\"last_processed_datetime\": null,\"current_retries\": 0,\"charged_currency\": \"USD\",\"base_to_charged_exchange_rate\": 1,\"base_currency\": \"USD\",\"line_items\": [{\"id\": 266362,\"subscription_id\": 239815,\"platform_id\": \"gid://shopify/SubscriptionLine/93c8406d-c29a-4ad9-a399-a1d0d6989ded\",\"platform_product_id\": \"4690768822359\",\"platform_variant_id\": \"32497506877527\",\"subscription_group_id\": 13894,\"subscription_group_billing_rules_id\": 28097,\"title\": \"Six Meals Pack\",\"product_name\": \"Six Meals Pack\",\"variant_name\": \"Default Title\",\"sku\": null,\"url\": \"https://dailycious.com/products/six-meals-pack\",\"image\": null,\"quantity\": 1,\"price\": 7500,\"price_charged\": 7500,\"discounted_price\": 7500,\"discounted_price_charged\": 7500,\"full_price\": null,\"full_price_charged\": null,\"requires_shipping\": true,\"grams\": 0,\"weight\": 0,\"weight_unit\": \"lb\",\"taxable\": true,\"discounts\": [],\"prepaid_metadata\": null,\"prepaid_orders\": [],\"created_at\": \"2021-04-23T16:59:46Z\",\"updated_at\": \"2021-04-23T16:59:47Z\"}],\"shipping_lines\": null,\"billing_address\": {\"shop_identifier\": \"27393687639\",\"platform_id\": 6287874883671,\"platform_customer_id\": 5089068384343,\"platform_type\": \"shopify\",\"first_name\": \"patrick\",\"last_name\": \"chemoul\",\"company\": \"\",\"phone\": \"\",\"street1\": \"10 Interstate 10\",\"street2\": \"APT#203\",\"city\": \"Los Angeles\",\"province\": \"California\",\"province_code\": \"CA\",\"country\": \"United States\",\"country_code\": \"US\",\"zip\": \"90036\",\"is_default\": true,\"created_at\": \"2021-04-22T15:19:30Z\",\"updated_at\": \"2021-04-23T16:59:31Z\",\"id\": 123591304,\"customer_id\": 99923859},\"shipping_address\": {\"shop_identifier\": \"27393687639\",\"platform_id\": 6287874883671,\"platform_customer_id\": 5089068384343,\"platform_type\": \"shopify\",\"first_name\": \"patrick\",\"last_name\": \"chemoul\",\"company\": \"\",\"phone\": \"\",\"street1\": \"10 Interstate 10\",\"street2\": \"APT#203\",\"city\": \"Los Angeles\",\"province\": \"California\",\"province_code\": \"CA\",\"country\": \"United States\",\"country_code\": \"US\",\"zip\": \"90036\",\"is_default\": true,\"created_at\": \"2021-04-22T15:19:30Z\",\"updated_at\": \"2021-04-23T16:59:31Z\",\"id\": 123591304,\"customer_id\": 99923859},\"idempotency_key\": \"gid://shopify/SubscriptionContract/1135607895\",\"created_at\": \"2021-04-23T16:59:46Z\",\"updated_at\": \"2021-04-23T16:59:46Z\",\"percent_discount\": null,\"discount_code\": \"\",\"note\": null,\"contract\": null,\"customer_id\": 99923859,\"billing_address_id\": 123591304,\"shipping_address_id\": 123591304,\"shop_identifier\": \"27393687639\"}",
+    "isBase64Encoded": false
+}

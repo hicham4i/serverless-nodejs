@@ -11,6 +11,8 @@ import {
 } from "./src/functions";
 
 const serverlessConfiguration: AWS = {
+  org: "mathisob",
+  app: "dailycious",
   service: "mykosherchef",
   frameworkVersion: "2",
   custom: {

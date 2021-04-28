@@ -1,555 +1,727 @@
-<link rel="stylesheet" href="https://unpkg.com/tailwindcss@1.2.0/dist/tailwind.min.css">
-    <div x-data="alpineInstance()" x-init="setDate()">
-        <div class="myheader">
-            <div class="mylogo">
-                <a href="/"> 
-                    <img src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191" alt="logo" />
-                </a>
-            </div>
-            <div class="myheader-2">
-                <div><a href="/pages/plan">Plan</a></div>
-                <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-                <div >Day</div>
-                <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-                <div>Meals</div>
-                <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-                <div style="font-weight: bolder;">Cart</div>
-            </div>
-            <div @click="show_support()" style="color:#111409" class="support">
-                <i class="fa fa-question-circle" aria-hidden="true"></i>
-                Customer support</div>
-        </div>
-        <div class="myheader-mob">
-            <div><a href="/pages/plan"><i style="position:unset" class="fas fa-chevron-left"></i></a></div>
-            <div style="color:#111409">Choose a Delivery Day</div>
-            <div style="color:#111409">
-                <i class="fa fa-question-circle" aria-hidden="true"></i>
-            </div>
-        </div>
-        <div class="mycontainer">
-            <div class="first_part">
-                <h2 id="titleplan">CHOOSE A DELIVERY DAY</h2>
-                <div><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
-                <div id="datepicker">
-                    <div>
-                        <ul style="list-style: none;">
-                            <template x-for="date in dates" :key="date">
-                                <li  x-ref="date" x-on:selectchange.window="$refs.date.focus()" @click="selectDate(date)"  :class="{ 'date-selected': date.selected }" class="date" >
-                                    <span class="myli" :class="{'select':date.selected}"> </span>
-                                    <span  class="myli" style ="font-weight: 600;"x-text="date.day"></span>
-                                    <span class="myli">,</span>
-                                    <span class="myli" x-text="date.month"></span>
-                                    <span class="myli" x-text="date.date"></span></li>
-                            </template>
-                        </ul>
-                    </div>
-                </div>
-                <div id="scroll">Scroll for more delivery dates</div>
-                <div><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
-                <button @click="saveDate()" id="next">NEXT</button>
-                <div id="myinfo">First Delivery Date:
-                    <span x-text="dateSelected.day"></span>,
-                    <span x-text="dateSelected.month"></span>
-                    <span x-text="dateSelected.date"></span></div>
-            </div>
-            <div class="faq_part">
-                <h2 id="common">COMMON QUESTIONS</h2>
-                <div>
-                    <ul>
-    
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Should I v3? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
-                                        security and usability for v2.</p>
-                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
-                                        their traffic, and for use cases in which it is not appropriate to show a
-                                        challenge to the user.</p>
-                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
-                                        higher-friction challenge, whereas more common actions like sign-in, searches,
-                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
-                                        reCAPTCHA v3 developer guide.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Shoudsdds fsffsfs? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
-                                        security and usability for v2.</p>
-                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
-                                        their traffic, and for use cases in which it is not appropriate to show a
-                                        challenge to the user.</p>
-                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
-                                        higher-friction challenge, whereas more common actions like sign-in, searches,
-                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
-                                        reCAPTCHA v3 developer guide.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Should ot going away? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
-                                        security and usability for v2.</p>
-                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
-                                        their traffic, and for use cases in which it is not appropriate to show a
-                                        challenge to the user.</p>
-                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
-                                        higher-friction challenge, whereas more common actions like sign-in, searches,
-                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
-                                        reCAPTCHA v3 developer guide.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Should I use reCAPTCHA v2 or v3? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>reCAPTCHA v2 is not going away! We will continue to fully support and improve
-                                        security and usability for v2.</p>
-                                    <p>reCAPTCHA v3 is intended for power users, site owners that want more data about
-                                        their traffic, and for use cases in which it is not appropriate to show a
-                                        challenge to the user.</p>
-                                    <p>For example, a registration page might still use reCAPTCHA v2 for a
-                                        higher-friction challenge, whereas more common actions like sign-in, searches,
-                                        comments, or voting might use reCAPTCHA v3. To see more details, see the
-                                        reCAPTCHA v3 developer guide.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-    
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 2 ? selected = 2 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        I'd like to run automated tests with reCAPTCHA. What should I do? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container2"
-                                x-bind:style="selected == 2 ? 'max-height: ' + $refs.container2.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>For reCAPTCHA v3, create a separate key for testing environments. Scores may not
-                                        be accurate as reCAPTCHA v3 relies on seeing real traffic.</p>
-                                    <p>For reCAPTCHA v2, use the following test keys. You will always get No CAPTCHA and
-                                        all verification requests will pass.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-    
-    
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 3 ? selected = 3 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Can I run reCAPTCHA v2 and v3 on the same page? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container3"
-                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>To do this, load the v3 site key as documented, and then explicitly render v2
-                                        using grecaptcha.render.</p>
-                                    <p>You are allowed to hide the badge as long as you include the reCAPTCHA branding
-                                        visibly in the user flow. Please include the following text:</p>
-                                    <p>Yes, please use "www.recaptcha.net" in your code in circumstances when
-                                        "www.google.com" is not accessible.</p>
-                                    <ul>
-                                        <li>First, replace &lt;script src="https://www.google.com/recaptcha/api.js"
-                                            async defer&gt;&lt;/script&gt; with &lt;script
-                                            src="https://www.recaptcha.net/recaptcha/api.js" async
-                                            defer&gt;&lt;/script&gt;</li>
-                                        <li>After that, apply the same to everywhere else that uses
-                                            "www.google.com/recaptcha/" on your site.</li>
-                                    </ul>
-                                    <p>After that, apply the same to everywhere else that uses
-                                        "www.google.com/recaptcha/" on your site.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-    
-                    </ul>
-                </div>
-    
-    
-            </div>
-        </div>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tailwindcss@1.2.0/dist/tailwind.min.css"
+/>
+<div x-data="alpineInstance()" x-init="setDate()">
+  <div class="myheader">
+    <div class="mylogo">
+      <a href="/">
+        <img
+          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191"
+          alt="logo"
+        />
+      </a>
     </div>
-    <style>
-          #gorgias-chat-container {
-        display: none
-    }
-    .support{
-        cursor: pointer;
-    }
-            /*remove minimal template css*/
-        .myli{
-            padding:2px;
-            padding-top: 3%;
-        }
-            .select{
-                background-color: #111409;
-                width: 8px;
-                height: 100%;
-                margin-right:10px;
-            }
-    .wrapper{
-        max-width: unset;
-        margin:unset;
-        padding:unset;
-    }
-        .button_faq {
-        border: unset;
-        border-radius: unset;
-        border-bottom: solid 1px #8080805e;
-        padding-left: unset;
-    }
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        line-height: 5vh;
+      "
+    >
+      <div id="myline">
+        <span class="mypoint">&nbsp;</span>
+        <span class="mypoint" style="background-color: #b5b35d"></span>
+        <span class="mypoint"></span>
+        <span class="mypoint"></span>
+      </div>
+      <div class="myheader-2">
+        <div><a href="/pages/plan">Plan</a></div>
 
-    .button_faq:hover {
-        color: #111409;
-    }
+        <div style="font-weight: bolder; color: #b5b35d">Day</div>
 
-    #common {
+        <div>Meals</div>
+
+        <div>Cart</div>
+      </div>
+    </div>
+    <div @click="show_support()" style="color: #3a6351" class="support">
+      <i class="fa fa-question-circle" aria-hidden="true"></i>
+      Customer support
+    </div>
+  </div>
+  <div class="myheader-mob">
+    <div>
+      <a href="/pages/plan"
+        ><i style="position: unset" class="fas fa-chevron-left"></i
+      ></a>
+    </div>
+    <div style="color: #3a6351">Choose a Delivery Day</div>
+    <div @click="show_support()" style="color: #3a6351">
+      <i class="fa fa-question-circle" aria-hidden="true"></i>
+    </div>
+  </div>
+  <div class="mycontainer">
+    <div class="first_part">
+      <h2 id="titleplan">CHOOSE A DELIVERY DAY</h2>
+      <div><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
+      <div id="datepicker">
+        <div>
+          <ul style="list-style: none">
+            <template x-for="date in dates" :key="date">
+              <li
+                x-ref="date"
+                x-on:selectchange.window="$refs.date.focus()"
+                @click="selectDate(date)"
+                :class="{ 'date-selected': date.selected }"
+                class="date"
+              >
+                <span class="myli" :class="{'select':date.selected}"> </span>
+                <span
+                  class="myli"
+                  style="font-weight: 600"
+                  x-text="date.day"
+                ></span>
+                <span class="myli">,</span>
+                <span class="myli" x-text="date.month"></span>
+                <span class="myli" x-text="date.date"></span>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+      <div id="scroll">Scroll for more delivery dates</div>
+      <div><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+      <button @click="saveDate()" id="next">NEXT</button>
+      <div id="myinfo">
+        First Delivery Date: <span x-text="dateSelected.day"></span>,
+        <span x-text="dateSelected.month"></span>
+        <span x-text="dateSelected.date"></span>
+      </div>
+    </div>
+    <div class="faq_part">
+      <h2 id="common">COMMON QUESTIONS</h2>
+      <div id="flexfaq">
+        <div class="faq_collumn">
+          <button @click="openFaq(0)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  
+            How long can you keep Dailycious meals in the fridge?
+          </button>
+          <div x-show="activeFaq[0]" class="panel">
+            <p>
+              Our meals are made fresh, and we don't use any chemical
+              preservatives or artificial ingredients, so we recommend you store
+              the meals in the fridge for no more than 7 days.
+            </p>
+          </div>
+
+          <button @click="openFaq(1)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            Can I freeze my meals?
+          </button>
+          <div x-show="activeFaq[1]" class="panel">
+            <p>
+              We always recommend you enjoy your meals fresh, but you can place
+              them in the freezer for up to 7 days after receipt and keep them
+              frozen for up to 3 months.
+            </p>
+          </div>
+
+          <button @click="openFaq(2)" class="accordion">
+            <i class="fas fa-angle-down"></i
+            ><i class="fas fa-angle-up"></i>  How do I heat up my meals?
+          </button>
+          <div x-show="activeFaq[2]" class="panel">
+            <p>
+              We do all the work so you have to do is reheat your meal in the
+              microwave. On the back of each meal, you’ll find an easy
+              step-by-step description for reheating the meal. Typically, the
+              heating time is 3 minutes in the microwave or 20 minutes at 250°F
+              in the oven.
+            </p>
+          </div>
+          <button @click="openFaq(3)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            Where can I find the ingredients list and nutritional information
+            for your meals?
+          </button>
+          <div x-show="activeFaq[3]" class="panel">
+            <p>
+              Very easy! To find out what ingredients we use, simply click on
+              the desired meal on our website, while the nutritional facts can
+              be found on the back label of your meal.
+            </p>
+          </div>
+
+          <button @click="openFaq(4)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            How long does it take for Dailycious meals to deliver?
+          </button>
+          <div x-show="activeFaq[4]" class="panel">
+            <p>
+              Depending where you are located, the delivery time will vary.
+              However, it will be shipped in a way that keeps iit as fresh as
+              possible.
+            </p>
+          </div>
+        </div>
+        <div class="faq_collumn">
+          <button @click="openFaq(5)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            How many people do Dailycious plans feed?
+          </button>
+          <div x-show="activeFaq[5]" class="panel">
+            <p>
+              Usually, each meal is an individual portion. You can choose to eat
+              your meals for just lunch/dinner or both. Adjust the plan based on
+              how many meals per day you wish to have.
+            </p>
+          </div>
+
+          <button @click="openFaq(6)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            What states does Dailycious deliver to?
+          </button>
+          <div x-show="activeFaq[6]" class="panel">
+            <p>
+              Dailycious delivers to California, Arizona, Nevada, Oregon,
+              Washington, Utah, Colorado, Texas, Wyoming, and Montana.
+            </p>
+          </div>
+
+          <button @click="openFaq(7)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            Can I change my menu options each week after placing the first
+            order?
+          </button>
+          <div x-show="activeFaq[7]" class="panel">
+            <p>
+              Absolutely! We offer a wide variety of meals and would love for
+              you to try them all.
+            </p>
+          </div>
+
+          <button @click="openFaq(8)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            Why is Dailycious better than other meal delivery options?
+          </button>
+          <div x-show="activeFaq[8]" class="panel">
+            <p>
+              Dailycious provides high quality, healthy, chef-prepared meals..
+            </p>
+          </div>
+
+          <button @click="openFaq(9)" class="accordion">
+            <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
+            Can I skip weeks if I sign up for a weekly subscription?
+          </button>
+          <div x-show="activeFaq[9]" class="panel">
+            <p>Yes, you can skip as many weeks as you’d like!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  #flexfaq {
+    display: flex;
+    justify-content: space-between;
+    width: 90vw;
+    margin: auto;
+  }
+  .accordion {
+    background-color: #e4eadf;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 12px;
+    transition: 0.4s;
+    margin-bottom: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    padding-right: unset;
+  }
+
+  .accordion:hover,
+  .accordion:focus {
+    background-color: #3a6351;
+    color: white;
+  }
+
+  .accordion:focus .fa-angle-down {
+    color: white;
+    display: none;
+  }
+  .accordion:focus .fa-angle-up {
+    color: white;
+    background-color: #3a6351;
+    display: inline;
+  }
+
+  .fa-angle-up {
+    display: none;
+  }
+
+  .panel {
+    padding: 0 18px 18px 18px;
+    display: block;
+    background-color: white;
+    overflow: hidden;
+  }
+  .faq_collumn {
+    width: 49%;
+  }
+
+  .mypoint {
+    width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 10px;
+  }
+  #myline {
+    height: 1px;
+    width: 30vw;
+    display: flex;
+    justify-content: space-between;
+    background-color: black;
+    align-items: center;
+  }
+  #gorgias-chat-container {
+    display: none;
+  }
+  .support {
+    cursor: pointer;
+  }
+  /*remove minimal template css*/
+  .myli {
+    padding: 2px;
+    padding-top: 3%;
+  }
+  .select {
+    background-color: #3a6351;
+    width: 8px;
+    height: 100%;
+    margin-right: 10px;
+  }
+  .wrapper {
+    max-width: unset;
+    margin: unset;
+    padding: unset;
+  }
+  .button_faq {
+    border: unset;
+    border-radius: unset;
+    border-bottom: solid 1px #8080805e;
+    padding-left: unset;
+  }
+
+  .button_faq:hover {
+    color: #3a6351;
+  }
+
+  #common {
     text-align: center;
-        padding-bottom: 4vh;
-        font-size: 20px;
-        font-weight: bolder;
-        font-family: Helvetica;
+    padding-bottom: 4vh;
+    font-size: 20px;
+    font-weight: bolder;
+    font-family: Helvetica;
+  }
+  .faq_part {
+    margin: 2%;
+    padding: 2%;
+    border: none;
+  }
+  .max-h-0 {
+    max-height: 0;
+  }
+  #myinfo {
+    font-size: 12px;
+    padding-top: 2vh;
+  }
+  #next {
+    background-color: #3a6351;
+    color: white;
+    width: 30%;
+    border-radius: 10px;
+    margin-top: 3vh;
+    height: 4vh;
+  }
+  #scroll {
+    padding-top: 3vh;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  #titleplan {
+    font-weight: 600;
+    letter-spacing: 0.166rem;
+    padding-bottom: 2vh;
+    font-family: "HELVETICA";
+  }
+
+  .date {
+    border: 1px solid #dee2e6;
+    width: 30vw;
+    height: 50px;
+    font-size: 16px;
+    padding-left: 15px;
+    cursor: pointer;
+    display: flex;
+  }
+
+  .date:hover {
+    margin-left: 5px;
+  }
+
+  .date:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(222 14 14 / 45%);
+  }
+
+  .date-selected {
+    background-color: #8080801f;
+    margin-left: 5px;
+    padding-left: unset;
+  }
+  #datepicker {
+    color: black;
+    padding-top: 5vh;
+    overflow: auto;
+    max-height: 300px;
+  }
+  .first_part {
+    padding-top: 2vh;
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mycontainer {
+    padding-top: 60px;
+    width: 100vw;
+    font-family: Helvetica !important;
+  }
+
+  .myheader-mob {
+    display: none;
+  }
+
+  .header-arrow-nok {
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 12px;
+    color: #8080807d;
+  }
+
+  .mylogo {
+    width: 12%;
+    position: relative;
+    top: 17px;
+    height: 35px;
+    max-width: 200px;
+  }
+
+  .myheader {
+    display: flex;
+    position: fixed;
+    top: 0;
+    background-color: white;
+    justify-content: space-between;
+    border-bottom: 1px solid #dee2e6;
+    line-height: 60px;
+    height: 60px;
+    width: 100vw;
+    font-family: Helvetica;
+    padding-left: 3vw;
+    padding-right: 1vw;
+    z-index: 9999;
+  }
+
+  .reading-width {
+    margin-left: unset;
+    margin-right: unset;
+  }
+
+  .content-main {
+    padding: unset;
+  }
+
+  .container {
+    margin-left: unset;
+    margin-right: unset;
+    max-width: unset;
+    width: unset;
+  }
+
+  .myheader-2 {
+    display: flex;
+    justify-content: space-between;
+    width: 32vw;
+    position: relative;
+    right: 11px;
+    height: 50%;
+    line-height: 30px;
+  }
+
+  #shopify-section-header {
+    display: none;
+  }
+
+  #shopify-section-announcement {
+    display: none;
+  }
+
+  .feature-page-title {
+    display: none;
+  }
+
+  #shopify-section-footer {
+    display: none;
+  }
+
+  @media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+
+    #flexfaq {
+      flex-direction: column;
+      padding-left: 5%;
     }
-          .faq_part {
-        padding-left: 10vw;
-        padding-right: 10vw;
-        margin-top: 5vh;
-        margin-bottom: 5vh;
+    .faq_collumn {
+      width: 94%;
     }
-    .max-h-0 {
-        max-height: 0;
+    .accordion {
+      padding: 10px;
     }
-        #myinfo{
-            font-size:12px;
-            padding-top:2vh;
-        }
-        #next{
-            background-color: #111409;
-        color: white;
-        width: 30%;
-        border-radius: 10px;
-        margin-top: 3vh;
-        }
-        #scroll{
-            padding-top:3vh;
-             font-size: 12px;
-             letter-spacing: 1px;
-        }
-        #titleplan{
-            font-weight: 600;    letter-spacing: .166rem;
-            padding-bottom: 2vh;
-            font-family: 'HELVETICA';
-        }
-    
-        .date{
-            border: 1px solid #dee2e6;
-            width: 30vw;
-            height: 50px;
-            font-size: 16px;
-            padding-left: 15px;
-            cursor: pointer;
-            display: flex;
-        }
-        
-        .date:hover {
-            margin-left: 5px;
-        }
 
-        .date:focus {
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgb(222 14 14 / 45%);
+    .date {
+      width: 90vw;
+    }
+
+    #next {
+      width: 100%;
+    }
+
+    .first_part {
+      padding: 5vw;
+    }
+
+    #titleplan {
+      display: none;
+    }
+
+    .mycontainer {
+      padding-top: 30px;
+      font-family: Helvetica;
+    }
+
+    .myheader {
+      display: none;
+    }
+
+    .myheader-mob {
+      position: fixed;
+      top: 0;
+      width: 100vw;
+      padding-left: 3vw;
+      padding-right: 3vw;
+      display: flex;
+      justify-content: space-between;
+      line-height: 44px;
+      height: 44px;
+      font-size: 19px;
+      font-family: Helvetica;
+      font-weight: bolder;
+      border-bottom: 1px solid #dee2e6;
+      background-color: white;
+    }
+
+    #descplan {
+      text-align: center;
+      margin-bottom: 2vh;
+    }
+  }
+</style>
+<script>
+  const day = new Date();
+  let plan = sessionStorage.getItem("plan");
+  const urlParams = new URLSearchParams(window.location.search);
+  const plan2 = urlParams.get("plan");
+  if (plan2) {
+    sessionStorage.setItem("plan", plan2);
+    plan = plan2;
+  }
+  console.log(day);
+
+  dateSelected = Object;
+
+  let zipcode = localStorage.getItem("zipcode");
+  if (!zipcode) {
+    window.location.href = "/pages/zipcode";
+  }
+  if (!plan) {
+    window.location.href = "/pages/plan";
+  }
+
+  function alpineInstance() {
+    return {
+      zipcode,
+      zipcodes: {},
+      daysToDelivery: 2,
+      activeFaq: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ],
+      fecthData() {
+        return fetch(
+          "https://cdn.shopify.com/s/files/1/0273/9368/7639/files/zipcodes_d4afd9a8-abce-4c46-a185-821416e43092.json?v=1619448719"
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            this.zipcodes = data;
+            this.daysToDelivery = this.zipcodes[this.zipcode];
+            console.log("days to delivery", this.daysToDelivery);
+            return this.daysToDelivery;
+          });
+      },
+      openFaq(i) {
+        const state = this.activeFaq[i];
+        this.activeFaq = this.activeFaq.map((active) => false);
+        this.activeFaq[i] = !state;
+      },
+      show_support() {
+        console.log("chat");
+        const chat = document.getElementById("gorgias-chat-container");
+        if (chat) {
+          chat.style.display = "block";
         }
-    
-        .date-selected {
-            background-color: #8080801f;
-            margin-left: 5px;
-            padding-left:unset;
-        }
-        #datepicker{
-            color:black;
-            padding-top: 5vh;
-            overflow: auto;
-            max-height: 300px;
-        }
-        .first_part {
-            padding-top: 2vh;
-            font-size: 1.25rem;
-            font-weight: 300;
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-    
-    
-        }
-    
-        .mycontainer {
-            padding-top: 60px;
-            width: 100vw;
-            height: 100vh;
-            font-family: Helvetica!important;
-    
-    
-        }
-    
-        .myheader-mob {
-            display: none;
-        }
-    
-    
-        .header-arrow-nok {
-            padding-left: 15px;
-            padding-right: 15px;
-            font-size: 12px;
-            color: #8080807d;
-        }
-    
-        .mylogo {
-            width: 12%;
-            position: relative;
-            top: 17px;
-            height: 35px;
-            max-width: 200px;
-        }
-    
-        .myheader {
-            display: flex;
-            position: fixed;
-            top: 0;
-            background-color: white;
-            justify-content: space-between;
-            border-bottom: 1px solid #dee2e6;
-            line-height: 60px;
-            height: 60px;
-            width: 100vw;
-            font-family: Helvetica;
-            padding-left: 3vw;
-            padding-right: 1vw;
-            z-index: 9999;
-        }
-    
-        .reading-width {
-            margin-left: unset;
-            margin-right: unset;
-        }
-    
-        .content-main {
-            padding: unset;
-        }
-    
-        .container {
-            margin-left: unset;
-            margin-right: unset;
-            max-width: unset;
-            width: unset;
-        }
-    
-        .myheader-2 {
-            display: flex;
-        }
-    
-        #shopify-section-header {
-            display: none;
-        }
-    
-        #shopify-section-announcement {
-            display: none;
-        }
-    
-        .feature-page-title {
-            display: none;
-        }
-    
-        #shopify-section-footer {
-            display: none;
-        }
-    
-        @media only screen and (max-width: 768px) {
-    
-            /* For mobile phones: */
-   
-            .faq_part {
-            padding-right: 5vw;
-            padding-left: 5vw;
-        }
-            .date{
-                width: 90vw;
+      },
+      saveDate() {
+        sessionStorage.setItem("date", JSON.stringify(this.dateSelected));
+        window.location.href = "/collections/menu-individual";
+        console.log(this.dateSelected);
+      },
+      setDate() {
+        console.log(day);
+        this.fecthData().then((daysToDelivery) => {
+          let options = { weekday: "long" };
+          let options2 = { month: "long" };
+          for (let x = 0; x < 20; x++) {
+            console.log(day);
+            const test = this.isDateAllowed(day, daysToDelivery);
+            console.log(test);
+            if (test) {
+              myday = new Intl.DateTimeFormat("en-US", options).format(day);
+              mymonth = new Intl.DateTimeFormat("en-US", options2).format(day);
+              date = {
+                day: myday,
+                month: mymonth,
+                date: day.getDate(),
+                selected: false,
+              };
+              this.dates.push(date);
             }
 
-            #next{
-                width: 100%;
-            }
-            
-            .first_part {
-                padding: 5vw;
-            }
-    
-            #titleplan {
-                display: none;
-            }
-    
-            .mycontainer {
-                padding-top: 30px;
-                font-family: Helvetica;
-            }
-    
-            .myheader {
-                display: none;
-            }
-    
-            .myheader-mob {
-                position: fixed;
-                top: 0;
-                width: 100vw;
-                padding-left: 3vw;
-                padding-right: 3vw;
-                display: flex;
-                justify-content: space-between;
-                line-height: 44px;
-                height: 44px;
-                font-size: 19px;
-                font-family: Helvetica;
-                font-weight: bolder;
-                border-bottom: 1px solid #dee2e6;
-                background-color: white;
-            }
-    
-            #descplan {
-                text-align: center;
-                margin-bottom: 2vh;
-            }
-    
+            day.setDate(day.getDate() + 1);
+          }
+          this.dates[0].selected = true;
+          this.dateSelected = this.dates[0];
+        });
+      },
+      selectDate(date) {
+        for (const item in this.dates) {
+          this.dates[item].selected = false;
         }
-    </style>
-    <script>
-
-        const dateOfToday = new Date();
-         dateSelected = Object;
-        let plan = sessionStorage.getItem('plan') ;
-        if (!plan) {
-            window.location.href="/pages/plan"
+        date.selected = true;
+        this.dateSelected = date;
+      },
+      isDateAllowed(date, daysToDelivery) {
+        if (
+          date.getUTCDay() === 0 ||
+          date.getUTCDay() === 6 ||
+          date.getUTCDay() === 1
+        ) {
+          return false;
         }
-    
-        function alpineInstance() {
-            return {
-                show_support() {
-                console.log("chat");
-                const chat = document.getElementById("gorgias-chat-container");
-                if (chat) {
-
-                    chat.style.display = "block";
-                }
-            },
-                saveDate() {
-                    sessionStorage.setItem('date', JSON.stringify(this.dateSelected));
-                    window.location.href="/collections/menu-individual";
-                    console.log(this.dateSelected);
-                },
-                setDate() {
-                    let options = { weekday: 'long'};
-                    let options2 = {month: 'long'};
-
-                    dateOfToday.setDate(dateOfToday.getDate() + 4);
-                    
-                    
-
-                    for (let x = 0; x < 11; x++) {
-                        dateOfToday.setDate(dateOfToday.getDate() + 1);
-                        if (dateOfToday.getDay() == 6) 
-                            dateOfToday.setDate(dateOfToday.getDate() + 2);
-                        if (dateOfToday.getDay() == 0) 
-                            dateOfToday.setDate(dateOfToday.getDate() + 1);
-                        myday = new Intl.DateTimeFormat('en-US', options).format(dateOfToday);
-                        mymonth = new Intl.DateTimeFormat('en-US', options2).format(dateOfToday);
-                        date = (
-                        {
-                            day: myday,
-                            month: mymonth,
-                            date: dateOfToday.getDate(),
-                            selected: false
-                        });
-                        if (x == 0)
-                            this.dateSelected = date;
-                        this.dates.push(date);
-                    }
-                },
-                selectDate(date) {
-                    for (const item in this.dates) {
-                        this.dates[item].selected = false;
-                    }
-                    date.selected = true;
-                    this.dateSelected = date;
-                },
-                dates: [],
+        const today = new Date();
+        const todayDay = today.getUTCDay();
+        const before15 = today.getUTCHours() <= 22;
+        const dayUntilDelivery = Math.round(
+          (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        console.log(todayDay, before15, dayUntilDelivery);
+        if (daysToDelivery === 1) {
+          if (todayDay === 0) {
+            if (before15) {
+              return dayUntilDelivery >= 3;
             }
+            return dayUntilDelivery >= 4;
+          }
+          if (todayDay === 1) {
+            if (before15) {
+              return dayUntilDelivery >= 3;
+            }
+            return dayUntilDelivery >= 4;
+          }
+          if (todayDay === 2) {
+            if (before15) {
+              return dayUntilDelivery >= 3;
+            }
+            return dayUntilDelivery >= 7;
+          }
+          if (todayDay === 3) {
+            return dayUntilDelivery >= 6;
+          }
+          if (todayDay === 4) {
+            return dayUntilDelivery >= 5;
+          }
+          if (todayDay === 5) {
+            return dayUntilDelivery >= 4;
+          }
+          if (todayDay === 6) {
+            return dayUntilDelivery >= 3;
+          }
         }
-    </script>
+        if (daysToDelivery === 2) {
+          if (date.getUTCDay() === 2) {
+            return false;
+          }
+          if (todayDay === 0) {
+            if (before15) {
+              return dayUntilDelivery >= 4;
+            }
+            return dayUntilDelivery >= 5;
+          }
+          if (todayDay === 1) {
+            if (before15) {
+              return dayUntilDelivery >= 4;
+            }
+            return dayUntilDelivery >= 9;
+          }
+          if (todayDay === 2) {
+            return dayUntilDelivery >= 8;
+          }
+          if (todayDay === 3) {
+            return dayUntilDelivery >= 7;
+          }
+          if (todayDay === 4) {
+            return dayUntilDelivery >= 6;
+          }
+          if (todayDay === 5) {
+            return dayUntilDelivery >= 5;
+          }
+          if (todayDay === 6) {
+            return dayUntilDelivery >= 4;
+          }
+        }
+      },
+      dates: [],
+    };
+  }
+</script>

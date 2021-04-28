@@ -6,8 +6,8 @@ import { middyfy } from "@libs/lambda";
 import { WebhookSubscriptionOrderCreatedEvent, BoldAPI } from "@libs/boldApi";
 import { env } from "../../env";
 // import schema from "./schema";
-import Shopify from "shopify-api-node";
-import { Note, months } from "../types/types";
+import { Note } from "../types/types";
+import { updateOrder } from "@libs/shopifyApi";
 
 const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
   event
@@ -17,55 +17,34 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
   const shopIdentifier = event.body.shop_identifier;
   const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
   const subscriptionId = event.body.subscription_id;
-  //const res = await boldApi.getSubscription(subscriptionId);
-  console.log(event.body);
-  const order = event.body.order;
-  const lineItems = order.line_items;
-  const filteredLineItems = lineItems.filter(
-    (lineItem) => !packIds.includes(lineItem.platform_variant_id)
-  );
-  console.log(filteredLineItems);
-  if (filteredLineItems.length > 0) {
-    const shopifyOrderId = parseInt(order.platform_id, 10);
-    console.log("first order");
-    const note = await getShopifyOrderNote(shopifyOrderId);
-    const parsedNote: Note = JSON.parse(note);
-    const ids = parsedNote.ids;
-    const date = parsedNote.date;
-    const dateObject = new Date();
-    dateObject.setMonth(months[date.month]);
-    dateObject.setDate(date.date - 5); // time when the order cannot be changed anymore
-    const isoString = dateObject.toISOString();
-    const res1 = await boldApi.updateSubscriptionNextOrderDate(
-      subscriptionId,
-      isoString.split(".")[0] + "Z"
-    );
-    console.log(res1);
-    const res = await boldApi.partialUpdateSubscription(subscriptionId, {
-      note: JSON.stringify({ ids: ids }),
+  const subscription = await boldApi.subscriptions.get(subscriptionId);
+  console.log(subscription);
+  if (!subscription.note) {
+    return formatJSONResponse({
+      message: "OK",
+      event,
     });
-    console.log(res);
   }
+  let parsednote: Note = JSON.parse(subscription.note as string);
+  if (!parsednote) {
+    return formatJSONResponse({
+      message: "OK",
+      event,
+    });
+  }
+  const ids = parsednote.ids;
+  const order = event.body.order;
+  const zip = event.body.order.shipping_addresses[0].postal_code;
+  const orderId = parseInt(order.platform_id, 10);
+  console.log(event.body);
+  const orderDate = new Date(order.placed_at);
+  orderDate.setDate(orderDate.getDate() + 5);
+  // const order = event.body.order;
+  // const lineItems = order.line_items;
+  await updateOrder(zip, orderDate, orderId, ids);
   return formatJSONResponse({
     message: "ok",
   });
 };
 
 export const main = middyfy(handler);
-const packIds = [
-  "39269021220951",
-  "32497506877527",
-  "39269025153111",
-  "39269026431063",
-];
-
-const getShopifyOrderNote = async (orderId: number) => {
-  const shopify = new Shopify({
-    shopName: "mykosherchef",
-    apiKey: env.SHOPIFY_API_KEY,
-    password: env.SHOPIFY_API_SECRET,
-  });
-  const res = await shopify.order.get(orderId);
-  console.log(res);
-  return res.note;
-};

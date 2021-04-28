@@ -5,7 +5,6 @@ export type Note = {
     month: string;
     date: number;
   };
-  zipcode: string;
 };
 
 export const months = {

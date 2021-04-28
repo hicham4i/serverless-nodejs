@@ -7,54 +7,68 @@
                 <img src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191" alt="logo" />
             </a>
         </div>
-        <div class="myheader-2">
-            <div style="font-weight: bolder;">Plan</div>
-            <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-            <div>Day</div>
-            <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-            <div>Meals</div>
-            <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-            <div>Cart</div>
+        <div style="display: flex;flex-direction: column;justify-content: flex-end;line-height: 5vh;">
+            <div id="myline">
+                <span class="mypoint" style="background-color:#b5b35d">&nbsp;</span>
+                <span class="mypoint"></span>
+                <span class="mypoint"></span>
+                <span class="mypoint"></span>
+            </div>
+            <div class="myheader-2">
+                <div style="font-weight: bolder;color:#b5b35d">Plan</div>
+                
+                <div>Day</div>
+               
+                <div>Meals</div>
+                
+                <div>Cart</div>
+            </div>
         </div>
-        <div @click="show_support()" style="color:#111409" class="support">
+        
+        <div @click="show_support()" style="color:#3A6351" class="support">
             <i class="fa fa-question-circle" aria-hidden="true"></i>
             Customer support</div>
     </div>
     <div class="myheader-mob">
         <div><a href="/"><i style="position:unset" class="fas fa-chevron-left"></i></a></div>
-        <div style="color:#111409">Choose a Plan</div>
-        <div style="color:#111409">
+        <div style="color:#3A6351">Choose a Plan</div>
+        <div style="color:#3A6351">
             <i class="fa fa-question-circle" aria-hidden="true"></i>
         </div>
     </div>
     <div class="mycontainer">
         <div class="first_part">
-            <h2 id="titleplan" style="font-weight: 600;    letter-spacing: .166rem;">CHOOSE A PLAN</h2>
+            
+            <h2 id="titleplan" style="font-weight: 600;">Choose a plan</h2>
             <p id="descplan">Each meal is one serving, for one person, at one sitting.</p>
             <div class="my_flex">
                 <div class="small_img"><img class="myimg"
-                        src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto/v1494958610/meal_sleeve_i19vxf"
+                        src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Box_1.png?v=1619194859"
                         alt="logo"></div>
                 <div class="separator"></div>
                 <div class="small_img"><img class="myimg"
-                        src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto/v1494958610/teriyaki_unsleeved_in_container_l6gcq9"
+                        src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Box_2.png?v=1619194859"
                         alt="logo"></div>
                 <div class="separator"></div>
                 <div class="small_img"><img class="myimg"
-                        src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto/v1494958610/teriyaki_plated_urly5f"
+                        src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Food_1.png?v=1619204931"
                         alt="logo"></div>
+            </div>
+            <div id="mybackg42" style="z-index:1">
+                <img style="width:60%;" src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/illustration_left.png?v=1619195231" alt="logo">
+            </div>
+            <div id="mybackg43" style="z-index:1">
+                <img style="width: 60%; margin-left: 40%;" src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/illustration_right.png?v=1619195231" alt="logo">
             </div>
         </div>
         <div class="second_part">
-            <p style="    letter-spacing: 1px;" class="mt-8 text-center">Pick the number of lunches or dinners you want
-                for the week.</p>
             <div class="my_flex2">
                 <div @click="savePlan(4)" class="small_plan">
 
                     <div class="mini">
                         <a href="/pages/day">
                         <img class="imgbanner"
-                            src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto,/v1494958610/updated-4-plan_uu0ijm.jpg"
+                            src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/meals-plan-1.jpg?v=1619166167"
                             alt="logo">
                             </a>
                     </div>
@@ -64,7 +78,7 @@
                             <h3>4</h3>
                             <h4>MEALS / WEEK</h4>
                         </div>
-                        <h5 class="myprice">$13,50 / meal</h5>
+                        <h5 class="myprice">$15.99 / meal</h5>
                         <button @click="savePlan(4)" class="button_plan"><a
                                 href="/pages/day">SELECT THIS
                                 PLAN</a></button>
@@ -81,7 +95,7 @@
                     <div class="mini">
                         <a href="/pages/day">
                         <img class="imgbanner"
-                            src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto,/v1494958610/updated-4-plan_uu0ijm.jpg"
+                            src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/meals-plan-2.jpg?v=1619166167"
                             alt="logo">
                             </a>
                     </div>
@@ -91,7 +105,7 @@
                             <h3>6</h3>
                             <h4>MEALS / WEEK</h4>
                         </div>
-                        <h5 class="myprice">$12,50 / meal</h5>
+                        <h5 class="myprice">$13.49  / meal</h5>
                         <button @click="savePlan(6)" class="button_plan"><a
                                 href="/pages/day">SELECT THIS
                                 PLAN</a></button>
@@ -106,7 +120,7 @@
                     <div class="mini">
                         <a href="/pages/day">
                         <img class="imgbanner"
-                            src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto,/v1494958610/updated-4-plan_uu0ijm.jpg"
+                            src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/meals-plan-3.jpg?v=1619166167"
                             alt="logo">
                             </a>
                     </div>
@@ -116,7 +130,7 @@
                             <h3>10</h3>
                             <h4>MEALS / WEEK</h4>
                         </div>
-                        <h5 class="myprice myprice2">$12 / meal</h5>
+                        <h5 class="myprice myprice2">$11.99 / meal</h5>
                         <button @click="savePlan(10)" class="button_plan"><a
                                 href="/pages/day">SELECT THIS
                                 PLAN</a></button>
@@ -131,14 +145,14 @@
                     <div class="mini">
                         <a href="/pages/day">
                         <img class="imgbanner"
-                            src="https://res.cloudinary.com/freshly/image/upload/q_auto:good,dpr_auto,f_auto,/v1494958610/updated-4-plan_uu0ijm.jpg"
+                            src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/meals-plan-4.jpg?v=1619166167"
                             alt="logo">
                         </a>
                     </div>
                     <div class="small_plan_detail">
                         <a href="/pages/day">
                         <div class="desc2">
-                            <h3>12</h3>
+                            <h3>11.49</h3>
                             <h4>MEALS / WEEK</h4>
                         </div>
                         <h5 class="myprice myprice2">$11,5/ meal</h5>
@@ -160,229 +174,149 @@
         </div>
         <div class="faq_part">
             <h2 id="common">COMMON QUESTIONS</h2>
-            <div>
-                <ul>
+            <div id="flexfaq">
+                <div class="faq_collumn">
+                    <button @click="openFaq(0)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>   How long can you keep Dailycious meals in the fridge?</button>
+                    <div x-show="activeFaq[0]" class="panel">
+                        <p>Our meals are made fresh, and we don't use any chemical preservatives or artificial ingredients, so we recommend you store the meals in the fridge for no more than 7 days.</p>
+                    </div>
+        
+                    <button @click="openFaq(1)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  Can I freeze my meals?</button>
+                    <div x-show="activeFaq[1]" class="panel">
+                        <p>We always recommend you enjoy your meals fresh, but you can place them in the freezer for up to 7 days after receipt and keep them frozen for up to 3 months.</p>
+                    </div>
+        
+                    <button @click="openFaq(2)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  How do I heat up my meals?</button>
+                    <div x-show="activeFaq[2]" class="panel">
+                        <p>We do all the work so you have to do is reheat your meal in the microwave. On the back of each meal, you’ll find an easy step-by-step description for reheating the meal. Typically, the heating time is 3 minutes in the microwave or 20 minutes at 250°F in the oven.</p>
+                    </div>
+                    <button @click="openFaq(3)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  Where can I find the ingredients list and nutritional information for your meals?</button>
+                    <div x-show="activeFaq[3]" class="panel">
+                        <p>Very easy! To find out what ingredients we use, simply click on the desired meal on our website, while the nutritional facts can be found on the back label of your meal.</p>
+                    </div>
+        
+                    <button  @click="openFaq(4)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  How long does it take for Dailycious meals to deliver?</button>
+                    <div x-show="activeFaq[4]" class="panel">
+                        <p>Depending where you are located, the delivery time will vary. However, it will be shipped in a way that keeps iit as fresh as possible.</p>
+                    </div>
+                </div>
+                <div class="faq_collumn">
+                    <button  @click="openFaq(5)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  How many people do Dailycious plans feed?</button>
+                    <div x-show="activeFaq[5]" class="panel">
+                        <p>Usually, each meal is an individual portion. You can choose to eat your meals for just lunch/dinner or both. Adjust the plan based on how many meals per day you wish to have.</p>
+                    </div>
 
-                    <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        How long can you keep Dailycious meals in the fridge?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>Our meals are made fresh, and we don't use any chemical preservatives or artificial ingredients, so we recommend you store the meals in the fridge for no more than 7 days.</p>
-                                
-                                </div>
-                            </div>
-    
-                        </li>
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Can I freeze my meals? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>We always recommend you enjoy your meals fresh, but you can place them in the freezer for up to 7 days after receipt and keep them frozen for up to 3 months.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        How do I heat up my meals?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>We do all the work so you have to do is reheat your meal in the microwave. On the back of each meal, you’ll find an easy step-by-step description for reheating the meal. Typically, the heating time is 3 minutes in the microwave or 20 minutes at 250°F in the oven.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full  py-6 text-left button_faq"
-                                @click="selected !== 1 ? selected = 1 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Where can I find the ingredients list and nutritional information for your meals?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container1"
-                                x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>Very easy! To find out what ingredients we use, simply click on the desired meal on our website, while the nutritional facts can be found on the back label of your meal.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-    
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 2 ? selected = 2 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                       How long does it take for Dailycious meals to deliver? </span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container2"
-                                x-bind:style="selected == 2 ? 'max-height: ' + $refs.container2.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>Depending where you are located, the delivery time will vary. However, it will be shipped in a way that keeps iit as fresh as possible.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-    
-    
-                        <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 3 ? selected = 3 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        How many people do Dailycious plans feed?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container3"
-                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>Usually, each meal is an individual portion. You can choose to eat your meals for just lunch/dinner or both. Adjust the plan based on how many meals per day you wish to have.</p>
-                                    
-                                </div>
-                            </div>
-    
-                        </li>
-                      <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 3 ? selected = 3 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        What states does Dailycious deliver to?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container3"
-                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                  <p>Dailycious delivers to California, Arizona, Nevada, Oregon, Washington, Utah, Colorado, Texas, Wyoming, and Montana.</p>  
-                                </div>
-                            </div>
-    
-                        </li>
-                      <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 3 ? selected = 3 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                       Can I change my menu options each week after placing the first order?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container3"
-                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                    <p>Absolutely! We offer a wide variety of meals and would love for you to try them all.
-                                  </p>
-                                </div>
-                            </div>
-    
-                        </li>
-                      
-                      <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 3 ? selected = 3 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Why is Dailycious better than other meal delivery options?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container3"
-                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                  <p>Dailycious provides high quality, healthy, chef-prepared meals.</p>
-                                </div>
-                            </div>
-    
-                        </li>
-                      
-                       <li class="relative border-b border-gray-200" x-data="{selected:null}">
-    
-                            <button type="button" class="w-full py-6 text-left button_faq"
-                                @click="selected !== 3 ? selected = 3 : selected = null">
-                                <div class="flex items-center justify-between">
-                                    <span class="title_faq">
-                                        Can I skip weeks if I sign up for a weekly subscription?</span>
-                                    <span class="ico-plus"><i class="fas fa-chevron-down"></i></span>
-                                </div>
-                            </button>
-    
-                            <div class="relative overflow-hidden transition-all max-h-0 duration-700" style=""
-                                x-ref="container3"
-                                x-bind:style="selected == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-                                <div class="answer">
-                                  <p>Yes, you can skip as many weeks as you’d like!</p>
-                                </div>
-                            </div>
-    
-                        </li>
+                    <button  @click="openFaq(6)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  What states does Dailycious deliver to?</button>
+                    <div x-show="activeFaq[6]" class="panel">
+                        <p>Dailycious delivers to California, Arizona, Nevada, Oregon, Washington, Utah, Colorado, Texas, Wyoming, and Montana.</p>
+                    </div>
 
-                </ul>
+                    <button  @click="openFaq(7)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  Can I change my menu options each week after placing the first order?</button>
+                    <div x-show="activeFaq[7]" class="panel">
+                        <p>Absolutely! We offer a wide variety of meals and would love for you to try them all.</p>
+                    </div>
+
+                    <button @click="openFaq(8)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  Why is Dailycious better than other meal delivery options?</button>
+                    <div x-show="activeFaq[8]" class="panel">
+                        <p>Dailycious provides high quality, healthy, chef-prepared meals..</p>
+                    </div>
+
+                    <button  @click="openFaq(9)" class="accordion"><i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  Can I skip weeks if I sign up for a weekly subscription?</button>
+                    <div x-show="activeFaq[9]" class="panel">
+                        <p>Yes, you can skip as many weeks as you’d like!</p>
+                    </div>
+                </div>
             </div>
-
-
         </div>
 
     </div>
 </div>
 </div>
 
+<script>
+    // var acc = document.getElementsByClassName("accordion");
+    // var i;
+
+    // for (i = 0; i < acc.length; i++) {
+    //     acc[i].addEventListener("click", function () {
+    //         this.classList.toggle("active");
+    //         var panel = this.nextElementSibling;
+    //         if (panel.style.display === "block") {
+    //             panel.style.display = "none";
+    //         } else {
+    //             panel.style.display = "block";
+    //         }
+    //     });
+    // }
+    function alpineInstance() {
+        let zipcode = localStorage.getItem('zipcode') ;
+        if (!zipcode) {
+            window.location.href="/pages/zipcode"
+        }
+        return {
+            activeFaq: [false, false,false,false,false,false,false,false,false,false,],
+            show_support() {
+                console.log("chat");
+                const chat = document.getElementById("gorgias-chat-container");
+                if (chat) {
+
+                    chat.style.display = "block";
+                }
+            },
+            savePlan(number) {
+                sessionStorage.setItem('plan', number);
+            },
+            openFaq(i) {
+                const state = this.activeFaq[i];
+                this.activeFaq = this.activeFaq.map(active => false);
+                this.activeFaq[i] = !state;
+            }
+        }
+    }
+</script>
+
 <style>
+    .mypoint{
+        width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 10px;
+    }
+    #myline{
+        height: 1px;
+        width: 30vw;
+        display: flex; justify-content: space-between;
+        background-color: black;
+        align-items: center;
+    }
+    #mybackg42{
+         position: absolute;
+         left:0;
+         bottom:0;
+     }
+     #mybackg43{
+         position: absolute;
+         right:0;
+         bottom:0;
+     }
+    .faq_part{
+        margin: 5%;
+    padding: 3%;
+    border: solid 1px #e4e4e4;
+    }
+    #descplan{
+        font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 1%;
+    }
+    #titleplan{
+        color: #3A6351;
+    letter-spacing: 1px;
+    font-size: 22px;
+    font-weight: 600;
+    padding: unset;
+    margin-bottom: 2px;
+    }
 
 #gorgias-chat-container {
         display: none
@@ -423,16 +357,7 @@
         font-size: 18px;
     }
 
-    .button_faq {
-        border: unset;
-        border-radius: unset;
-        border-bottom: solid 1px #8080805e;
-        padding-left: unset;
-    }
-
-    .button_faq:hover {
-        color: #111409;
-    }
+    
 
     #common {
         text-align: center;
@@ -441,12 +366,7 @@
         font-weight: bolder;
     }
 
-    .faq_part {
-        padding-left: 10vw;
-        padding-right: 10vw;
-        margin-top: 5vh;
-        margin-bottom: 5vh;
-    }
+    
 
     .max-h-0 {
         max-height: 0;
@@ -456,10 +376,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-top: 5%;
     }
 
     .button_plan {
-        background-color: #111409;
+        background-color: #3A6351;
         color: white;
         width: 85%;
         border-radius: 10px;
@@ -467,6 +388,10 @@
     }
 
 
+    h1,
+    h2,h5 {
+        color:#3A6351;
+    }
 
     h1,
     h2,
@@ -475,6 +400,7 @@
     h5 {
         font-family: Helvetica;
         padding: 1%;
+        
     }
 
     h3 {
@@ -493,6 +419,8 @@
         border: 1px solid rgba(0, 0, 0, .125);
         border-radius: .25rem;
         padding-bottom: 3vh;
+        width: 18vw;
+    margin: auto;
     }
 
     .small_plan:hover {
@@ -507,14 +435,14 @@
         display: flex;
         flex-direction: row;
         padding-top: 3vw;
-        padding-left: 1vw;
-        padding-right: 1vw;
+        margin: auto;
+    width: 80vw;
+    margin-bottom: 2%;
     }
 
     .separator {
-        border-right: solid 1px;
-        height: 16vh;
-        margin-bottom: 3vh;
+        border-bottom: solid 1px;
+    width: 10vw;
     }
 
     .myimg {
@@ -528,17 +456,21 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        width: 44vw;
+        width: 55vw;
+        z-index:2;
     }
 
     .first_part {
+        padding-top: 5%;
+    padding-bottom: 5%;
         font-size: 1.25rem;
         font-weight: 300;
         line-height: 1.5;
-        background-color: #f8f9fa;
+        background-color: #E4EADF;
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
 
 
     }
@@ -605,6 +537,10 @@
 
     .myheader-2 {
         display: flex;
+    justify-content: space-between;
+    width: 32vw;
+    position: relative;
+    right: 11px;
     }
 
     #shopify-section-header {
@@ -623,13 +559,69 @@
         display: none;
     }
 
+    #flexfaq{
+        display: flex;
+    justify-content: space-between;
+    width: 80vw;
+    margin: auto;
+    }
+    .accordion {
+        
+        background-color: #E4EADF;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 12px;
+        transition: 0.4s;
+        margin-bottom: 20px;
+        font-weight: bold;
+        border-radius:10px;
+        padding-right: unset;
+    }
+
+  
+    .accordion:hover, .accordion:focus{
+        background-color: #3a6351;
+        color:white;
+    }
+
+    
+
+    .accordion:focus .fa-angle-down{
+        color:white;
+        display: none;
+    }
+    .accordion:focus .fa-angle-up{
+        color:white;
+        background-color: #3a6351;
+        display: inline;
+    }
+
+    .fa-angle-up{
+        display: none;
+    }
+
+    .panel {
+        padding: 0 18px 18px 18px;
+        display: block;
+        background-color: white;
+        overflow: hidden;
+    }
+    .faq_collumn{
+        width: 49%;
+    }
+
     @media only screen and (max-width: 768px) {
 
         /* For mobile phones: */
-        .separator {
-            height: 8vh;
-            margin-bottom: 1vh;
+        .detail {
+            margin-top:10%;
         }
+
 
         .my_flex {
             width: 90vw;
@@ -644,7 +636,7 @@
         }
 
         .mycontainer {
-            padding-top: 30px;
+            padding-top: 45px;
         }
 
         .myheader {
@@ -694,6 +686,9 @@
             display: flex;
             flex-direction: row;
             padding-bottom: unset;
+            width: unset;
+            margin: 1vw;
+            
         }
 
         .small_plan_detail {
@@ -744,30 +739,20 @@
             width: 28vw;
         }
 
-        .detail {
-            padding-top: 5vh;
+        .accordion{
+            font-size:12px;
+            height: 8vh;
         }
+        #flexfaq{
+            flex-direction: column;
+            padding-left: 5%;
+        }
+        .faq_collumn{
+            width: 94%;
 
-        .faq_part {
-            padding-right: 5vw;
-            padding-left: 5vw;
+        }
+        .accordion{
+            padding: 10px;
         }
     }
 </style>
-<script>
-    function alpineInstance() {
-        return {
-            show_support() {
-                console.log("chat");
-                const chat = document.getElementById("gorgias-chat-container");
-                if (chat) {
-
-                    chat.style.display = "block";
-                }
-            },
-            savePlan(number) {
-                sessionStorage.setItem('plan', number);
-            }
-        }
-    }
-</script>

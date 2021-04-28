@@ -34,12 +34,12 @@ const handler: TypedEventHandler<{
   const shopUrl = body.shopUrl || "dailycious.com";
   const frontBoldApi = new BoldAPI(token, shopUrl, true);
   const backBoldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier, false);
-  const test = await frontBoldApi.getSubscription(subscriptionId);
+  const test = await frontBoldApi.subscriptions.get(subscriptionId);
   console.log("test", test);
   const ids = body.ids;
   console.log("ids", ids);
   if (ids && ids.length > 0) {
-    const subscription = await backBoldApi.partialUpdateSubscription(
+    const subscription = await backBoldApi.subscriptions.partialUpdate(
       subscriptionId,
       {
         note: JSON.stringify({ ids: ids }),

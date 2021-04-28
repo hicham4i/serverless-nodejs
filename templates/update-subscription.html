@@ -2092,9 +2092,10 @@
           shopUrl: "dailycious.com",
           ids: this.cart.map((product) => product.variants[0].id),
         };
-        this.awsAPIRequest("updateProducts", param).then(res => {
-            console.log("REEEEs", res);
-        })
+        this.awsAPIRequest("updateProducts", param).then((res) => {
+          console.log("REEEEs", res);
+          window.location.href = "/pages/my-subscriptions";
+        });
       },
       products: [],
       cart,

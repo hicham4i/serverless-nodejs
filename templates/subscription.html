@@ -30,7 +30,14 @@
       accessToken: "",
       subscriptions: [],
       shopIdentifier: "",
+      products: [],
+      fecthData() {
+        fetch("/collections/menu-individual/products.json")
+          .then((response) => response.json())
+          .then((data) => (this.products = data.products));
+      },
       getSubscriptionToken() {
+        this.fecthData();
         window.BOLD.subscriptions.getJWT((data) => {
           // handle data...
           console.log("data", data);
@@ -157,8 +164,22 @@
         if (el) {
           const elToReplace = el.querySelector("div");
           const template =
-            `<a href="/pages/change-subscription?subid=${subscriptionId}">Update Products</a>` +
-            products.map((id) => `<p> id: ${id} </p>`).join(" ");
+            products
+              .map((id) => {
+                const product = this.products.find(
+                  (prod) => prod.variants[0].id === id
+                );
+                if (product) {
+                  return `<p> ${product.title} </p>`;
+                }
+                return "";
+              })
+              .join(" ") +
+            `<a href="/pages/change-subscription?subid=${subscriptionId}">
+<button class="btn" style="margin: 20px 0px">
+Update Products
+</button>
+  </a>`;
           elToReplace.outerHTML = template;
         }
         //
@@ -168,12 +189,14 @@
 </script>
 
 <style>
-  .products-panel-wrap {
-    display: none;
+  #customer-portal-root .subscription-header-details-container,
+  #customer-portal-root .future-order-details-container {
+    flex-basis: 100%;
   }
-  .next-order-date-edit-resume-button {
-    display: none;
-  }
+  .subscriptions-header-images-container,
+  .future-order-images-container,
+  .products-panel-wrap,
+  .next-order-date-edit-resume-button,
   .bsub-link {
     display: none;
   }
@@ -183,7 +206,9 @@
     max-width: 1200px;
     margin: auto;
   }
-
+  .next-order-date-edit-resume-button {
+    display: none;
+  }
   .rte {
     max-width: 1200px;
     margin: auto;

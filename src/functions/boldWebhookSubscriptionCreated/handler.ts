@@ -1,18 +1,57 @@
 import "source-map-support/register";
 
 // import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/apiGateway";
-import { formatJSONResponse } from "@libs/apiGateway";
+import { formatJSONResponse, TypedEventHandler } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
 
-// import schema from "./schema";
-// import * as Shopify from "shopify-api-node";
-
-// const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
-const handler = async (event) => {
+import Shopify from "shopify-api-node";
+import { Note, months } from "../types/types";
+import { WebhookSubscriptionCreatedEvent, BoldAPI } from "@libs/boldApi";
+import { env } from "../../env";
+const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
+  event
+) => {
   console.log("EVENT:", JSON.stringify(event));
+  const shopIdentifier = event.body.shop_identifier;
+  const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
+  const subscriptionId = event.body.id;
+  const orders = await boldApi.subscriptions.listOrders(subscriptionId);
+  const order = orders[0];
+  console.log("ORDER", order);
+  const shopifyOrderId = parseInt(order.order.platform_id, 10);
+  console.log("shopifyOrderId", shopifyOrderId);
+  const note = await getShopifyOrderNote(shopifyOrderId);
+  const parsedNote: Note = JSON.parse(note);
+  const ids = parsedNote.ids;
+  const date = parsedNote.date;
+  const dateObject = new Date();
+  dateObject.setMonth(months[date.month]);
+  dateObject.setDate(date.date + 7 - 5); // time when the order cannot be changed anymore
+  const isoString = dateObject.toISOString();
+  const res1 = await boldApi.subscriptions.updateNextOrderDate(
+    subscriptionId,
+    isoString.split("T")[0] + "T22:00:00Z",
+    true
+  );
+  console.log(res1);
+  const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
+    note: JSON.stringify({ ids: ids }),
+  });
+  console.log(res);
   return formatJSONResponse({
     message: "ok",
   });
 };
 
 export const main = middyfy(handler);
+
+const getShopifyOrderNote = async (orderId: number) => {
+  const shopify = new Shopify({
+    shopName: "mykosherchef",
+    apiKey: env.SHOPIFY_API_KEY,
+    password: env.SHOPIFY_API_SECRET,
+  });
+  const res = await shopify.order.get(orderId);
+  console.log(res);
+  return res.note;
+};

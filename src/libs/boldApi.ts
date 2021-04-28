@@ -3,6 +3,59 @@ export class BoldAPI {
   token: string;
   shopIdentifier: string;
   frontEndRequest: boolean;
+
+  subscriptions = {
+    get: (
+      subscriptionId: number,
+      shopIdentifier?: string
+    ): Promise<Subscription> => {
+      return this.makeBoldRequest(
+        "get",
+        `subscriptions/${subscriptionId}`,
+        undefined,
+        shopIdentifier
+      ).then((res) => res.subscription);
+    },
+
+    partialUpdate: (
+      subscriptionId: number,
+      updateData: Partial<Omit<Subscription, "id">>,
+      shopIdentifier?: string
+    ): Promise<Subscription> => {
+      return this.makeBoldRequest(
+        "patch",
+        `subscriptions/${subscriptionId}`,
+        { subscription: updateData },
+        shopIdentifier
+      ).then((res) => res.subscription);
+    },
+
+    updateNextOrderDate: async (
+      subscriptionId: number,
+      nextDate: string, // isoString without any miliseconds,
+      includeFutureOrders: boolean, // option not documented
+      shopIdentifier?: string
+    ): Promise<Subscription> => {
+      return this.makeBoldRequest(
+        "put",
+        `subscriptions/${subscriptionId}/next_shipping_date`,
+        { nextDate, includeFutureOrders },
+        shopIdentifier
+      ).then((res) => res.subscription);
+    },
+
+    listOrders: (
+      subscriptionId: number,
+      shopIdentifier?: string
+    ): Promise<Order[]> => {
+      return this.makeBoldRequest(
+        "get",
+        `subscriptions/${subscriptionId}/orders`,
+        undefined,
+        shopIdentifier
+      ).then((res) => res.subscription_orders);
+    },
+  };
   constructor(
     token: string,
     shopIdentifier?: string, // either string identifier for backend api or shop url for frontend api
@@ -55,52 +108,16 @@ export class BoldAPI {
       }
     }
   }
-
-  async getSubscription(
-    subscriptionId: number,
-    shopIdentifier?: string
-  ): Promise<Subscription> {
-    return this.makeBoldRequest(
-      "get",
-      `subscriptions/${subscriptionId}`,
-      undefined,
-      shopIdentifier
-    ).then((res) => res.subscription);
-  }
-
-  async partialUpdateSubscription(
-    subscriptionId: number,
-    updateData: Partial<Omit<Subscription, "id">>,
-    shopIdentifier?: string
-  ): Promise<Subscription> {
-    return this.makeBoldRequest(
-      "patch",
-      `subscriptions/${subscriptionId}`,
-      { subscription: updateData },
-      shopIdentifier
-    ).then((res) => res.subscription);
-  }
-
-  async updateSubscriptionNextOrderDate(
-    subscriptionId: number,
-    nextDate: string, // isoString
-    shopIdentifier?: string
-  ): Promise<Subscription> {
-    return this.makeBoldRequest(
-      "put",
-      `subscriptions/${subscriptionId}/next_shipping_date`,
-      { nextDate },
-      shopIdentifier
-    ).then((res) => res.subscription);
-  }
 }
 
-export type WebhookSubscriptionOrderCreatedEvent = {
+export type WebhookSubscriptionOrderCreatedEvent = {} & Order;
+
+export type Order = {
   id: number;
   subscription_id: number;
   shop_id: number;
-  // base_to_charged_exchange_rate: 1;
-  // base_currency: "USD";
+  base_to_charged_exchange_rate: number;
+  base_currency: string;
   order: {
     platform_id: string;
     platform_customer_id: string;
@@ -115,58 +132,21 @@ export type WebhookSubscriptionOrderCreatedEvent = {
       quantity: number;
       price: number;
       price_charged: number;
-      // total_tax: 0;
-      // total_tax_charged: 0;
-      // requires_shipping: true;
-      // grams: 0;
-      // weight: 0;
-      // weight_unit: "";
-      // taxable: true;
-      // created_at: "2021-04-22T15:56:36Z";
-      // updated_at: "2021-04-22T15:56:53Z";
+      total_tax: number;
+      total_tax_charged: number;
+      requires_shipping: boolean;
+      grams: number;
+      weight: number;
+      weight_unit: string;
+      taxable: boolean;
+      created_at: string;
+      updated_at: string;
       id: number;
       order_id: number;
     }[];
-    // billing_address: {
-    //   type: "billing";
-    //   first_name: "mathis";
-    //   last_name: "obadia";
-    //   street1: "41 Rue Mediterra Drive";
-    //   street2: "";
-    //   company: "";
-    //   city: "Henderson";
-    //   province: "Nevada";
-    //   country: "United States";
-    //   country_code: "US";
-    //   phone: "";
-    //   postal_code: "89011";
-    //   email: "mathisob@gmail.com";
-    //   created_at: "2021-04-22T15:56:36Z";
-    //   updated_at: "2021-04-22T15:56:53Z";
-    //   id: 224392589;
-    //   order_id: 90835576;
-    // };
-    // shipping_addresses: [
-    //   {
-    //     type: "shipping";
-    //     first_name: "mathis";
-    //     last_name: "obadia";
-    //     street1: "41 Rue Mediterra Drive";
-    //     street2: "";
-    //     company: "";
-    //     city: "Henderson";
-    //     province: "Nevada";
-    //     country: "United States";
-    //     country_code: "US";
-    //     phone: "";
-    //     postal_code: "89011";
-    //     email: "mathisob@gmail.com";
-    //     created_at: "2021-04-22T15:56:36Z";
-    //     updated_at: "2021-04-22T15:56:53Z";
-    //     id: 224392588;
-    //     order_id: 90835576;
-    //   }
-    // ];
+
+    billing_address: OrderAddress;
+    shipping_addresses: OrderAddress[];
     // subtotal: 100;
     // subtotal_charged: 100;
     // subtotal_tax: 0;
@@ -195,10 +175,10 @@ export type WebhookSubscriptionOrderCreatedEvent = {
     // exchange_rate: 1;
     // test: true;
     // url: "";
-    // created_at: "2021-04-22T15:56:37Z";
-    // updated_at: "2021-04-22T15:56:53Z";
-    // placed_at: "2021-04-22T15:56:30Z";
-    // deleted_at: null;
+    created_at: string;
+    updated_at: string;
+    placed_at: string;
+    deleted_at: string | null;
     id: number;
     subscription_id: number;
   };
@@ -208,6 +188,39 @@ export type WebhookSubscriptionOrderCreatedEvent = {
   shop_identifier: string;
 };
 
+export type Address = {
+  type: "billing" | "shipping";
+  first_name: string;
+  last_name: string;
+  street1: string;
+  street2: string;
+  company: string;
+  city: string;
+  province: string;
+  country: string;
+  country_code: string;
+  phone: string;
+  postal_code: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+  id: number;
+};
+
+export type OrderAddress = Address & {
+  order_id: number;
+};
+
+export type SubscriptionAddress = Omit<Address, "postal_code"> & {
+  shop_identifier: string;
+  platform_id: string;
+  platform_customer_id: string;
+  platform_type: string;
+  customer_id: number;
+  is_default: false;
+  zip: string;
+};
+
 export type Subscription = {
   id: number;
   customer: null;
@@ -215,7 +228,7 @@ export type Subscription = {
   next_order_datetime: string;
   next_payment_datetime: string;
   next_processing_datetime: string;
-  subscription_status: "active";
+  subscription_status: "active" | "inactive" | "paused";
   payment_method_token: string;
   payment_gateway_public_id: null;
   payment_rrule: string;
@@ -231,52 +244,8 @@ export type Subscription = {
   // base_currency: "USD";
   // line_items: [[Object]];
   // shipping_lines: null;
-  // billing_address: {
-  //   shop_identifier: "27393687639";
-  //   platform_id: "6285693452375";
-  //   platform_customer_id: "5078958866519";
-  //   platform_type: "shopify";
-  //   first_name: "mathis";
-  //   last_name: "obadia";
-  //   company: "";
-  //   phone: "";
-  //   street1: "41 Rue Mediterra Drive";
-  //   street2: "";
-  //   city: "Henderson";
-  //   province: "Nevada";
-  //   province_code: "NV";
-  //   country: "United States";
-  //   country_code: "US";
-  //   zip: "89011";
-  //   is_default: false;
-  //   created_at: null;
-  //   updated_at: null;
-  //   id: 123165228;
-  //   customer_id: 99482146;
-  // };
-  // shipping_address: {
-  //   shop_identifier: "27393687639";
-  //   platform_id: "6285693452375";
-  //   platform_customer_id: "5078958866519";
-  //   platform_type: "shopify";
-  //   first_name: "mathis";
-  //   last_name: "obadia";
-  //   company: "";
-  //   phone: "";
-  //   street1: "41 Rue Mediterra Drive";
-  //   street2: "";
-  //   city: "Henderson";
-  //   province: "Nevada";
-  //   province_code: "NV";
-  //   country: "United States";
-  //   country_code: "US";
-  //   zip: "89011";
-  //   is_default: false;
-  //   created_at: null;
-  //   updated_at: null;
-  //   id: 123165228;
-  //   customer_id: 99482146;
-  // };
+  billing_address: SubscriptionAddress;
+  shipping_address: SubscriptionAddress;
   // idempotency_key: "7eeb0531-33f1-4686-9511-28a57fb8a318";
   // created_at: "2021-04-22T15:56:51Z";
   // updated_at: "2021-04-23T07:00:16Z";
@@ -286,6 +255,10 @@ export type Subscription = {
   customer_id: number;
   billing_address_id: number;
   shipping_address_id: number;
+};
+
+export type WebhookSubscriptionCreatedEvent = Subscription & {
+  shop_identifier: string;
 };
 
 export default BoldAPI;

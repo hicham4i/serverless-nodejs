@@ -33,9 +33,9 @@ const handler: TypedEventHandler<{
   const shopUrl = body.shopUrl || "dailycious.com";
   const frontBoldApi = new BoldAPI(token, shopUrl, true);
   const backBoldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier, false);
-  const test = await frontBoldApi.getSubscription(subscriptionId);
+  const test = await frontBoldApi.subscriptions.get(subscriptionId);
   console.log("test", test);
-  const subscription = await backBoldApi.getSubscription(subscriptionId);
+  const subscription = await backBoldApi.subscriptions.get(subscriptionId);
   console.log("subscription", subscription);
   return formatJSONResponseCors({
     note: subscription.note,
