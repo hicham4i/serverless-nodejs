@@ -30,13 +30,13 @@ const handler = async (event) => {
   const allLineItems: IOrderLineItem[] = [];
   const lineItems = res.map((order) => order.line_items);
   lineItems.forEach((lineItem) => allLineItems.push(...lineItem));
-  const productCount: { id: number; quantity: number; title: string }[] = [];
+  const productCount: ProductCount = [];
   allLineItems.forEach((lineItem) => {
     const index = productCount.findIndex(
       (prod) => prod.id === lineItem.product_id
     );
     if (index !== -1) {
-      productCount[index].quantity += 1;
+      productCount[index].quantity += lineItem.quantity;
     } else {
       productCount.push({
         id: lineItem.product_id,
@@ -44,7 +44,9 @@ const handler = async (event) => {
         title: lineItem.title,
       });
     }
+    console.log("count 3", getTotalCount(productCount));
   });
+  const totalCount = getTotalCount(productCount);
   return formatHTMLResponse(
     `
    <!DOCTYPE html>
@@ -58,6 +60,7 @@ const handler = async (event) => {
    <body>
      
    <div class="container">
+    <p>Total Count: ${totalCount}</p>
     ${productCount
       .map((prod) => `<p> ${prod.title} (${prod.id}): ${prod.quantity} </p>`)
       .join(" ")}
@@ -72,4 +75,11 @@ const handler = async (event) => {
   );
 };
 
+const getTotalCount = (productCount: ProductCount): number => {
+  return productCount.reduce((prev, productCount) => {
+    return prev + productCount.quantity;
+  }, 0);
+};
+
+type ProductCount = { id: number; quantity: number; title: string }[];
 export const main = middyfy(handler);

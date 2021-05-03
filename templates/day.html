@@ -7,7 +7,7 @@
     <div class="mylogo">
       <a href="/">
         <img
-          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191"
+          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-K_4cc8f9e7-8490-4f22-8c8e-58cb6b46338d.png?v=1619540061"
           alt="logo"
         />
       </a>
@@ -96,63 +96,67 @@
         <div class="faq_collumn">
           <button @click="openFaq(0)" class="accordion">
             <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i>  
-            How long can you keep Dailycious meals in the fridge?
+            What type of diets do you accomodate?
           </button>
           <div x-show="activeFaq[0]" class="panel">
             <p>
-              Our meals are made fresh, and we don't use any chemical
-              preservatives or artificial ingredients, so we recommend you store
-              the meals in the fridge for no more than 7 days.
+              We cook with the highest quality ingredients, and create recipes
+              accessible to everyone—we offer gluten-free, keto, halal, vegan,
+              vegetarian, and pescatarian options. Additionally, all our meals
+              are Kosher (certified by OK Kosher) and diary-free. We love you
+              and want you to feel included! If you have any questions, just
+              shoot us a message and we’ll help you right away.
             </p>
           </div>
 
           <button @click="openFaq(1)" class="accordion">
             <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
-            Can I freeze my meals?
+            How long can you keep Dailycious meals in the fridge?
           </button>
           <div x-show="activeFaq[1]" class="panel">
             <p>
-              We always recommend you enjoy your meals fresh, but you can place
-              them in the freezer for up to 7 days after receipt and keep them
-              frozen for up to 3 months.
+              We love meals fresh and healthy! That’s why we don't use any
+              chemical preservatives or artificial ingredients. We recommend you
+              store the meals in the fridge for no more than 10 days.
             </p>
           </div>
 
           <button @click="openFaq(2)" class="accordion">
             <i class="fas fa-angle-down"></i
-            ><i class="fas fa-angle-up"></i>  How do I heat up my meals?
+            ><i class="fas fa-angle-up"></i>  Can I freeze my meals?
           </button>
           <div x-show="activeFaq[2]" class="panel">
             <p>
-              We do all the work so you have to do is reheat your meal in the
-              microwave. On the back of each meal, you’ll find an easy
-              step-by-step description for reheating the meal. Typically, the
-              heating time is 3 minutes in the microwave or 20 minutes at 250°F
-              in the oven.
+              We always recommend you enjoy your meals fresh, but you can place
+              them in the fridge for up to 10 days after receipt and keep them
+              frozen for up to 3 months.
             </p>
           </div>
           <button @click="openFaq(3)" class="accordion">
             <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
-            Where can I find the ingredients list and nutritional information
-            for your meals?
+            How do I heat up my meals?
           </button>
           <div x-show="activeFaq[3]" class="panel">
             <p>
-              Very easy! To find out what ingredients we use, simply click on
-              the desired meal on our website, while the nutritional facts can
-              be found on the back label of your meal.
+              We do the grocery shopping, cooking and cleaning! All you have to
+              do is heat your meal in the microwave. How? On the back of each
+              meal, you’ll find an easy step-by-step description for reheating
+              the meal. Typically, the heating time is 3 minutes in the
+              microwave or 20 minutes at 250°F in the oven. As delicious as it
+              is easy.
             </p>
           </div>
 
           <button @click="openFaq(4)" class="accordion">
             <i class="fas fa-angle-down"></i><i class="fas fa-angle-up"></i> 
-            How long does it take for Dailycious meals to deliver?
+            Where can I find the ingredients list and nutritional information
+            for your meals?
           </button>
           <div x-show="activeFaq[4]" class="panel">
             <p>
-              Depending where you are located, the delivery time will vary.
-              However, it will be shipped in a way that keeps iit as fresh as
-              possible.
+              Very easy! Simply click on the desired meal on our website to know
+              everything about it. Additionally, the nutritional facts can be
+              found on the back label of your meal!
             </p>
           </div>
         </div>
@@ -412,7 +416,7 @@
   }
 
   .mylogo {
-    width: 12%;
+    width: 10%;
     position: relative;
     top: 17px;
     height: 35px;
@@ -564,7 +568,7 @@
     return {
       zipcode,
       zipcodes: {},
-      daysToDelivery: 2,
+      deliveryDuration: 2,
       activeFaq: [
         false,
         false,
@@ -585,9 +589,9 @@
           .then((data) => {
             console.log(data);
             this.zipcodes = data;
-            this.daysToDelivery = this.zipcodes[this.zipcode];
-            console.log("days to delivery", this.daysToDelivery);
-            return this.daysToDelivery;
+            this.deliveryDuration = this.zipcodes[this.zipcode];
+            console.log("days to delivery", this.deliveryDuration);
+            return this.deliveryDuration;
           });
       },
       openFaq(i) {
@@ -609,25 +613,19 @@
       },
       setDate() {
         console.log(day);
-        this.fecthData().then((daysToDelivery) => {
-          let options = { weekday: "long" };
-          let options2 = { month: "long" };
+        this.fecthData().then((deliveryDuration) => {
           for (let x = 0; x < 20; x++) {
             console.log(day);
-            const test = this.isDateAllowed(day, daysToDelivery);
+            const test = this.isDateAllowed(day, deliveryDuration);
             console.log(test);
             if (test) {
-              myday = new Intl.DateTimeFormat("en-US", options).format(day);
-              mymonth = new Intl.DateTimeFormat("en-US", options2).format(day);
+              const losAngelesTime = this.getLosAngelesDateTime(day);
               date = {
-                day: myday,
-                month: mymonth,
-                date: day.getDate(),
+                ...losAngelesTime,
                 selected: false,
               };
               this.dates.push(date);
             }
-
             day.setDate(day.getDate() + 1);
           }
           this.dates[0].selected = true;
@@ -638,88 +636,127 @@
         for (const item in this.dates) {
           this.dates[item].selected = false;
         }
+        const email = localStorage.getItem("email");
+        _learnq.push([
+          "identify",
+          {
+            $email: this.email,
+            orderDay: date.day,
+          },
+        ]);
         date.selected = true;
         this.dateSelected = date;
       },
-      isDateAllowed(date, daysToDelivery) {
+      isDateAllowed(date, deliveryDuration) {
+        const losAngelesTime = this.getLosAngelesDateTime(date);
+        console.log(
+          "date",
+          date,
+          "losAngelesTime",
+          losAngelesTime,
+          "deliveryDuration",
+          deliveryDuration
+        );
+        const dayName = losAngelesTime.day;
+        console.log("dayName", dayName);
         if (
-          date.getUTCDay() === 0 ||
-          date.getUTCDay() === 6 ||
-          date.getUTCDay() === 1
+          dayName === "Sunday" ||
+          dayName === "Saturday" ||
+          dayName === "Monday"
         ) {
           return false;
         }
         const today = new Date();
-        const todayDay = today.getUTCDay();
-        const before15 = today.getUTCHours() <= 22;
+        const todayLosAngeles = this.getLosAngelesDateTime(today);
+        const todayDayName = todayLosAngeles.day;
+        const before15 = todayLosAngeles.hours < 15;
         const dayUntilDelivery = Math.round(
           (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
         );
-        console.log(todayDay, before15, dayUntilDelivery);
-        if (daysToDelivery === 1) {
-          if (todayDay === 0) {
+        console.log(todayDayName, before15, dayUntilDelivery);
+        if (deliveryDuration === 1) {
+          if (todayDayName === "Sunday" || todayDayName === "Monday") {
             if (before15) {
               return dayUntilDelivery >= 3;
             }
             return dayUntilDelivery >= 4;
           }
-          if (todayDay === 1) {
-            if (before15) {
-              return dayUntilDelivery >= 3;
-            }
-            return dayUntilDelivery >= 4;
-          }
-          if (todayDay === 2) {
+          if (todayDayName === "Tuesday") {
             if (before15) {
               return dayUntilDelivery >= 3;
             }
             return dayUntilDelivery >= 7;
           }
-          if (todayDay === 3) {
+          if (todayDayName === "Wednesday") {
             return dayUntilDelivery >= 6;
           }
-          if (todayDay === 4) {
+          if (todayDayName === "Thursday") {
             return dayUntilDelivery >= 5;
           }
-          if (todayDay === 5) {
+          if (todayDayName === "Friday") {
             return dayUntilDelivery >= 4;
           }
-          if (todayDay === 6) {
+          if (todayDayName === "Saturday") {
             return dayUntilDelivery >= 3;
           }
         }
-        if (daysToDelivery === 2) {
-          if (date.getUTCDay() === 2) {
+        if (deliveryDuration === 2) {
+          if (dayName === "Tuesday") {
             return false;
           }
-          if (todayDay === 0) {
+          if (todayDayName === "Sunday") {
             if (before15) {
               return dayUntilDelivery >= 4;
             }
             return dayUntilDelivery >= 5;
           }
-          if (todayDay === 1) {
+          if (todayDayName === 1) {
             if (before15) {
               return dayUntilDelivery >= 4;
             }
             return dayUntilDelivery >= 9;
           }
-          if (todayDay === 2) {
+          if (todayDayName === "Tuesday") {
             return dayUntilDelivery >= 8;
           }
-          if (todayDay === 3) {
+          if (todayDayName === "Wednesday") {
             return dayUntilDelivery >= 7;
           }
-          if (todayDay === 4) {
+          if (todayDayName === "Thursday") {
             return dayUntilDelivery >= 6;
           }
-          if (todayDay === 5) {
+          if (todayDayName === "Friday") {
             return dayUntilDelivery >= 5;
           }
-          if (todayDay === 6) {
+          if (todayDayName === "Saturday") {
             return dayUntilDelivery >= 4;
           }
         }
+      },
+      getLosAngelesDateTime(dateObject) {
+        const optionsDay = { weekday: "long", timeZone: "America/Los_Angeles" };
+        const optionsMonth = { month: "long", timeZone: "America/Los_Angeles" };
+        const optionsDate = { day: "numeric", timeZone: "America/Los_Angeles" };
+        const optionsHours = {
+          hour: "numeric",
+          hour12: false,
+          timeZone: "America/Los_Angeles",
+        };
+        const day = new Intl.DateTimeFormat("en-US", optionsDay).format(
+          dateObject
+        );
+        const month = new Intl.DateTimeFormat("en-US", optionsMonth).format(
+          dateObject
+        );
+        const date = new Intl.DateTimeFormat("en-US", optionsDate).format(
+          dateObject
+        );
+        const hoursString = new Intl.DateTimeFormat(
+          "en-US",
+          optionsHours
+        ).format(dateObject);
+        const hours = parseInt(hoursString);
+        return { day, month, date, hours };
       },
       dates: [],
     };
