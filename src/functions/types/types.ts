@@ -3,7 +3,7 @@ export type Note = {
   date: {
     day: string;
     month: string;
-    date: number;
+    date: number | string;
   };
 };
 

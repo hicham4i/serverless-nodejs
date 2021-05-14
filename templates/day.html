@@ -7,7 +7,7 @@
     <div class="mylogo">
       <a href="/">
         <img
-          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-K_4cc8f9e7-8490-4f22-8c8e-58cb6b46338d.png?v=1619540061"
+          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/logo_1.svg?v=1620140247"
           alt="logo"
         />
       </a>
@@ -20,38 +20,39 @@
         line-height: 5vh;
       "
     >
-      <div id="myline">
-        <span class="mypoint">&nbsp;</span>
-        <span class="mypoint" style="background-color: #b5b35d"></span>
+      <div style="display: flex; align-items: center">
+        <span class="mypoint" style="background-color: #e4eadf">&nbsp;</span>
+        <div class="myline" style="background-color: #e4eadf"></div>
+        <span class="mypoint" style="background-color: #e4eadf"></span>
+        <div class="myline"></div>
         <span class="mypoint"></span>
+        <div class="myline"></div>
         <span class="mypoint"></span>
       </div>
-      <div class="myheader-2">
-        <div><a href="/pages/plan">Plan</a></div>
 
-        <div style="font-weight: bolder; color: #b5b35d">Day</div>
+      <div class="myheader-2">
+        <div
+          @click="window.location.href='/pages/zipcode'"
+          style="font-weight: bolder; color: #e4eadf; cursor: pointer"
+        >
+          Plan
+        </div>
+
+        <div style="font-weight: bolder; color: #e4eadf">Day</div>
 
         <div>Meals</div>
 
         <div>Cart</div>
       </div>
     </div>
-    <div @click="show_support()" style="color: #3a6351" class="support">
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
-      Customer support
+    <div @click="show_support()" style="color: #e4eadf" class="support">
+      <a onclick="GorgiasChat.open();"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i>
+        <span id="mylink">Customer support</span>
+      </a>
     </div>
   </div>
-  <div class="myheader-mob">
-    <div>
-      <a href="/pages/plan"
-        ><i style="position: unset" class="fas fa-chevron-left"></i
-      ></a>
-    </div>
-    <div style="color: #3a6351">Choose a Delivery Day</div>
-    <div @click="show_support()" style="color: #3a6351">
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
-    </div>
-  </div>
+
   <div class="mycontainer">
     <div class="first_part">
       <h2 id="titleplan">CHOOSE A DELIVERY DAY</h2>
@@ -103,7 +104,7 @@
               We cook with the highest quality ingredients, and create recipes
               accessible to everyone—we offer gluten-free, keto, halal, vegan,
               vegetarian, and pescatarian options. Additionally, all our meals
-              are Kosher (certified by OK Kosher) and diary-free. We love you
+              are Kosher (certified by OK Kosher) and dairy-free. We love you
               and want you to feel included! If you have any questions, just
               shoot us a message and we’ll help you right away.
             </p>
@@ -275,15 +276,18 @@
   .mypoint {
     width: 6px;
     height: 6px;
-    background-color: black;
+    background-color: #ffffff47;
     border-radius: 10px;
+    margin-left: 3px;
+    margin-right: 3px;
   }
-  #myline {
-    height: 1px;
-    width: 30vw;
+  .myline {
+    height: 3px;
+    width: 9vw;
+    min-width: 128px;
     display: flex;
     justify-content: space-between;
-    background-color: black;
+    background-color: #ffffff47;
     align-items: center;
   }
   #gorgias-chat-container {
@@ -344,7 +348,8 @@
     width: 30%;
     border-radius: 10px;
     margin-top: 3vh;
-    height: 4vh;
+    height: 5vh;
+    outline: none;
   }
   #scroll {
     padding-top: 3vh;
@@ -404,10 +409,6 @@
     font-family: Helvetica !important;
   }
 
-  .myheader-mob {
-    display: none;
-  }
-
   .header-arrow-nok {
     padding-left: 15px;
     padding-right: 15px;
@@ -427,7 +428,7 @@
     display: flex;
     position: fixed;
     top: 0;
-    background-color: white;
+    background-color: #3a6351;
     justify-content: space-between;
     border-bottom: 1px solid #dee2e6;
     line-height: 60px;
@@ -456,13 +457,13 @@
   }
 
   .myheader-2 {
+    min-width: 440px;
     display: flex;
     justify-content: space-between;
-    width: 32vw;
-    position: relative;
-    right: 11px;
+    width: 29vw;
     height: 50%;
     line-height: 30px;
+    color: #ffffff47;
   }
 
   #shopify-section-header {
@@ -483,6 +484,19 @@
 
   @media only screen and (max-width: 768px) {
     /* For mobile phones: */
+    .myline {
+      min-width: unset;
+      width: 22vw;
+    }
+
+    /* For mobile phones: */
+
+    .mylogo {
+      display: none;
+    }
+    #mylink {
+      display: none;
+    }
 
     #flexfaq {
       flex-direction: column;
@@ -501,6 +515,7 @@
 
     #next {
       width: 100%;
+      height: 5vh;
     }
 
     .first_part {
@@ -512,34 +527,27 @@
     }
 
     .mycontainer {
-      padding-top: 30px;
+      padding-top: 60px;
       font-family: Helvetica;
+    }
+
+    .myheader-2 {
+      min-width: unset;
+      width: 80vw;
     }
 
     .myheader {
-      display: none;
-    }
-
-    .myheader-mob {
-      position: fixed;
-      top: 0;
-      width: 100vw;
-      padding-left: 3vw;
       padding-right: 3vw;
-      display: flex;
-      justify-content: space-between;
-      line-height: 44px;
-      height: 44px;
-      font-size: 19px;
-      font-family: Helvetica;
-      font-weight: bolder;
-      border-bottom: 1px solid #dee2e6;
-      background-color: white;
     }
 
     #descplan {
       text-align: center;
       margin-bottom: 2vh;
+    }
+  }
+  @media only screen and (min-height: 1020px) {
+    .myline {
+      width: 12vw;
     }
   }
 </style>
@@ -658,6 +666,10 @@
           deliveryDuration
         );
         const dayName = losAngelesTime.day;
+        const disallowedDates = ["17", "18", "19", "20"];
+        if (disallowedDates.includes(losAngelesTime.date)) {
+          return false;
+        }
         console.log("dayName", dayName);
         if (
           dayName === "Sunday" ||

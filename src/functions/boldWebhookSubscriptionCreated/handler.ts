@@ -26,6 +26,9 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const ids = parsedNote.ids;
     const date = parsedNote.date;
     const dateObject = new Date();
+    if (typeof date.date === "string") {
+      date.date = parseInt(date.date);
+    }
     dateObject.setMonth(months[date.month]);
     dateObject.setDate(date.date + 7 - 5); // time when the order cannot be changed anymore
     const isoString = dateObject.toISOString();
