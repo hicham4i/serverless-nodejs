@@ -32,6 +32,9 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
 
   const dateObject = new Date();
   dateObject.setMonth(months[date.month]);
+  if (typeof date.date === "string") {
+    date.date = parseInt(date.date, 10);
+  }
   dateObject.setDate(date.date);
   const zipcode = event.body.shipping_address.zip;
   await updateOrder(zipcode, dateObject, orderId, ids);

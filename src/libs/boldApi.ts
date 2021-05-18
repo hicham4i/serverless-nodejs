@@ -55,6 +55,21 @@ export class BoldAPI {
         shopIdentifier
       ).then((res) => res.subscription_orders);
     },
+
+    swapProducts: (
+      subscriptionId: number,
+      swapProducts: SwapProductArg[],
+      shopIdentifier?: string
+    ): Promise<Subscription> => {
+      return this.makeBoldRequest(
+        "put",
+        `subscriptions/${subscriptionId}/products_swap`,
+        {
+          swap_products: swapProducts,
+        },
+        shopIdentifier
+      ).then((res) => res.subscription);
+    },
   };
   constructor(
     token: string,
@@ -111,7 +126,29 @@ export class BoldAPI {
 }
 
 export type WebhookSubscriptionOrderCreatedEvent = {} & Order;
-
+export type LineItem = {
+  platform_product_id: string;
+  platform_variant_id: string;
+  title: string;
+  sku: string;
+  url: string;
+  image: string;
+  quantity: number;
+  price: number;
+  price_charged: number;
+  total_tax: number;
+  total_tax_charged: number;
+  requires_shipping: boolean;
+  grams: number;
+  weight: number;
+  weight_unit: string;
+  taxable: boolean;
+  created_at: string;
+  updated_at: string;
+  id: number;
+  order_id: number;
+  bold_platform_subscription_line_item_id: number;
+};
 export type Order = {
   id: number;
   subscription_id: number;
@@ -122,29 +159,7 @@ export type Order = {
     platform_id: string;
     platform_customer_id: string;
     shop_identifier: string;
-    line_items: {
-      platform_product_id: string;
-      platform_variant_id: string;
-      title: string;
-      sku: string;
-      url: string;
-      image: string;
-      quantity: number;
-      price: number;
-      price_charged: number;
-      total_tax: number;
-      total_tax_charged: number;
-      requires_shipping: boolean;
-      grams: number;
-      weight: number;
-      weight_unit: string;
-      taxable: boolean;
-      created_at: string;
-      updated_at: string;
-      id: number;
-      order_id: number;
-    }[];
-
+    line_items: LineItem[];
     billing_address: OrderAddress;
     shipping_addresses: OrderAddress[];
     // subtotal: 100;
@@ -242,7 +257,7 @@ export type Subscription = {
   // charged_currency: "USD";
   // base_to_charged_exchange_rate: 1;
   // base_currency: "USD";
-  // line_items: [[Object]];
+  line_items: LineItem[];
   // shipping_lines: null;
   billing_address: SubscriptionAddress;
   shipping_address: SubscriptionAddress;
@@ -259,6 +274,13 @@ export type Subscription = {
 
 export type WebhookSubscriptionCreatedEvent = Subscription & {
   shop_identifier: string;
+};
+
+export type SwapProductArg = {
+  bold_platform_line_item_id: number; // not correctly documented
+  platform_product_id: string;
+  platform_variant_id: string;
+  subscription_group_id: number;
 };
 
 export default BoldAPI;

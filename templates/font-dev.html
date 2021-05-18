@@ -1,3 +1,7 @@
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tailwindcss@1.2.0/dist/tailwind.min.css"
+/>
 <div x-data="alpineInstance()" x-init="fecthData()">
   <div
     x-show.transition.in.duration.500ms.origin.top.center.opacity.out.duration.200ms.origin.bottom.center.opacity="isDialogOpen"
@@ -30,35 +34,54 @@
     <div class="mylogo">
       <a href="/">
         <img
-          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191"
+          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/logo_1.svg?v=1620140247"
           alt="logo"
         />
       </a>
     </div>
-    <div class="myheader-2">
-      <div style="color: #111409"><a href="/pages/plan">Plan</a></div>
-      <div class="header-arrow-ok"><i class="fas fa-chevron-right"></i></div>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        line-height: 5vh;
+      "
+    >
+      <div style="display: flex; align-items: center">
+        <span class="mypoint" style="background-color: #e4eadf">&nbsp;</span>
+        <div class="myline" style="background-color: #e4eadf"></div>
+        <span class="mypoint" style="background-color: #e4eadf"></span>
+        <div class="myline" style="background-color: #e4eadf"></div>
+        <span class="mypoint" style="background-color: #e4eadf"></span>
+        <div class="myline"></div>
+        <span class="mypoint"></span>
+      </div>
 
-      <div style="color: #111409"><a href="/pages/day">Day</a></div>
-      <div class="header-arrow-ok"><i class="fas fa-chevron-right"></i></div>
-      <div style="font-weight: bolder">Meals</div>
-      <div class="header-arrow-nok"><i class="fas fa-chevron-right"></i></div>
-      <div>Cart</div>
-    </div>
-    <div @click="show_support()" style="color: #111409" class="support">
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
-      Customer support
-    </div>
-  </div>
+      <div class="myheader-2">
+        <div
+          @click="window.location.href='/pages/zipcode'"
+          style="font-weight: bolder; color: #e4eadf; cursor: pointer"
+        >
+          Plan
+        </div>
 
-  <div class="myheader-mob">
-    <div>
-      <a href="/pages/day"></a
-      ><i style="position: unset" class="fas fa-chevron-left"></i>
+        <div
+          @click="window.location.href='/pages/day'"
+          style="font-weight: bolder; color: #e4eadf; cursor: pointer"
+        >
+          Day
+        </div>
+
+        <div style="font-weight: bolder; color: #e4eadf">Meals</div>
+
+        <div>Cart</div>
+      </div>
     </div>
-    <div style="color: #111409">Choose <span x-text="plan"></span> meals</div>
-    <div style="color: #111409">
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
+    <div @click="show_support()" style="color: #e4eadf" class="support">
+      <a onclick="GorgiasChat.open();"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i>
+        <span id="mylink">Customer support</span>
+      </a>
     </div>
   </div>
   <!-- begin: bundle -->
@@ -123,12 +146,68 @@
   <!-- begin: cart -->
   <div x-show="show" class="cart" :class="{ 'menu-dopweb-blur': isDialogOpen }">
     <div class="dateSection">
+      Meal plan:
+      <div x-show="plan == 4">$15.99 / meal</div>
+      <div x-show="plan == 6">$13.49 / meal</div>
+      <div x-show="plan == 10">$11.99 / meal</div>
+      <div x-show="plan == 12">$11.49 / meal</div>
+    </div>
+    <div class="planSection">
+      <div
+        @click="changePlan(4)"
+        :class="{ 'planselect': plan==4 }"
+        class="nplan"
+      >
+        4
+        <div x-show="plan == 4" class="selectplan"></div>
+      </div>
+      <div
+        @click="changePlan(6)"
+        :class="{ 'planselect': plan==6 }"
+        class="nplan"
+      >
+        6
+        <div x-show="plan == 6" class="selectplan"></div>
+      </div>
+      <div
+        @click="changePlan(10)"
+        :class="{ 'planselect': plan==10 }"
+        class="nplan"
+      >
+        10
+        <div x-show="plan == 10" class="selectplan"></div>
+      </div>
+      <div
+        @click="changePlan(12)"
+        :class="{ 'planselect': plan==12 }"
+        style="border-right: solid 1px #80808042"
+        class="nplan"
+      >
+        12
+        <div x-show="plan == 12" class="selectplan"></div>
+      </div>
+    </div>
+    <div class="dateSection">
       My delivery for:
       <span style="font-weight: bolder">
         <span x-text="date.day"></span>,
         <span x-text="date.month"></span>
         <span x-text="date.date"></span>
       </span>
+    </div>
+    <div class="dateSection">
+      <div>Meals in my delivery:</div>
+      <div
+        @click="clearCart()"
+        style="
+          text-decoration: underline;
+          color: #3a6351;
+          font-weight: bolder;
+          cursor: pointer;
+        "
+      >
+        Clear all
+      </div>
     </div>
     <template x-for="product in cart" :key="product.id">
       <div class="small_img2 animated fadeInLeft">
@@ -160,22 +239,6 @@
 
     <div class="info" :class="{'empty_meal_start': count > 0}">
       <h2>Get started by adding your meals</h2>
-      <p>
-        Experience the best ready-to-eat kosher gourmet meals, delivered fresh
-        straight to your door.
-      </p>
-
-      <p>
-        Personalize your gourmet box my choosing up to
-        <span x-text="plan"></span> meals from our menu for $119.
-      </p>
-
-      <p>
-        The meals of your choice will be shipped the following Monday, Tuesday
-        or Wednesday* , and delivered to your door two days after.
-      </p>
-
-      <p style="font-style: italic">*Los Angeles County only.</p>
     </div>
 
     <div
@@ -215,12 +278,68 @@
     </button>
     <div class="all_meals">
       <div class="dateSection">
+        Meal plan:
+        <div x-show="plan == 4">$15.99 / meal</div>
+        <div x-show="plan == 6">$13.49 / meal</div>
+        <div x-show="plan == 10">$11.99 / meal</div>
+        <div x-show="plan == 12">$11.49 / meal</div>
+      </div>
+      <div class="planSection">
+        <div
+          @click="changePlan(4)"
+          :class="{ 'planselect': plan==4 }"
+          class="nplan"
+        >
+          4
+          <div x-show="plan == 4" class="selectplan"></div>
+        </div>
+        <div
+          @click="changePlan(6)"
+          :class="{ 'planselect': plan==6 }"
+          class="nplan"
+        >
+          6
+          <div x-show="plan == 6" class="selectplan"></div>
+        </div>
+        <div
+          @click="changePlan(10)"
+          :class="{ 'planselect': plan==10 }"
+          class="nplan"
+        >
+          10
+          <div x-show="plan == 10" class="selectplan"></div>
+        </div>
+        <div
+          @click="changePlan(12)"
+          :class="{ 'planselect': plan==12 }"
+          style="border-right: solid 1px #80808042"
+          class="nplan"
+        >
+          12
+          <div x-show="plan == 12" class="selectplan"></div>
+        </div>
+      </div>
+      <div class="dateSection">
         My delivery for:
         <span style="font-weight: bolder">
           <span x-text="date.day"></span>,
           <span x-text="date.month"></span>
           <span x-text="date.date"></span>
         </span>
+      </div>
+      <div class="dateSection">
+        <div>Meals in my delivery:</div>
+        <div
+          @click="clearCart()"
+          style="
+            text-decoration: underline;
+            color: #3a6351;
+            font-weight: bolder;
+            cursor: pointer;
+          "
+        >
+          Clear all
+        </div>
       </div>
       <template class="prod" x-for="product in cart" :key="product.id">
         <div class="small_img2">
@@ -321,7 +440,7 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
           All set! Click Here
@@ -343,7 +462,7 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
           All set! Click Here
@@ -365,7 +484,7 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
           All set! Click Here
@@ -387,7 +506,7 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
           All set! Click Here
@@ -402,27 +521,67 @@
   </div>
 </div>
 <style>
+  a,
+  .text-link {
+    color: #e4eadf;
+  }
+  .mypoint {
+    width: 6px;
+    height: 6px;
+    background-color: #ffffff47;
+    border-radius: 10px;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+  .myline {
+    height: 3px;
+    width: 9vw;
+    min-width: 128px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff47;
+    align-items: center;
+  }
+  .planselect {
+    background-color: #d2f3e4;
+  }
+  .selectplan {
+    background-color: #3a6351;
+    height: 4px;
+    width: 100%;
+    position: relative;
+    top: -5px;
+  }
+
+  .nplan {
+    width: 23%;
+    height: 6vh;
+    border: solid 1px #80808042;
+    text-align: center;
+    line-height: 6vh;
+    border-right: unset;
+    cursor: pointer;
+  }
+
   .support {
     cursor: pointer;
   }
+
   /*remove minimal template css*/
   .wrapper {
     max-width: unset;
     margin: unset;
     padding: unset;
   }
-  #gorgias-chat-container {
-    display: none;
-  }
 
-  .myheader-mob {
+  #gorgias-chat-container {
     display: none;
   }
 
   .header-arrow-ok {
     padding-left: 15px;
     padding-right: 15px;
-    color: #111409;
+    color: #3a6351;
     font-size: 12px;
   }
 
@@ -434,20 +593,22 @@
   }
 
   .mylogo {
-    width: 15%;
-    position: relative;
-    top: 7px;
-    height: 35px;
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .myheader {
     display: flex;
     position: fixed;
-    background-color: white;
+    top: 0;
+    background-color: #3a6351;
     justify-content: space-between;
     border-bottom: 1px solid #dee2e6;
-    line-height: 44px;
-    width: calc(100vw - 344px);
+    line-height: 60px;
+    height: 60px;
+    width: 100vw;
     font-family: Helvetica;
     padding-left: 3vw;
     padding-right: 1vw;
@@ -455,7 +616,13 @@
   }
 
   .myheader-2 {
+    min-width: 440px;
     display: flex;
+    justify-content: space-between;
+    width: 29vw;
+    height: 50%;
+    line-height: 30px;
+    color: #ffffff47;
   }
 
   .dateSection {
@@ -468,6 +635,23 @@
     font-size: 13px;
     line-height: 45px;
     padding-left: 1vw;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1vw;
+  }
+
+  .planSection {
+    background-color: white;
+    height: 10vh;
+    margin: 1px;
+    border: 0.5px solid #f2f2f2;
+    font-weight: 500;
+    font-family: Helvetica;
+    font-size: 13px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
   }
 
   #shopify-section-header {
@@ -607,13 +791,13 @@
   }
 
   /*.add_button:active span {
-    padding-right: 3vw;
-  }
-  
-  .add_button:active span:after {
-    opacity: 1;
+      padding-right: 3vw;
+    }
     
-  }*/
+    .add_button:active span:after {
+      opacity: 1;
+      
+    }*/
 
   .close {
     width: 2vw;
@@ -690,10 +874,10 @@
   }
 
   /* .menu-dopweb-blur {
-      background-color: rgb(191 191 191)!important;
-      opacity: 0.5;
-   
-  }*/
+        background-color: rgb(191 191 191)!important;
+        opacity: 0.5;
+     
+    }*/
 
   .titleproduct {
     display: block;
@@ -703,7 +887,7 @@
     font-size: 13px;
     line-height: 1rem;
     letter-spacing: 1px;
-    color: #111409;
+    color: #3a6351;
   }
 
   .popup .titleproduct {
@@ -754,7 +938,7 @@
   }
 
   .popup .hide {
-    display: block;
+    display: block !important;
   }
 
   .popup {
@@ -874,7 +1058,10 @@
 
   .info {
     padding: 5%;
-    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60vh;
   }
 
   .empty_meal_start {
@@ -974,27 +1161,27 @@
 
   .gradient1 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 84%, #d9d9d9 84%);
+    background: linear-gradient(90deg, #3a6351 84%, #d9d9d9 84%);
   }
 
   .gradient2 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 68%, #d9d9d9 68%);
+    background: linear-gradient(90deg, #3a6351 68%, #d9d9d9 68%);
   }
 
   .gradient3 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 52%, #d9d9d9 52%);
+    background: linear-gradient(90deg, #3a6351 52%, #d9d9d9 52%);
   }
 
   .gradient4 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 36%, #d9d9d9 36%);
+    background: linear-gradient(90deg, #3a6351 36%, #d9d9d9 36%);
   }
 
   .gradient5 {
     height: 100%;
-    background: linear-gradient(90deg, #111409 20%, #d9d9d9 20%);
+    background: linear-gradient(90deg, #3a6351 20%, #d9d9d9 20%);
   }
 
   .border_count {
@@ -1026,7 +1213,7 @@
     letter-spacing: 2px;
     color: white;
     appearance: none;
-    background-color: #111409;
+    background-color: #3a6351;
     cursor: pointer;
     outline: none;
     height: 44px;
@@ -1126,7 +1313,7 @@
 
   .add_button {
     max-width: unset;
-    background-color: #111409;
+    background-color: #3a6351;
     width: 6vw;
     height: 5vh;
     min-height: unset;
@@ -1150,7 +1337,7 @@
   .add_button2 {
     width: 4vw;
     height: 4vh;
-    color: #111409;
+    color: #3a6351;
     text-align: center;
     line-height: 4vh;
     font-size: 16px;
@@ -1242,6 +1429,10 @@
     .small_img {
       flex-basis: 31%;
     }
+
+    .myline {
+      width: 12vw;
+    }
   }
 
   @media only screen and (max-width: 991px) {
@@ -1252,37 +1443,32 @@
 
   @media only screen and (max-width: 768px) {
     /* For mobile phones: */
-
-    .all_meals {
-      padding-top: 47px;
+    .mylogo {
+      display: none;
     }
-
+    #mylink {
+      display: none;
+    }
+    .myline {
+      min-width: unset;
+      width: 22vw;
+    }
     .prod {
       padding-top: 20px;
     }
 
     .dateSection {
-      top: 6vh;
-      left: 0;
-      padding-left: 15vw;
-      position: absolute;
-      width: 100%;
+      padding-left: 4vw;
+      padding-right: 4vw;
+    }
+
+    .myheader-2 {
+      min-width: unset;
+      width: 80vw;
     }
 
     .myheader {
-      display: none;
-    }
-
-    .myheader-mob {
-      padding-left: 3vw;
       padding-right: 3vw;
-      display: flex;
-      justify-content: space-between;
-      line-height: 44px;
-      font-size: 19px;
-      font-family: Helvetica;
-      font-weight: bolder;
-      border-bottom: 1px solid #dee2e6;
     }
 
     .fa-chevron-left {
@@ -1333,18 +1519,20 @@
     }
 
     /*.menu-dopweb-blur {
-              background-color: transparent!important;
-      opacity: unset;
-   
-  }*/
+                background-color: transparent!important;
+        opacity: unset;
+     
+    }*/
 
     .close {
       width: 6vw;
     }
 
     .imgdetailMini {
-      padding: 5%;
-      width: 100%;
+      width: 90%;
+      margin: auto;
+      margin-bottom: 2%;
+      padding: unset;
     }
 
     .imgdetail {
@@ -1402,8 +1590,8 @@
       width: 6px;
       height: 6px;
       transform: rotate(225deg);
-      border-right: 2px solid #111409;
-      border-bottom: 2px solid #111409;
+      border-right: 2px solid #3a6351;
+      border-bottom: 2px solid #3a6351;
       animation: arrow-wave 1s infinite;
       animation-direction: alternate;
 
@@ -1557,7 +1745,7 @@
       font-size: 0.8rem;
       line-height: 1rem;
       letter-spacing: 1.8px;
-      color: #111409;
+      color: #3a6351;
       padding-left: 3vw;
     }
 
@@ -1596,6 +1784,7 @@
       flex-direction: column;
       padding-right: 3vw;
       padding-bottom: 14vh;
+      margin-top: 60px;
     }
 
     .cart {
@@ -1639,22 +1828,32 @@
 <script>
   let productDetail = Object;
   let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  let zipcode = JSON.parse(localStorage.getItem("zipcode") || "[]");
   let date = JSON.parse(sessionStorage.getItem("date") || "{}");
-  let zipcode = localStorage.getItem("zipcode");
   let plan = sessionStorage.getItem("plan");
+
   if (!zipcode) {
     window.location.href = "/pages/zipcode";
-  }
-  if (!date) {
-    window.location.href = "/pages/day";
   }
   if (!plan) {
     window.location.href = "/pages/plan";
   }
+  if (!date) {
+    window.location.href = "/pages/day";
+  }
+
   count = cart.length;
 
   function alpineInstance() {
     return {
+      clearCart() {
+        console.log("clear");
+        this.cart = [];
+        this.count = 0;
+      },
+      changePlan(desired_plan) {
+        this.plan = desired_plan;
+      },
       show_support() {
         console.log("chat");
         const chat = document.getElementById("gorgias-chat-container");
@@ -1663,7 +1862,52 @@
         }
       },
       fecthData() {
-        fetch("/collections/menu-individual/products.json")
+        const menuUrls = [
+          "may-17-may-23",
+          "may-24-may-30",
+          "may-31-june-6",
+          "june-7-june-13",
+          "june-14-june-20",
+        ];
+        const months = {
+          january: 0,
+          february: 1,
+          march: 2,
+          april: 3,
+          may: 4,
+          june: 5,
+          july: 6,
+          august: 7,
+          september: 8,
+          october: 9,
+          november: 10,
+          december: 11,
+        };
+        let menuUrl = "menu-individual";
+        const boundaries = menuUrls.forEach((url) => {
+          const arr = url.split("-");
+          console.log(arr);
+          const beginDate = new Date();
+          beginDate.setMonth(months[arr[0]]);
+          beginDate.setDate(arr[1]);
+          const test = "";
+          test.toLowerCase();
+          const endDate = new Date();
+          endDate.setMonth(months[arr[2]]);
+          endDate.setDate(arr[3]);
+          const orderDate = new Date();
+          orderDate.setMonth(months[date.month.toLowerCase()]);
+          orderDate.setDate(date.date);
+          console.log(beginDate, endDate, orderDate);
+          if (
+            orderDate.getTime() >= beginDate.getTime() &&
+            orderDate.getTime() <= endDate.getTime()
+          ) {
+            menuUrl = url;
+          }
+        });
+        console.log("menu url", menuUrl);
+        fetch(`/collections/${menuUrl}/products.json`)
           .then((response) => response.json())
           .then((data) => (this.products = data.products));
       },
@@ -1725,6 +1969,7 @@
         properties["_deliveryDate"] = date;
         properties["Delivery Date"] = `${date.day}, ${date.month} ${date.date}`;
         //TODO: put in real zip code
+        const zipcode = "90210";
         properties["_zipcode"] = zipcode;
         this.cart.forEach((product, index) => {
           properties["Product " + (index + 1)] = product.title;
@@ -1746,7 +1991,7 @@
                 {
                   quantity: 1,
                   id: 39269021220951,
-                  selling_plan: 407273559,
+                  selling_plan: 409010263,
                   // properties,
                 },
               ],
@@ -1759,7 +2004,7 @@
                 {
                   quantity: 1,
                   id: 32497506877527,
-                  selling_plan: 407240791,
+                  selling_plan: 409010263,
                   // properties,
                 },
               ],
@@ -1772,7 +2017,7 @@
                 {
                   quantity: 1,
                   id: 39269025153111,
-                  selling_plan: 407240791,
+                  selling_plan: 409010263,
                   // properties,
                 },
               ],
@@ -1785,7 +2030,7 @@
                 {
                   quantity: 1,
                   id: 39269026431063,
-                  selling_plan: 407240791,
+                  selling_plan: 409010263,
                   // properties,
                 },
               ],
@@ -1796,18 +2041,25 @@
             console.log("Issue");
         }
         console.log(formData);
-        fetch("/cart/add.js", {
+        fetch("/cart/clear.js", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
         }).then((response) => {
-          console.log(response);
-          localStorage.removeItem("cart");
-          sessionStorage.removeItem("date");
-          sessionStorage.removeItem("plan");
-          window.location.href = "/cart";
+          fetch("/cart/add.js", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }).then((response) => {
+            console.log(response);
+            localStorage.removeItem("cart");
+            sessionStorage.removeItem("date");
+            sessionStorage.removeItem("plan");
+            window.location.href = "/cart";
+          });
         });
       },
       products: [],

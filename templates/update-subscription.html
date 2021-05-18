@@ -3,7 +3,7 @@
   id="myDiv"
   style="display: none"
   x-data="alpineInstance()"
-  x-init="myFunction(),getSubscriptionToken(),fecthData()"
+  x-init="myFunction(),getSubscriptionToken()"
 >
   <div
     x-show.transition.in.duration.500ms.origin.top.center.opacity.out.duration.200ms.origin.bottom.center.opacity="isDialogOpen"
@@ -36,15 +36,17 @@
     <div class="mylogo">
       <a href="/">
         <img
-          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/Dailycious-Logo-DarkGreen_180x.png?v=1616609191"
+          src="https://cdn.shopify.com/s/files/1/0273/9368/7639/files/logo.svg?v=1619607672"
           alt="logo"
         />
       </a>
     </div>
     <div class="myheader-2">Change your next order</div>
-    <div @click="show_support()" style="color: #3a6351" class="support">
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
-      Customer support
+    <div @click="show_support()" style="color: #111409" class="support">
+      <a onclick="GorgiasChat.open();"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i> Customer
+        support</a
+      >
     </div>
   </div>
 
@@ -55,8 +57,10 @@
       ></a>
     </div>
     <div style="color: #3a6351">Choose <span x-text="plan"></span> meals</div>
-    <div style="color: #3a6351">
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
+    <div @click="show_support()" style="color: #111409" class="support">
+      <a onclick="GorgiasChat.open();"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i
+      ></a>
     </div>
   </div>
   <!-- begin: bundle -->
@@ -122,10 +126,10 @@
   <div x-show="show" class="cart" :class="{ 'menu-dopweb-blur': isDialogOpen }">
     <div class="dateSection">
       Meal plan:
-      <div x-show="plan == 4">$13,50 / meal</div>
-      <div x-show="plan == 6">$12,50 / meal</div>
-      <div x-show="plan == 10">$12,00 / meal</div>
-      <div x-show="plan == 12">$11,50 / meal</div>
+      <div x-show="plan == 4">$15.99 / meal</div>
+      <div x-show="plan == 6">$13.49 / meal</div>
+      <div x-show="plan == 10">$11.99 / meal</div>
+      <div x-show="plan == 12">$11.49 / meal</div>
     </div>
     <div class="planSection">
       <div
@@ -214,22 +218,6 @@
 
     <div class="info" :class="{'empty_meal_start': count > 0}">
       <h2>Get started by adding your meals</h2>
-      <p>
-        Experience the best ready-to-eat kosher gourmet meals, delivered fresh
-        straight to your door.
-      </p>
-
-      <p>
-        Personalize your gourmet box my choosing up to
-        <span x-text="plan"></span> meals from our menu for $119.
-      </p>
-
-      <p>
-        The meals of your choice will be shipped the following Monday, Tuesday
-        or Wednesday* , and delivered to your door two days after.
-      </p>
-
-      <p style="font-style: italic">*Los Angeles County only.</p>
     </div>
 
     <div
@@ -270,10 +258,10 @@
     <div class="all_meals">
       <div class="dateSection">
         Meal plan:
-        <div x-show="plan == 4">$13,50 / meal</div>
-        <div x-show="plan == 6">$12,50 / meal</div>
-        <div x-show="plan == 10">$12,00 / meal</div>
-        <div x-show="plan == 12">$11,50 / meal</div>
+        <div x-show="plan == 4">$15.99 / meal</div>
+        <div x-show="plan == 6">$13.49 / meal</div>
+        <div x-show="plan == 10">$11.99 / meal</div>
+        <div x-show="plan == 12">$11.49 / meal</div>
       </div>
       <div class="planSection">
         <div
@@ -431,10 +419,10 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
-          All set! Click Here
+          Update your next Order
         </div>
         <div x-show="cart.length > plan" class="count_meal3">
           <div class="messageCart">Remove</div>
@@ -453,10 +441,10 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
-          All set! Click Here
+          Update your next Order
         </div>
         <div x-show="cart.length > plan" class="count_meal3">
           <div class="messageCart">Remove</div>
@@ -475,10 +463,10 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
-          All set! Click Here
+          Update your next Order
         </div>
         <div x-show="cart.length > plan" class="count_meal3">
           <div class="messageCart">Remove</div>
@@ -497,10 +485,10 @@
         <div x-show="cart.length < plan" class="count_meal2">
           <div class="messageCart">Add</div>
           <div class="count" x-text="plan-count"></div>
-          <div>meal to continu</div>
+          <div>meals to continu</div>
         </div>
         <div x-show="cart.length == plan" class="messageCart">
-          All set! Click Here
+          Update your next Order
         </div>
         <div x-show="cart.length > plan" class="count_meal3">
           <div class="messageCart">Remove</div>
@@ -1094,6 +1082,10 @@
 
   .info {
     padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60vh;
   }
 
   .empty_meal_start {
@@ -1951,23 +1943,25 @@
               date: date.getDate(),
               selected: false,
             };
-            console.log("DATE :", this.date);
-            console.log("subscription", data);
-            subscription.note = data.note;
-            console.log("sub with note,", subscription);
-            const parsednote = JSON.parse(subscription.note);
-            const ids = parsednote.ids;
-            console.log("ID: ", ids);
-            ids.forEach((id) => {
-              const product = this.products.find(
-                (product) => product.variants[0].id === id
-              );
-              console.log(product);
-              if (product) {
-                this.insert_to_cart(product);
-              }
+            this.fecthData().then((res) => {
+              console.log("DATE :", this.date);
+              console.log("subscription", data);
+              subscription.note = data.note;
+              console.log("sub with note,", subscription);
+              const parsednote = JSON.parse(subscription.note);
+              const ids = parsednote.ids;
+              console.log("ID: ", ids);
+              ids.forEach((id) => {
+                const product = this.products.find(
+                  (product) => product.variants[0].id === id
+                );
+                console.log(product);
+                if (product) {
+                  this.insert_to_cart(product);
+                }
+              });
+              this.plan = this.cart.length;
             });
-            this.plan = this.cart.length;
           });
         });
       },
@@ -2028,7 +2022,50 @@
         }
       },
       fecthData() {
-        fetch("/collections/menu-individual/products.json")
+        const menuUrls = [
+          "may-17-may-23",
+          "may-24-may-30",
+          "may-31-june-6",
+          "june-7-june-13",
+          "june-14-june-20",
+        ];
+        const months = {
+          january: 0,
+          february: 1,
+          march: 2,
+          april: 3,
+          may: 4,
+          june: 5,
+          july: 6,
+          august: 7,
+          september: 8,
+          october: 9,
+          november: 10,
+          december: 11,
+        };
+        let menuUrl = "menu-individual";
+        const boundaries = menuUrls.forEach((url) => {
+          const arr = url.split("-");
+          console.log(arr);
+          const beginDate = new Date();
+          beginDate.setMonth(months[arr[0]]);
+          beginDate.setDate(arr[1]);
+          const endDate = new Date();
+          endDate.setMonth(months[arr[2]]);
+          endDate.setDate(arr[3]);
+          const orderDate = new Date();
+          orderDate.setMonth(months[this.date.month.toLowerCase()]);
+          orderDate.setDate(this.date.date);
+          console.log(beginDate, endDate, orderDate);
+          if (
+            orderDate.getTime() >= beginDate.getTime() &&
+            orderDate.getTime() <= endDate.getTime()
+          ) {
+            menuUrl = url;
+          }
+        });
+        console.log("menu url", menuUrl);
+        return fetch(`/collections/${menuUrl}/products.json`)
           .then((response) => response.json())
           .then((data) => (this.products = data.products));
       },
