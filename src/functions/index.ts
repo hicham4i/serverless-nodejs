@@ -4,6 +4,8 @@ import { default as updateProducts } from "./updateProducts";
 import { default as boldWebhookSubscriptionCreated } from "./boldWebhookSubscriptionCreated";
 import { default as boldWebhookSubscriptionOrderCreated } from "./boldWebhookSubscriptionOrderCreated";
 import { default as showAllProducts } from "./showAllProducts";
+import { default as boldWebhookCreate } from "./boldWebhookCreate";
+import { default as boldWebhookOrderFailed } from "./boldWebhookOrderFailed";
 
 export const functions = {
   shopifyWebhook,
@@ -12,4 +14,6 @@ export const functions = {
   boldWebhookSubscriptionCreated,
   boldWebhookSubscriptionOrderCreated,
   showAllProducts,
+  boldWebhookCreate,
+  boldWebhookOrderFailed,
 };

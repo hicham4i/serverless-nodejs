@@ -71,6 +71,44 @@ export class BoldAPI {
       ).then((res) => res.subscription);
     },
   };
+
+  webhooks = {
+    getWebhookTopics: (shopIdentifier?: string): Promise<WebhookTopic[]> => {
+      return this.makeBoldRequest(
+        "get",
+        "webhooks/topics",
+        undefined,
+        shopIdentifier
+      ).then((res) => res.webhook_topics);
+    },
+
+    createWebhookSubscription: (
+      webhook_subscription: CreateWebhookSubscriptionParam,
+      shopIdentifier?: string
+    ): Promise<WebhookSubscription> => {
+      const shop_id = shopIdentifier || this.shopIdentifier;
+      const param = {
+        webhook_subscription: { ...webhook_subscription, shop_id },
+      };
+      return this.makeBoldRequest(
+        "post",
+        "webhooks/subscriptions",
+        param,
+        shopIdentifier
+      ).then((res) => res.webhook_subscription);
+    },
+
+    listWebhookSubscriptions: (
+      shopIdentifier?: string
+    ): Promise<WebhookSubscription[]> => {
+      return this.makeBoldRequest(
+        "get",
+        "webhooks/subscriptions",
+        undefined,
+        shopIdentifier
+      ).then((res) => res.webhook_subscriptions);
+    },
+  };
   constructor(
     token: string,
     shopIdentifier?: string, // either string identifier for backend api or shop url for frontend api
@@ -124,6 +162,11 @@ export class BoldAPI {
     }
   }
 }
+
+export type WebhookTopic = {
+  id: number;
+  topic_name: string;
+};
 
 export type WebhookSubscriptionOrderCreatedEvent = {} & Order;
 export type LineItem = {
@@ -281,6 +324,22 @@ export type SwapProductArg = {
   platform_product_id: string;
   platform_variant_id: string;
   subscription_group_id: number;
+};
+
+export type CreateWebhookSubscriptionParam = {
+  callback_url: string;
+  shared_secret: string;
+  webhook_topic_id: string | number; // It is very important to pass the webhook id as a string
+};
+
+export type WebhookSubscription = {
+  id: number;
+  shop_id: number;
+  webhook_topic_id: number;
+  callback_url: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 };
 
 export default BoldAPI;
