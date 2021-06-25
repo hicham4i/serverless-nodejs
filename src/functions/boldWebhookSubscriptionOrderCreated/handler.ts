@@ -2,7 +2,6 @@ import "source-map-support/register";
 
 import type { TypedEventHandler } from "@libs/apiGateway";
 import { formatJSONResponse } from "@libs/apiGateway";
-import { middyfy } from "@libs/lambda";
 import { WebhookSubscriptionOrderCreatedEvent, BoldAPI } from "@libs/boldApi";
 import { env } from "../../env";
 // import schema from "./schema";
@@ -15,8 +14,9 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
   try {
     // const handler = async (event) => {
     console.log("EVENT:", JSON.stringify(event));
-    const shopIdentifier = event.body.shop_identifier;
+    const shopIdentifier = "27393687639";
     const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
+    console.log("BODY", event.body);
     const subscriptionId = event.body.subscription_id;
     const subscription = await boldApi.subscriptions.get(subscriptionId);
     console.log(subscription);
@@ -54,4 +54,8 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
   }
 };
 
-export const main = middyfy(handler);
+export const main = (event, context, callback) => {
+  console.log("EVENT", event);
+  event.body = JSON.parse(event.body);
+  return handler(event, context, callback);
+};

@@ -1,5 +1,5 @@
 import "source-map-support/register";
-
+import { productPlans } from "../plans";
 // import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/apiGateway";
 import {
   formatJSONResponseError,
@@ -41,9 +41,12 @@ const handler: TypedEventHandler<{
     const test = await frontBoldApi.subscriptions.get(subscriptionId);
     console.log("test", test);
     const subscription = await backBoldApi.subscriptions.get(subscriptionId);
+    const productId = subscription.line_items[0].platform_variant_id;
+    const plan = productPlans.find((p) => p.variantId.toString() === productId);
     console.log("subscription", subscription);
     return formatJSONResponseCors({
       note: subscription.note,
+      size: plan.plan,
     });
   } catch (err) {
     console.error(err);
