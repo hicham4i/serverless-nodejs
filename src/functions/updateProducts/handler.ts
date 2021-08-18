@@ -65,7 +65,7 @@ const handler: TypedEventHandler<{
     const subscription = await backBoldApi.subscriptions.partialUpdate(
       subscriptionId,
       {
-        note: JSON.stringify({ ids: ids }),
+        note: JSON.stringify({ ids: ids, date: new Date().toISOString() }),
       }
     );
     console.log("subscription", subscription);
