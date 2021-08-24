@@ -62,10 +62,27 @@ const handler: TypedEventHandler<{
         swapProductArg,
       ]);
     }
+    const orderID = body.order;
+    let subNote = JSON.parse(sub.note);
+    if (orderID && subNote.orders) {
+      subNote.orders[orderID] = ids;
+      subNote.date = new Date().toISOString()
+    } else {
+      const futureOrders = await frontBoldApi.subscriptions.listFutureOrders(subscriptionId);
+      const orders = futureOrders.map(o => {
+        const order = {};
+        order[o.id] = ids
+        return order
+      })
+      subNote = {
+        orders,
+        Date: new Date().toISOString()
+      };
+    }
     const subscription = await backBoldApi.subscriptions.partialUpdate(
       subscriptionId,
       {
-        note: JSON.stringify({ ids: ids, date: new Date().toISOString() }),
+        note: JSON.stringify(subNote),
       }
     );
     console.log("subscription", subscription);

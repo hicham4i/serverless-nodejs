@@ -56,6 +56,18 @@ export class BoldAPI {
       ).then((res) => res.subscription_orders);
     },
 
+    listFutureOrders: (
+      subscriptionId: number,
+      shopIdentifier?: string
+    ): Promise<Order[]> => {
+      return this.makeBoldRequest(
+        "get",
+        `subscriptions/${subscriptionId}/future_orders`,
+        undefined,
+        shopIdentifier
+      ).then((res) => res.subscription_orders);
+    },
+
     swapProducts: (
       subscriptionId: number,
       swapProducts: SwapProductArg[],
