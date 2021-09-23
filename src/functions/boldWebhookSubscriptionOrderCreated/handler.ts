@@ -7,7 +7,8 @@ import { env } from "../../env";
 // import schema from "./schema";
 import { Note } from "../types/types";
 import { updateOrder } from "@libs/shopifyApi";
-import Shopify from "shopify-api-node";
+import { IProduct } from "shopify-api-node";
+import axios from "axios";
 
 const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
   event
@@ -22,6 +23,8 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     const subscription = await boldApi.subscriptions.get(subscriptionId);
     console.log(subscription);
     if (!subscription.note) {
+      console.log("NO SUBSCRIPTION NOTE!");
+      console.log("THIS IS PROBABLY THE FIRST ORDER");
       return formatJSONResponse({
         message: "OK",
         event,
@@ -29,12 +32,23 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     }
     let parsednote: Note = JSON.parse(subscription.note as string);
     if (!parsednote) {
+      console.error("THERE IS NOT NOTE HERE THIS IS WEIRD!");
       return formatJSONResponse({
         message: "OK",
         event,
       });
     }
-    const ids = parsednote.ids;
+    const orderID = event.body.order.id;
+    const date = new Date();
+    let ids = parsednote.ids;
+    if (parsednote[orderID]) {
+      ids = parsednote[orderID];
+      console.log("THIS IS AN ORDER FOR 5 DAYS FROM NOW");
+    } else {
+      console.log("USER HAS NOT UPDATED THEIR PRODUCTS YET");
+    }
+    date.setDate(date.getDate() + 5);
+    ids = await filterProducts(ids, date);
     const order = event.body.order;
     const zip = event.body.order.shipping_addresses[0].postal_code;
     const orderId = parseInt(order.platform_id, 10);
@@ -54,29 +68,90 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     });
   }
 };
-const getShopifyProducts = async (params?: any) => {
-  const shopify = new Shopify({
-    shopName: "mykosherchef",
-    apiKey: env.SHOPIFY_API_KEY,
-    password: env.SHOPIFY_API_SECRET,
-  });
-  const res = await shopify.product.list(params);
-  console.log('getShopifyProducts ==>', res);
-  return res;
-};
 
-const isContained = async (ids: string | string[]) => {
-  const productList = await getShopifyProducts();
-  if (typeof ids === "string") {
-    const ordredProducts = productList.find(p => p.id === ids);
-    return ordredProducts ? true : false;
-  }
-  const ordredProducts = productList.filter(p => ids.includes(p.id));
-  return ordredProducts.length === ids.length;
-}
+const filterProducts = async (ids: number[], date: Date): Promise<number[]> => {
+  const productList = await getCurrentCollection(date);
+  // console.log("PRODUCTS", productList);
+  const variants = productList.map((p) => p.variants[0]);
+  const variantIds = variants.map((variant) => variant.id);
+  console.log("VARIANT IDS are:", variantIds);
+  console.log("IDS are:", ids);
+  const filteredIds = ids.map((id) => {
+    if (variantIds.includes(id)) {
+      return id;
+    } else {
+      console.log(
+        "THE ID: ",
+        id,
+        " IS NOT INCLUDED, REPLACED WITH :",
+        variantIds[0]
+      );
+      return variantIds[0]; // TODO: make this random?
+    }
+  });
+  console.log("FILTERED IDS:", filteredIds);
+  return filteredIds;
+};
 
 export const main = (event, context, callback) => {
   console.log("EVENT", event);
   event.body = JSON.parse(event.body);
   return handler(event, context, callback);
+};
+
+const getCurrentCollection = async (dateObject: Date): Promise<IProduct[]> => {
+  const months = {
+    january: 0,
+    february: 1,
+    march: 2,
+    april: 3,
+    may: 4,
+    june: 5,
+    july: 6,
+    august: 7,
+    september: 8,
+    october: 9,
+    november: 10,
+    december: 11,
+  };
+  // dateObject.setDate(dateObject.getDate() + 7);
+  const optionsMonth: Intl.DateTimeFormatOptions = {
+    month: "long",
+    timeZone: "America/Los_Angeles",
+  };
+  const optionsDate: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    timeZone: "America/Los_Angeles",
+  };
+  const month = new Intl.DateTimeFormat("en-US", optionsMonth).format(
+    dateObject
+  );
+  const dateInt = new Intl.DateTimeFormat("en-US", optionsDate).format(
+    dateObject
+  );
+  const date = { month, date: parseInt(dateInt) };
+  const orderDate = new Date();
+  orderDate.setMonth(months[date.month.toLowerCase()]);
+  orderDate.setDate(date.date);
+  const day = orderDate.getDay();
+  const mondayOffset = day !== 0 ? day - 1 : 6;
+  const sundayOffset = day !== 0 ? 7 - day : 0;
+  const monday = new Date();
+  monday.setMonth(months[date.month.toLowerCase()]);
+  monday.setDate(orderDate.getDate() - mondayOffset);
+  const mondayMonth = new Intl.DateTimeFormat("en-US", optionsMonth).format(
+    monday
+  );
+  const sunday = new Date();
+  sunday.setMonth(months[date.month.toLowerCase()]);
+  sunday.setDate(orderDate.getDate() + sundayOffset);
+  const sundayMonth = new Intl.DateTimeFormat("en-US", optionsMonth).format(
+    sunday
+  );
+  console.log(sunday);
+  const menuUrl = `${mondayMonth.toLowerCase()}-${monday.getDate()}-${sundayMonth}-${sunday.getDate()}`;
+  console.log("MENU URL", menuUrl);
+  return await axios
+    .get(`https://dailycious.com/collections/${menuUrl}/products.json`)
+    .then((res) => res.data.products as IProduct[]);
 };

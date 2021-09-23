@@ -24,13 +24,9 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const note = await getShopifyOrderNote(shopifyOrderId);
     const parsedNote: Note = JSON.parse(note);
     const ids = parsedNote.ids;
-    const date = parsedNote.date;
-    const dateObject = new Date();
-    if (typeof date.date === "string") {
-      date.date = parseInt(date.date);
-    }
-    dateObject.setMonth(months[date.month]);
-    dateObject.setDate(date.date + 7 - 5); // time when the order cannot be changed anymore
+    const dateObject = setDateFromNote(parsedNote);
+    const nextOrderDate = dateObject.toISOString();
+    dateObject.setDate(dateObject.getDate() + 7 - 5); // time when the order cannot be changed anymore
     const isoString = dateObject.toISOString();
     const res1 = await boldApi.subscriptions.updateNextOrderDate(
       subscriptionId,
@@ -39,7 +35,7 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     );
     console.log(res1);
     const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
-      note: JSON.stringify({ ids: ids }),
+      note: JSON.stringify({ ids: ids, nextOrderDate }),
     });
     console.log(res);
     return formatJSONResponse({
@@ -61,4 +57,15 @@ const getShopifyOrderNote = async (orderId: number) => {
   const res = await shopify.order.get(orderId);
   console.log(res);
   return res.note;
+};
+
+export const setDateFromNote = (note: Note): Date => {
+  console.log("NOTE", note);
+  const date = note.date;
+  const dateObject = new Date();
+  if (typeof date.date === "string") {
+    date.date = parseInt(date.date);
+  }
+  dateObject.setMonth(months[date.month]);
+  return dateObject;
 };

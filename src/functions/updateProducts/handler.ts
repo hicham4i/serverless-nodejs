@@ -19,6 +19,7 @@ const handler: TypedEventHandler<{
   subscriptionId: number;
   token: string;
   ids: number[];
+  orderId?: number;
 }> = async (event) => {
   console.log("EVENT:", JSON.stringify(event));
   const body = event.body;
@@ -62,27 +63,26 @@ const handler: TypedEventHandler<{
         swapProductArg,
       ]);
     }
-    const orderID = body.order;
-    let subNote = JSON.parse(sub.note);
-    if (orderID && subNote.orders) {
-      subNote.orders[orderID] = ids;
-      subNote.date = new Date().toISOString()
-    } else {
-      const futureOrders = await frontBoldApi.subscriptions.listFutureOrders(subscriptionId);
-      const orders = futureOrders.map(o => {
-        const order = {};
-        order[o.id] = ids
-        return order
-      })
-      subNote = {
-        orders,
-        Date: new Date().toISOString()
-      };
+    const fullSubscription = await backBoldApi.subscriptions.get(
+      subscriptionId
+    );
+    console.log("fullSubscription", fullSubscription);
+    let noteObject = {} as any;
+    try {
+      noteObject = JSON.parse(fullSubscription.note);
+    } catch (err) {
+      console.error(err);
+    }
+    noteObject.ids = ids;
+    noteObject.date = new Date().toISOString();
+    const orderId = body.orderId;
+    if (orderId) {
+      noteObject[orderId] = ids;
     }
     const subscription = await backBoldApi.subscriptions.partialUpdate(
       subscriptionId,
       {
-        note: JSON.stringify(subNote),
+        note: JSON.stringify(noteObject),
       }
     );
     console.log("subscription", subscription);
