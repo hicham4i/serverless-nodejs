@@ -7,6 +7,7 @@ import { env } from "../../env";
 // import schema from "./schema";
 import { Note } from "../types/types";
 import { updateOrder } from "@libs/shopifyApi";
+import Shopify from "shopify-api-node";
 
 const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
   event
@@ -53,6 +54,26 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     });
   }
 };
+const getShopifyProducts = async (params?: any) => {
+  const shopify = new Shopify({
+    shopName: "mykosherchef",
+    apiKey: env.SHOPIFY_API_KEY,
+    password: env.SHOPIFY_API_SECRET,
+  });
+  const res = await shopify.product.list(params);
+  console.log('getShopifyProducts ==>', res);
+  return res;
+};
+
+const isContained = async (ids: string | string[]) => {
+  const productList = await getShopifyProducts();
+  if (typeof ids === "string") {
+    const ordredProducts = productList.find(p => p.id === ids);
+    return ordredProducts ? true : false;
+  }
+  const ordredProducts = productList.filter(p => ids.includes(p.id));
+  return ordredProducts.length === ids.length;
+}
 
 export const main = (event, context, callback) => {
   console.log("EVENT", event);
