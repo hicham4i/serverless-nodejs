@@ -31,6 +31,7 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
       });
     }
     let parsednote: Note = JSON.parse(subscription.note as string);
+    console.log("THIS IS THE NOTE", parsednote);
     if (!parsednote) {
       console.error("THERE IS NOT NOTE HERE THIS IS WEIRD!");
       return formatJSONResponse({
@@ -38,15 +39,10 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
         event,
       });
     }
-    const orderID = event.body.order.id;
+    // const orderID = event.body.order.id;
+    const createdAt = event.body.created_at;
     const date = new Date();
-    let ids = parsednote.ids;
-    if (parsednote[orderID]) {
-      ids = parsednote[orderID];
-      console.log("THIS IS AN ORDER FOR 5 DAYS FROM NOW");
-    } else {
-      console.log("USER HAS NOT UPDATED THEIR PRODUCTS YET");
-    }
+    let ids = getIDsFromNote(createdAt, parsednote);
     date.setDate(date.getDate() + 5);
     ids = await filterProducts(ids, date);
     const order = event.body.order;
@@ -55,8 +51,6 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     console.log(event.body);
     const orderDate = new Date(order.placed_at);
     orderDate.setDate(orderDate.getDate() + 5);
-    // const order = event.body.order;
-    // const lineItems = order.line_items;
     await updateOrder(zip, orderDate, orderId, ids);
     return formatJSONResponse({
       message: "ok",
@@ -154,4 +148,23 @@ const getCurrentCollection = async (dateObject: Date): Promise<IProduct[]> => {
   return await axios
     .get(`https://dailycious.com/collections/${menuUrl}/products.json`)
     .then((res) => res.data.products as IProduct[]);
+};
+
+const getIDsFromNote = (date: string, note: any) => {
+  console.log("date", date);
+  console.log("note:", note);
+  const keyDate = Object.keys(note).find((key) => {
+    const fullNoteDate = key.split("-").splice(1, 3).join("-");
+    const smallNoteDate = fullNoteDate.split("T")[0];
+    const smallDate = date.split("T")[0];
+    console.log("TEST", smallNoteDate, smallDate);
+    return smallDate === smallNoteDate;
+  });
+  if (keyDate) {
+    console.log("FOUND KEYFS");
+    return note[keyDate];
+  } else {
+    console.log("NOT FOUDN");
+    return note.ids;
+  }
 };
