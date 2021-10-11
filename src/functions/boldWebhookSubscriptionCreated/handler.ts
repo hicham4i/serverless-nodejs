@@ -66,6 +66,7 @@ export const setDateFromNote = (note: Note): Date => {
   if (typeof date.date === "string") {
     date.date = parseInt(date.date);
   }
+  dateObject.setDate(date.date);
   dateObject.setMonth(months[date.month]);
   return dateObject;
 };
