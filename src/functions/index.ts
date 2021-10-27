@@ -6,7 +6,7 @@ import { default as boldWebhookSubscriptionOrderCreated } from "./boldWebhookSub
 import { default as showAllProducts } from "./showAllProducts";
 import { default as boldWebhookCreate } from "./boldWebhookCreate";
 import { default as boldWebhookOrderFailed } from "./boldWebhookOrderFailed";
-
+import { default as generateCSV } from "./generateCSV";
 export const functions = {
   shopifyWebhook,
   getProducts,
@@ -16,4 +16,5 @@ export const functions = {
   showAllProducts,
   boldWebhookCreate,
   boldWebhookOrderFailed,
+  generateCSV,
 };

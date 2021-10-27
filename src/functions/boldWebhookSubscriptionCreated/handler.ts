@@ -34,6 +34,12 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
       true
     );
     console.log(res1);
+    const res2 = await boldApi.subscriptions.updateNextOrderDate(
+      subscriptionId,
+      isoString.split("T")[0] + "T22:00:00Z",
+      false
+    );
+    console.log(res2);
     const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
       note: JSON.stringify({ ids: ids, nextOrderDate }),
     });

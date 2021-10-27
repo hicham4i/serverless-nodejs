@@ -7,6 +7,7 @@ const shopify = new Shopify({
   apiKey: env.SHOPIFY_API_KEY,
   password: env.SHOPIFY_API_SECRET,
 });
+export { shopify };
 
 export const updateOrder = async (
   zipcopde: string,

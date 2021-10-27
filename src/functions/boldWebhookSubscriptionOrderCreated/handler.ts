@@ -70,21 +70,32 @@ const filterProducts = async (ids: number[], date: Date): Promise<number[]> => {
   const variantIds = variants.map((variant) => variant.id);
   console.log("VARIANT IDS are:", variantIds);
   console.log("IDS are:", ids);
-  const filteredIds = ids.map((id) => {
+  const replacedIds = ids.map((id) => {
     if (variantIds.includes(id)) {
       return id;
     } else {
-      console.log(
-        "THE ID: ",
-        id,
-        " IS NOT INCLUDED, REPLACED WITH :",
-        variantIds[0]
-      );
-      return variantIds[0]; // TODO: make this random?
+      console.log("THE ID: ", id, " IS NOT INCLUDED, REPLACED WITH :", null);
+      return null; // TODO: make this random?
     }
   });
-  console.log("FILTERED IDS:", filteredIds);
-  return filteredIds;
+  console.log("REPLACED", replacedIds);
+  const filteredIds = replacedIds.filter((id) => id);
+  console.log("FILTERED", filteredIds);
+  let i = 0;
+  const finalIds = replacedIds.map((id) => {
+    if (!id) {
+      const newId = filteredIds[i];
+      console.log("newId", newId);
+      i++;
+      if (i === filteredIds.length - 1) {
+        i = 0;
+      }
+      return newId;
+    }
+    return id;
+  });
+  console.log("FINAL IDS:", finalIds);
+  return finalIds;
 };
 
 export const main = (event, context, callback) => {
