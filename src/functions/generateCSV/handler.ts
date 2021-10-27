@@ -3,21 +3,54 @@ import "source-map-support/register";
 import { formatJSONResponseCors, TypedEventHandler } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
 import { shopify } from "@libs/shopifyApi";
+import Shopify from "shopify-api-node";
+var stringify = require('csv-stringify');
 
 const handler: TypedEventHandler<{}> = async (event) => {
   try {
     // how to test your code: npx sls invoke local -f generateCSV --path src/functions/generateCSV/mock.json --stage prod
-    console.log("EVENT:", JSON.stringify(event)); // event should be empty
+    // event should be empty
+    // console.log("======= >EVENT:", JSON.stringify(event)); 
     // first get the dates for next week in the form of e.g Oct 28 2021
     // should get a list looking like ["Oct 28 2021", "Oct 29 2021", "Oct 30 2021"] etc... with 7 days
 
     // fetch the data from shopify to get the full list of orders that were created in the last 15 days (not sure we need that much maybe 5 or 10 is enough )
-    const orders = await shopify.order.list({});
-    console.log("ORDERS", orders);
+    const orders = await shopify.order.list();
+    const upcomingDates = getUpcomingDates();
+    const upcomingOrders = orders.filter(order => upcomingDates.includes(getDateFromTag(order.tags)));
+
+    let taggedOrders = [];
+    upcomingOrders.forEach((order, index) => {
+      const targetObj = taggedOrders.find(obj => obj.date === getDateFromTag(order.tags));
+      if (!targetObj) {
+        const newObj = {
+          date: getDateFromTag(order.tags),
+          orders: getProducts(order)
+        }
+        taggedOrders.push(newObj);
+        return;
+      }
+      targetObj.orders = targetObj.orders.concat(getProducts(order));
+      targetObj.orders = targetObj.orders.reduce((previous, current) => {
+        let t = previous.find(p => p.id === current.id);
+        t ? t.quantity += current.quantity : previous.push(current);
+        return previous
+      }, []);
+    });
+    taggedOrders.forEach(element => {
+      stringify(element.orders, { header: true }, (err, output) => {
+        console.log('========> ~ file: handler.ts ~ line 43 ~ err', err);
+        console.log('========> ~ file: handler.ts ~ line 43 ~ output', output);
+        // fs.writeFile('/'+element.date+'.csv', output);
+      });
+    });
+
+    console.log(JSON.stringify(taggedOrders));
+
     // create an object an array like: taggedOrders = [{date: "Oct 29 2021", orders: []}, {date: "Oct 30 2021", orders: []}] etc
 
     // for each order in the order list, add to the tagged orders array if it has a tag with the date (order.tags.includes(date) or something like that)
-
+    // get products inside order
     // generate a CSV with the tagged orders array.
   } catch (err) {
     console.error(err);
@@ -26,5 +59,40 @@ const handler: TypedEventHandler<{}> = async (event) => {
     });
   }
 };
-
+const formatDate = (date: Date) => {
+  const day = date.toLocaleString('default', { day: '2-digit' });
+  const month = date.toLocaleString('en-GB', { month: 'short' });
+  const year = date.toLocaleString('default', { year: 'numeric' });
+  return `${month} ${day} ${year}`;
+};
+const getUpcomingDates = () => {
+  let upcongDates: string[] = [];
+  const date = new Date();
+  for (let i = 0; i <= 7; i++) {
+    date.setDate(date.getDate() + 1);
+    upcongDates = [...upcongDates, formatDate(date)];
+  }
+  return upcongDates;
+};
+const getDateFromTag  = (tag: string) => {
+  return tag ? tag.split(',')[1].trim() : '';
+};
+const getProducts  = (order: Shopify.IOrder) => {
+  const productCount = [];
+  order.line_items.forEach((lineItem) => {
+    const index = productCount.findIndex(
+      (prod) => prod.id === lineItem.product_id
+    );
+    if (index !== -1) {
+      productCount[index].quantity += lineItem.quantity;
+    } else {
+      productCount.push({
+        id: lineItem.product_id,
+        quantity: lineItem.quantity,
+        title: lineItem.title,
+      });
+    }
+  });
+  return productCount;
+};
 export const main = middyfy(handler);
