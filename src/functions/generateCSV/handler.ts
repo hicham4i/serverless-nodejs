@@ -26,12 +26,19 @@ const handler: TypedEventHandler<{}> = async (event) => {
       allProducts = allProducts.concat(orderProducts);
     });
     const CsvProducts = allProducts.reduce((previous, current) => {
-      let entry = previous.find(p => p.id === current.id);
+      let entry = previous.find(p => +p.id === +current.id);
       entry && entry[current.date] ? entry[current.date] += current.quantity : 
       entry ? entry[current.date] = current.quantity : 
       previous.push(getEntryFromProduct(current.title, current.id, current.date, current.quantity, upcomingDates))
       return previous
-    }, []);
+    }, [
+      getEntryFromProduct('Four Meals Pack', '6546596593751', null, null, upcomingDates),
+      getEntryFromProduct('Six Meals Pack', '4690768822359', null, null, upcomingDates),
+      //TODO: CHANGE JUS THE ID (xxxxxxx)
+      // getEntryFromProduct('Ten Meals Pack', 'xxxxxxx', null, null, upcomingDates),
+      getEntryFromProduct('Twelve Meals Pack', '6546597773399', null, null, upcomingDates)
+    ]);
+    // console.log("🚀 ~ file: handler.ts ~ line 35 ~ CsvProducts ~ CsvProducts", CsvProducts)
 
     stringify(CsvProducts, { header: true }, (err, output) => {
       if (err) throw err;
@@ -60,7 +67,7 @@ const getEntryFromProduct = (title:  string, id: string, date: string, quantity:
   upcomingDates.forEach(d => {
     entry[d] = 0;
   });
-  entry[date] = quantity;
+  if (date) entry[date] = quantity;
   return entry;
 };
 const formatDate = (date: Date) => {
@@ -72,7 +79,7 @@ const formatDate = (date: Date) => {
 const getUpcomingDates = () => {
   let upcongDates: string[] = [];
   const date = new Date();
-  for (let i = 0; i <= 7; i++) {
+  for (let i = 0; i < 7; i++) {
     date.setDate(date.getDate() + 1);
     upcongDates = [...upcongDates, formatDate(date)];
   }
