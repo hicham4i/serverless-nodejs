@@ -6,7 +6,7 @@ export default {
   events: [
     {
       http: {
-        method: "post",
+        method: "get",
         path: "generateCSV",
         cors: true,
       },

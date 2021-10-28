@@ -15,8 +15,22 @@ export const updateOrder = async (
   orderId: number,
   productIds: number[]
 ) => {
-  if (!zipcodes[zipcopde]) {
+  console.log(
+    "UPDATE ORDER PARAMS",
+    zipcodes,
+    shippingDate,
+    orderId,
+    productIds
+  );
+  if (!zipcodes.transporter[zipcopde]) {
     console.error("zip code note recognized!");
+  }
+  const shopifyOrder = await shopify.order.get(orderId);
+  if (shopifyOrder.line_items.length > 1) {
+    console.log(
+      "THERE IS NO NEED TO UPDATE THIS ORDER IT WAS ALREADY MODIFIED"
+    );
+    return;
   }
   const transporter = zipcodes.transporter[zipcopde];
   const daysToDelivery = zipcodes.days[zipcopde] || 2;

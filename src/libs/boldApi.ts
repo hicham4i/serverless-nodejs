@@ -120,6 +120,17 @@ export class BoldAPI {
         shopIdentifier
       ).then((res) => res.webhook_subscriptions);
     },
+    deleteWebhookSubscriptions: (
+      subscriptionId: number,
+      shopIdentifier?: string
+    ): Promise<WebhookSubscription[]> => {
+      return this.makeBoldRequest(
+        "delete",
+        `webhooks/subscriptions/${subscriptionId}`,
+        undefined,
+        shopIdentifier
+      ).then((res) => res.webhook_subscriptions);
+    },
   };
   constructor(
     token: string,

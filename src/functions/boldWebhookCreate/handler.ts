@@ -21,10 +21,12 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     console.log(res2);
     // const res3 = await bold.webhooks.createWebhookSubscription({
     //   shared_secret: "SuperSecretShared",
-    //   webhook_topic_id: "6",
+    //   webhook_topic_id: "3",
     //   callback_url:
-    //     "https://cxph27182g.execute-api.us-east-1.amazonaws.com/prod/boldWebhookOrderFailed",
+    //     "https://6ok68wz8f0.execute-api.us-east-1.amazonaws.com/prod/boldWebhookSubscriptionOrderCreated",
     // });
+    // console.log(res3);
+    // const res3 = await bold.webhooks.deleteWebhookSubscriptions(183);
     // console.log(res3);
     return formatJSONResponse({
       message: "ok",

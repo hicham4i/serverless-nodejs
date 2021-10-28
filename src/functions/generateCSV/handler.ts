@@ -4,20 +4,22 @@ import { formatJSONResponseCors, TypedEventHandler } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
 import { shopify } from "@libs/shopifyApi";
 import Shopify from "shopify-api-node";
-var stringify = require('csv-stringify');
+var stringify = require("csv-stringify");
 
 const handler: TypedEventHandler<{}> = async (event) => {
   try {
     // how to test your code: npx sls invoke local -f generateCSV --path src/functions/generateCSV/mock.json --stage prod
     // event should be empty
-    console.log("======= >EVENT:", JSON.stringify(event)); 
+    console.log("======= >EVENT:", JSON.stringify(event));
     // first get the dates for next week in the form of e.g Oct 28 2021
     // should get a list looking like ["Oct 28 2021", "Oct 29 2021", "Oct 30 2021"] etc... with 7 days
 
     // fetch the data from shopify to get the full list of orders that were created in the last 15 days (not sure we need that much maybe 5 or 10 is enough )
     const orders = await shopify.order.list();
     const upcomingDates = getUpcomingDates();
-    const upcomingOrders = orders.filter(order => upcomingDates.includes(getDateFromTag(order.tags)));
+    const upcomingOrders = orders.filter((order) =>
+      upcomingDates.includes(getDateFromTag(order.tags))
+    );
 
     let allProducts = [];
 
@@ -25,25 +27,78 @@ const handler: TypedEventHandler<{}> = async (event) => {
       const orderProducts = getProducts(order, getDateFromTag(order.tags));
       allProducts = allProducts.concat(orderProducts);
     });
-    const CsvProducts = allProducts.reduce((previous, current) => {
-      let entry = previous.find(p => +p.id === +current.id);
-      entry && entry[current.date] ? entry[current.date] += current.quantity : 
-      entry ? entry[current.date] = current.quantity : 
-      previous.push(getEntryFromProduct(current.title, current.id, current.date, current.quantity, upcomingDates))
-      return previous
-    }, [
-      getEntryFromProduct('Four Meals Pack', '6546596593751', null, null, upcomingDates),
-      getEntryFromProduct('Six Meals Pack', '4690768822359', null, null, upcomingDates),
-      getEntryFromProduct('Ten Meals Pack', '6546596593751', null, null, upcomingDates),
-      getEntryFromProduct('Twelve Meals Pack', '6546597773399', null, null, upcomingDates)
-    ]);
+    const CsvProducts = allProducts.reduce(
+      (previous, current) => {
+        let entry = previous.find((p) => +p.id === +current.id);
+        entry && entry[current.date]
+          ? (entry[current.date] += current.quantity)
+          : entry
+          ? (entry[current.date] = current.quantity)
+          : previous.push(
+              getEntryFromProduct(
+                current.title,
+                current.id,
+                current.date,
+                current.quantity,
+                upcomingDates
+              )
+            );
+        return previous;
+      },
+      [
+        getEntryFromProduct(
+          "Four Meals Pack",
+          "6546596593751",
+          null,
+          null,
+          upcomingDates
+        ),
+        getEntryFromProduct(
+          "Six Meals Pack",
+          "4690768822359",
+          null,
+          null,
+          upcomingDates
+        ),
+        getEntryFromProduct(
+          "Ten Meals Pack",
+          "6546596593751",
+          null,
+          null,
+          upcomingDates
+        ),
+        getEntryFromProduct(
+          "Twelve Meals Pack",
+          "6546597773399",
+          null,
+          null,
+          upcomingDates
+        ),
+      ]
+    );
     // console.log("🚀 ~ file: handler.ts ~ line 35 ~ CsvProducts ~ CsvProducts", CsvProducts)
 
-    stringify(CsvProducts, { header: true }, (err, output) => {
-      if (err) throw err;
-      console.log("🚀 ~ file: handler.ts ~ line 38 ~ stringify ~ output", output)
-
-      // fs.writeFile(__dirname+'/weekProducts.csv', output);
+    return new Promise((resolve, reject) => {
+      stringify(CsvProducts, { header: true }, (err, output) => {
+        if (err) reject(err);
+        console.log(
+          "🚀 ~ file: handler.ts ~ line 38 ~ stringify ~ output",
+          output
+        );
+        resolve(output);
+        // fs.writeFile(__dirname+'/weekProducts.csv', output);
+      });
+    }).then((csvString) => {
+      return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "text/csv",
+          "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+          "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+          "Content-Disposition": 'attachment; filename="weekProducts.csv"',
+        },
+        body: csvString,
+      };
     });
 
     // create an object an array like: taggedOrders = [{date: "Oct 29 2021", orders: []}, {date: "Oct 30 2021", orders: []}] etc
@@ -58,21 +113,27 @@ const handler: TypedEventHandler<{}> = async (event) => {
     });
   }
 };
-const getEntryFromProduct = (title:  string, id: string, date: string, quantity: number, upcomingDates) => {
+const getEntryFromProduct = (
+  title: string,
+  id: string,
+  date: string,
+  quantity: number,
+  upcomingDates
+) => {
   const entry = {
     id,
-    title
+    title,
   };
-  upcomingDates.forEach(d => {
+  upcomingDates.forEach((d) => {
     entry[d] = 0;
   });
   if (date) entry[date] = quantity;
   return entry;
 };
 const formatDate = (date: Date) => {
-  const day = date.toLocaleString('default', { day: '2-digit' });
-  const month = date.toLocaleString('en-GB', { month: 'short' });
-  const year = date.toLocaleString('default', { year: 'numeric' });
+  const day = date.toLocaleString("default", { day: "2-digit" });
+  const month = date.toLocaleString("en-GB", { month: "short" });
+  const year = date.toLocaleString("default", { year: "numeric" });
   return `${month} ${day} ${year}`;
 };
 const getUpcomingDates = () => {
@@ -84,10 +145,10 @@ const getUpcomingDates = () => {
   }
   return upcongDates;
 };
-const getDateFromTag  = (tag: string) => {
-  return tag ? tag.split(',')[1].trim() : '';
+const getDateFromTag = (tag: string) => {
+  return tag ? tag.split(",")[1].trim() : "";
 };
-const getProducts  = (order: Shopify.IOrder, date: string) => {
+const getProducts = (order: Shopify.IOrder, date: string) => {
   const productCount = [];
   order.line_items.forEach((lineItem) => {
     const index = productCount.findIndex(
@@ -100,7 +161,7 @@ const getProducts  = (order: Shopify.IOrder, date: string) => {
         id: lineItem.product_id,
         quantity: lineItem.quantity,
         title: lineItem.title,
-        date
+        date,
       });
     }
   });
