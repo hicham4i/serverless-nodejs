@@ -5,12 +5,14 @@ import { middyfy } from "@libs/lambda";
 import { shopify } from "@libs/shopifyApi";
 import Shopify from "shopify-api-node";
 var stringify = require('csv-stringify');
+var fs = require('fs');
+import path from 'path';
 
 const handler: TypedEventHandler<{}> = async (event) => {
   try {
     // how to test your code: npx sls invoke local -f generateCSV --path src/functions/generateCSV/mock.json --stage prod
     // event should be empty
-    // console.log("======= >EVENT:", JSON.stringify(event)); 
+    console.log("======= >EVENT:", JSON.stringify(event)); 
     // first get the dates for next week in the form of e.g Oct 28 2021
     // should get a list looking like ["Oct 28 2021", "Oct 29 2021", "Oct 30 2021"] etc... with 7 days
 
@@ -19,34 +21,32 @@ const handler: TypedEventHandler<{}> = async (event) => {
     const upcomingDates = getUpcomingDates();
     const upcomingOrders = orders.filter(order => upcomingDates.includes(getDateFromTag(order.tags)));
 
-    let taggedOrders = [];
-    upcomingOrders.forEach((order, index) => {
-      const targetObj = taggedOrders.find(obj => obj.date === getDateFromTag(order.tags));
-      if (!targetObj) {
-        const newObj = {
-          date: getDateFromTag(order.tags),
-          orders: getProducts(order)
-        }
-        taggedOrders.push(newObj);
-        return;
-      }
-      targetObj.orders = targetObj.orders.concat(getProducts(order));
-      targetObj.orders = targetObj.orders.reduce((previous, current) => {
-        let t = previous.find(p => p.id === current.id);
-        t ? t.quantity += current.quantity : previous.push(current);
-        return previous
-      }, []);
-    });
-    taggedOrders.forEach(element => {
-      stringify(element.orders, { header: true }, (err, output) => {
-        console.log('========> ~ file: handler.ts ~ line 43 ~ err', err);
-        console.log('========> ~ file: handler.ts ~ line 43 ~ output', output);
-        // fs.writeFile('/'+element.date+'.csv', output);
-      });
-    });
+    let allProducts = [];
 
-    console.log(JSON.stringify(taggedOrders));
+    upcomingOrders.forEach((order) => {
+      const orderProducts = getProducts(order, getDateFromTag(order.tags));
+      allProducts = allProducts.concat(orderProducts);
+    });
+    const CsvProducts = allProducts.reduce((previous, current) => {
+      let entry = previous.find(p => p.id === current.id);
+      entry && entry[current.date] ? entry[current.date] += current.quantity : 
+      entry ? entry[current.date] = current.quantity : 
+      previous.push(getEntryFromProduct(current.title, current.id, current.date, current.quantity, upcomingDates))
+      return previous
+    }, []);
+    // console.log("🚀 ~ file: handler.ts ~ line 37 ~ CsvProducts ~ CsvProducts", JSON.stringify(CsvProducts))
+    stringify(CsvProducts, { header: true }, (err, output) => {
+      if (err) throw err;
+      fs.writeFile(__dirname+'/weekProducts.csv', output);
+    });
+    const filePath = path.join(__dirname, 'weekProducts.csv');
 
+    // return {
+    //   statusCode: 200,
+    //   headers: {
+    //     "Content-Type": "application/octet-stream",
+    //   },
+    // };
     // create an object an array like: taggedOrders = [{date: "Oct 29 2021", orders: []}, {date: "Oct 30 2021", orders: []}] etc
 
     // for each order in the order list, add to the tagged orders array if it has a tag with the date (order.tags.includes(date) or something like that)
@@ -58,6 +58,17 @@ const handler: TypedEventHandler<{}> = async (event) => {
       message: "error",
     });
   }
+};
+const getEntryFromProduct = (title:  string, id: string, date: string, quantity: number, upcomingDates) => {
+  const entry = {
+    id,
+    title
+  };
+  upcomingDates.forEach(d => {
+    entry[d] = 0;
+  });
+  entry[date] = quantity;
+  return entry;
 };
 const formatDate = (date: Date) => {
   const day = date.toLocaleString('default', { day: '2-digit' });
@@ -77,7 +88,7 @@ const getUpcomingDates = () => {
 const getDateFromTag  = (tag: string) => {
   return tag ? tag.split(',')[1].trim() : '';
 };
-const getProducts  = (order: Shopify.IOrder) => {
+const getProducts  = (order: Shopify.IOrder, date: string) => {
   const productCount = [];
   order.line_items.forEach((lineItem) => {
     const index = productCount.findIndex(
@@ -90,6 +101,7 @@ const getProducts  = (order: Shopify.IOrder) => {
         id: lineItem.product_id,
         quantity: lineItem.quantity,
         title: lineItem.title,
+        date
       });
     }
   });
