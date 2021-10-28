@@ -4,8 +4,7 @@ import { formatJSONResponseCors, TypedEventHandler } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
 import { shopify } from "@libs/shopifyApi";
 import Shopify from "shopify-api-node";
-var fs = require('fs');
-import path from 'path';
+var stringify = require('csv-stringify');
 
 const handler: TypedEventHandler<{}> = async (event) => {
   try {
@@ -33,30 +32,14 @@ const handler: TypedEventHandler<{}> = async (event) => {
       previous.push(getEntryFromProduct(current.title, current.id, current.date, current.quantity, upcomingDates))
       return previous
     }, []);
-    const createCsvStringifier =
-    require("csv-writer").createObjectCsvStringifier;
-    const header = [
-      { id: "id", title: "ID" },
-      { id: "title", title: "Title" },
-    ];
-    upcomingDates.forEach((d, index) => {
-      header.push({ id: d, title: d },)
-    });
-    const csvStringifier = createCsvStringifier({
-      header: header
-    });
-    const csvString = csvStringifier.stringifyRecords(CsvProducts);
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "text/csv",
-        "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-        "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-        "Content-Disposition": 'attachment; filename="weekProducts.csv"',
-      },
-      body: csvString,
-    };
+    stringify(CsvProducts, { header: true }, (err, output) => {
+      if (err) throw err;
+      console.log("🚀 ~ file: handler.ts ~ line 38 ~ stringify ~ output", output)
+
+      // fs.writeFile(__dirname+'/weekProducts.csv', output);
+    });
+
     // create an object an array like: taggedOrders = [{date: "Oct 29 2021", orders: []}, {date: "Oct 30 2021", orders: []}] etc
 
     // for each order in the order list, add to the tagged orders array if it has a tag with the date (order.tags.includes(date) or something like that)
