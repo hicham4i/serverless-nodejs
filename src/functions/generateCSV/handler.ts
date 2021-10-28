@@ -34,8 +34,7 @@ const handler: TypedEventHandler<{}> = async (event) => {
     }, [
       getEntryFromProduct('Four Meals Pack', '6546596593751', null, null, upcomingDates),
       getEntryFromProduct('Six Meals Pack', '4690768822359', null, null, upcomingDates),
-      //TODO: CHANGE JUS THE ID (xxxxxxx)
-      // getEntryFromProduct('Ten Meals Pack', 'xxxxxxx', null, null, upcomingDates),
+      getEntryFromProduct('Ten Meals Pack', '6546596593751', null, null, upcomingDates),
       getEntryFromProduct('Twelve Meals Pack', '6546597773399', null, null, upcomingDates)
     ]);
     // console.log("🚀 ~ file: handler.ts ~ line 35 ~ CsvProducts ~ CsvProducts", CsvProducts)
