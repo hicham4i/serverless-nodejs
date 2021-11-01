@@ -15,11 +15,17 @@ const handler: TypedEventHandler<{}> = async (event) => {
     // should get a list looking like ["Oct 28 2021", "Oct 29 2021", "Oct 30 2021"] etc... with 7 days
 
     // fetch the data from shopify to get the full list of orders that were created in the last 15 days (not sure we need that much maybe 5 or 10 is enough )
-    const orders = await shopify.order.list();
+    const orders = await shopify.order.list({ limit: 250 });
     const upcomingDates = getUpcomingDates();
-    const upcomingOrders = orders.filter((order) =>
-      upcomingDates.includes(getDateFromTag(order.tags))
-    );
+    const upcomingOrders = orders.filter((order) => {
+      console.log(
+        "TAGS",
+        order.tags,
+        "INLCUDED",
+        upcomingDates.includes(getDateFromTag(order.tags))
+      );
+      return upcomingDates.includes(getDateFromTag(order.tags));
+    });
 
     let allProducts = [];
 
@@ -62,7 +68,7 @@ const handler: TypedEventHandler<{}> = async (event) => {
         ),
         getEntryFromProduct(
           "Ten Meals Pack",
-          "6546596593751",
+          "6546597314647",
           null,
           null,
           upcomingDates
@@ -140,13 +146,22 @@ const getUpcomingDates = () => {
   let upcongDates: string[] = [];
   const date = new Date();
   for (let i = 0; i < 7; i++) {
-    date.setDate(date.getDate() + 1);
     upcongDates = [...upcongDates, formatDate(date)];
+    date.setDate(date.getDate() + 1);
   }
   return upcongDates;
 };
 const getDateFromTag = (tag: string) => {
-  return tag ? tag.split(",")[1].trim() : "";
+  const split = tag.split(",");
+  if (!split) {
+    return "";
+  }
+  if (split.length === 3) {
+    return tag ? tag.split(",")[1].trim() : "";
+  }
+  if (split.length === 2) {
+    return tag ? tag.split(",")[0].trim() : "";
+  }
 };
 const getProducts = (order: Shopify.IOrder, date: string) => {
   const productCount = [];
