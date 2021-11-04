@@ -48,7 +48,7 @@ const handler: TypedEventHandler<{
     console.log("oldPlan", oldPlan);
     const newPlan = ids.length;
     if (newPlan !== oldPlan.plan) {
-      const newPlanParam = productPlans.find((plan) => plan.plan === newPlan);
+      const newPlanParam = productPlans.find((plan) => plan.plan === newPlan && plan.student === oldPlan.student);
       console.log("plan updated!");
       const lineItemId =
         sub.line_items[0].bold_platform_subscription_line_item_id;
