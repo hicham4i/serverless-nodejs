@@ -56,7 +56,7 @@ const handler: TypedEventHandler<{
         bold_platform_line_item_id: lineItemId,
         platform_variant_id: newPlanParam.variantId.toString(),
         platform_product_id: newPlanParam.productId.toString(),
-        subscription_group_id: 13894,
+        subscription_group_id: oldPlan.subscription_group_id,
       };
       console.log("swapProductArg", swapProductArg);
       await backBoldApi.subscriptions.swapProducts(subscriptionId, [
