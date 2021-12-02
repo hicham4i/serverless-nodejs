@@ -43,12 +43,20 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     const createdAt = event.body.created_at;
     const date = new Date();
     let ids = getIDsFromNote(createdAt, parsednote);
+    // find which products are available
+
+    // change to real order date with day of the week with note day
     date.setDate(date.getDate() + 5);
+
     ids = await filterProducts(ids, date);
+
+
     const order = event.body.order;
     const zip = event.body.order.shipping_addresses[0].postal_code;
     const orderId = parseInt(order.platform_id, 10);
     console.log(event.body);
+
+    // change to real order date with day of the week with note day
     const orderDate = new Date(order.placed_at);
     orderDate.setDate(orderDate.getDate() + 5);
     await updateOrder(zip, orderDate, orderId, ids);

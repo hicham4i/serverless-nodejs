@@ -26,6 +26,15 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const ids = parsedNote.ids;
     const dateObject = setDateFromNote(parsedNote);
     const nextOrderDate = dateObject.toISOString();
+    // date of next order: dateObject.getDate() + 7 final first saturday before
+    // nextOrderDate
+    // const getSaturdayBeforeDate = (date: Date) => {
+    //   const day = date.getDay();
+    //   const diff = day === 0 ? 6 : day - 1;
+    //   return new Date(date.setDate(date.getDate() - diff));
+    // };
+
+
     dateObject.setDate(dateObject.getDate() + 7 - 5); // time when the order cannot be changed anymore
     const isoString = dateObject.toISOString();
     const res1 = await boldApi.subscriptions.updateNextOrderDate(
@@ -40,6 +49,7 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
       false
     );
     console.log(res2);
+    // save day of receiving order possible thuesday, thursday, friday
     const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
       note: JSON.stringify({ ids: ids, nextOrderDate }),
     });

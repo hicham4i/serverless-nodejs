@@ -17,7 +17,7 @@ export const updateOrder = async (
 ) => {
   console.log(
     "UPDATE ORDER PARAMS",
-    zipcodes,
+    //zipcodes,
     shippingDate,
     orderId,
     productIds
