@@ -15,7 +15,7 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
 ) => {
   try {
     // const handler = async (event) => {
-    console.log("EVENT:", JSON.stringify(event));
+    // console.log("EVENT:", JSON.stringify(event));
     const shopIdentifier = "27393687639";
     const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
     console.log("BODY", event.body);

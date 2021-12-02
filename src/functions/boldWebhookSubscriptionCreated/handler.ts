@@ -11,16 +11,17 @@ import { env } from "../../env";
 const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
   event
 ) => {
-  console.log("EVENT:", JSON.stringify(event));
+  console.log("====================IN====================");
   try {
+    console.log("====================TRY====================");
     const shopIdentifier = event.body.shop_identifier;
     const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
     const subscriptionId = event.body.id;
     const orders = await boldApi.subscriptions.listOrders(subscriptionId);
     const order = orders[0];
-    console.log("ORDER", order);
+    // console.log("ORDER", order);
     const shopifyOrderId = parseInt(order.order.platform_id, 10);
-    console.log("shopifyOrderId", shopifyOrderId);
+    // console.log("shopifyOrderId", shopifyOrderId);
     const note = await getShopifyOrderNote(shopifyOrderId);
     const parsedNote: Note = JSON.parse(note);
     const ids = parsedNote.ids;
@@ -28,42 +29,45 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const nextOrderDate = dateObject.toISOString();
     // date of next order: dateObject.getDate() + 7 final first saturday before
     // nextOrderDate
-    // const getSaturdayBeforeDate = (date: Date) => {
-    //   const day = date.getDay();
-    //   const diff = day === 0 ? 6 : day - 1;
-    //   return new Date(date.setDate(date.getDate() - diff));
-    // };
+    const sundayBefore = getdayBeforeDate(dateObject, 0);
+    console.log('🚀 ~ file: handler.ts ~ line 32 ~ sundayBefore', sundayBefore);
 
 
     dateObject.setDate(dateObject.getDate() + 7 - 5); // time when the order cannot be changed anymore
     const isoString = dateObject.toISOString();
-    const res1 = await boldApi.subscriptions.updateNextOrderDate(
-      subscriptionId,
-      isoString.split("T")[0] + "T22:00:00Z",
-      true
-    );
-    console.log(res1);
-    const res2 = await boldApi.subscriptions.updateNextOrderDate(
-      subscriptionId,
-      isoString.split("T")[0] + "T22:00:00Z",
-      false
-    );
-    console.log(res2);
+    console.log('🚀 ~ file: handler.ts ~ line 37 ~ isoString', isoString);
+    // const res1 = await boldApi.subscriptions.updateNextOrderDate(
+    //   subscriptionId,
+    //   isoString.split("T")[0] + "T22:00:00Z",
+    //   true
+    // );
+    // console.log(res1);
+    // const res2 = await boldApi.subscriptions.updateNextOrderDate(
+    //   subscriptionId,
+    //   isoString.split("T")[0] + "T22:00:00Z",
+    //   false
+    // );
+    // console.log(res2);
     // save day of receiving order possible thuesday, thursday, friday
-    const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
-      note: JSON.stringify({ ids: ids, nextOrderDate }),
-    });
-    console.log(res);
+    // const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
+    //   note: JSON.stringify({ ids: ids, nextOrderDate }),
+    // });
+    // console.log(res);
     return formatJSONResponse({
       message: "ok",
     });
   } catch (err) {
-    console.error(err);
+    console.log("====================catch====================");
+    console.error('-----------', err);
   }
 };
 
 export const main = middyfy(handler);
-
+const getdayBeforeDate = (date: Date, dayIndex: number) => {
+  var day = new Date();
+  day.setDate(date.getDate() + (dayIndex - 1 - date.getDay() + 7) % 7 + 1);
+  return day.setHours(0,0);
+}
 const getShopifyOrderNote = async (orderId: number) => {
   const shopify = new Shopify({
     shopName: "mykosherchef",
