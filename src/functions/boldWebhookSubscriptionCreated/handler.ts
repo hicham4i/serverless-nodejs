@@ -11,9 +11,7 @@ import { env } from "../../env";
 const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
   event
 ) => {
-  console.log("====================IN====================");
   try {
-    console.log("====================TRY====================");
     const shopIdentifier = event.body.shop_identifier;
     const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
     const subscriptionId = event.body.id;
@@ -29,35 +27,30 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const nextOrderDate = dateObject.toISOString();
     // date of next order: dateObject.getDate() + 7 final first saturday before
     // nextOrderDate
-    const sundayBefore = getdayBeforeDate(dateObject, 0);
-    console.log('🚀 ~ file: handler.ts ~ line 32 ~ sundayBefore', sundayBefore);
-
-
-    dateObject.setDate(dateObject.getDate() + 7 - 5); // time when the order cannot be changed anymore
-    const isoString = dateObject.toISOString();
-    console.log('🚀 ~ file: handler.ts ~ line 37 ~ isoString', isoString);
-    // const res1 = await boldApi.subscriptions.updateNextOrderDate(
-    //   subscriptionId,
-    //   isoString.split("T")[0] + "T22:00:00Z",
-    //   true
-    // );
-    // console.log(res1);
-    // const res2 = await boldApi.subscriptions.updateNextOrderDate(
-    //   subscriptionId,
-    //   isoString.split("T")[0] + "T22:00:00Z",
-    //   false
-    // );
-    // console.log(res2);
+    const saturdayBefore = new Date(getdayBeforeDate(dateObject, 0));
+    // dateObject.setDate(dateObject.getDate() + 7 - 5); // time when the order cannot be changed anymore
+    const isoString = saturdayBefore.toISOString();
+    const res1 = await boldApi.subscriptions.updateNextOrderDate(
+      subscriptionId,
+      isoString.split("T")[0] + "T22:00:00Z",
+      true
+    );
+    console.log(res1);
+    const res2 = await boldApi.subscriptions.updateNextOrderDate(
+      subscriptionId,
+      isoString.split("T")[0] + "T22:00:00Z",
+      false
+    );
+    console.log(res2);
     // save day of receiving order possible thuesday, thursday, friday
-    // const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
-    //   note: JSON.stringify({ ids: ids, nextOrderDate }),
-    // });
-    // console.log(res);
+    const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
+      note: JSON.stringify({ ids: ids, nextOrderDate }),
+    });
+    console.log(res);
     return formatJSONResponse({
       message: "ok",
     });
   } catch (err) {
-    console.log("====================catch====================");
     console.error('-----------', err);
   }
 };
