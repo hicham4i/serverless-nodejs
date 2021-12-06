@@ -18,7 +18,7 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     // console.log("EVENT:", JSON.stringify(event));
     const shopIdentifier = "27393687639";
     const boldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
-    console.log("BODY", event.body);
+    // console.log("BODY", event.body);
     const subscriptionId = event.body.subscription_id;
     const subscription = await boldApi.subscriptions.get(subscriptionId);
     console.log(subscription);
@@ -54,7 +54,7 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     const order = event.body.order;
     const zip = event.body.order.shipping_addresses[0].postal_code;
     const orderId = parseInt(order.platform_id, 10);
-    console.log(event.body);
+    // console.log(event.body);
 
     // change to real order date with day of the week with note day
     const orderDate = new Date(order.placed_at);
@@ -82,8 +82,8 @@ const filterProducts = async (ids: number[], date: Date): Promise<number[]> => {
     if (variantIds.includes(id)) {
       return id;
     } else {
-      console.log("THE ID: ", id, " IS NOT INCLUDED, REPLACED WITH :", null);
-      return null; // TODO: make this random?
+      const random = variantIds[Math.floor(Math.random() * variantIds.length)];
+      return random; // make this random
     }
   });
   console.log("REPLACED", replacedIds);
@@ -165,7 +165,7 @@ const getCurrentCollection = async (dateObject: Date): Promise<IProduct[]> => {
   const menuUrl = `${mondayMonth.toLowerCase()}-${monday.getDate()}-${sundayMonth}-${sunday.getDate()}`;
   console.log("MENU URL", menuUrl);
   return await axios
-    .get(`https://dailycious.com/collections/${menuUrl}/products.json`)
+    .get(`https://dailycious.com/collections/${menuUrl}/products.json?limit=250`)
     .then((res) => res.data.products as IProduct[]);
 };
 
