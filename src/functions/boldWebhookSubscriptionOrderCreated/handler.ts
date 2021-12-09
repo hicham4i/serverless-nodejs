@@ -41,14 +41,15 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     }
     // const orderID = event.body.order.id;
     const createdAt = event.body.created_at;
-    const date = new Date();
+    const date = new Date(createdAt);
     let ids = getIDsFromNote(createdAt, parsednote);
     // find which products are available
-
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const nextDeliveryDate = getdayAfterDate(date, days.indexOf(parsednote.deliveryDay.toLowerCase()));
     // change to real order date with day of the week with note day
-    date.setDate(date.getDate() + 5);
+    // date.setDate(date.getDate() + 5);
 
-    ids = await filterProducts(ids, date);
+    ids = await filterProducts(ids, nextDeliveryDate);
 
 
     const order = event.body.order;
@@ -56,10 +57,9 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     const orderId = parseInt(order.platform_id, 10);
     // console.log(event.body);
 
-    // change to real order date with day of the week with note day
-    const orderDate = new Date(order.placed_at);
-    orderDate.setDate(orderDate.getDate() + 5);
-    await updateOrder(zip, orderDate, orderId, ids);
+    // i did the same thing just in case it changes
+    const nextDeliveryDate2 = getdayAfterDate(date, days.indexOf(parsednote.deliveryDay.toLowerCase()));
+    await updateOrder(zip, nextDeliveryDate2, orderId, ids);
     return formatJSONResponse({
       message: "ok",
     });
@@ -70,7 +70,11 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
     });
   }
 };
-
+const getdayAfterDate = (date: Date, dayIndex: number) => {
+  var day = new Date();
+  day.setDate(date.getDate() - date.getDay() + dayIndex + 7 % 7 + 1);
+  return day;
+}
 const filterProducts = async (ids: number[], date: Date): Promise<number[]> => {
   const productList = await getCurrentCollection(date);
   // console.log("PRODUCTS", productList);

@@ -5,6 +5,7 @@ export type Note = {
     month: string;
     date: number | string;
   };
+  deliveryDay?: string
 };
 
 export const months = {
