@@ -1,6 +1,7 @@
 import Shopify from "shopify-api-node";
 import { env } from "../env";
 import zipcodes from "../zipcodes.json";
+import * as AWS from "aws-sdk";
 
 const shopify = new Shopify({
   shopName: "mykosherchef",
@@ -25,16 +26,10 @@ export const updateOrder = async (
   if (!zipcodes.transporter[zipcopde]) {
     console.error("zip code note recognized!");
   }
-  const shopifyOrder = await shopify.order.get(orderId);
-  if (shopifyOrder.line_items.length > 1) {
-    console.log(
-      "THERE IS NO NEED TO UPDATE THIS ORDER IT WAS ALREADY MODIFIED"
-    );
-    return;
-  }
   const transporter = zipcodes.transporter[zipcopde];
   const daysToDelivery = zipcodes.days[zipcopde] || 2;
   shippingDate.setDate(shippingDate.getDate() - daysToDelivery);
+  console.log("shipping date", shippingDate);
   const weekNumber = `Week ${getWeekNumber(shippingDate)}`;
   const shipDayTag = shippingDate
     .toLocaleDateString("en-US", {
@@ -48,12 +43,27 @@ export const updateOrder = async (
     tags: tags.join(" , "),
   };
   console.log(param);
+  const test = await checkIfOrderTreated(orderId);
+  if (test) {
+    console.log(
+      "DYNAMO : THERE IS NO NEED TO UPDATE THIS ORDER IT WAS ALREADY MODIFIED"
+    );
+    return;
+  }
+  const shopifyOrder = await shopify.order.get(orderId);
+  if (shopifyOrder.line_items.length > 1) {
+    console.log(
+      "SHOPIFY: THERE IS NO NEED TO UPDATE THIS ORDER IT WAS ALREADY MODIFIED"
+    );
+    return;
+  }
   const res = await shopify.order.update(orderId, param).catch((err) => {
     console.log("ERR", err);
   });
   console.log("RES:", JSON.stringify(res));
   const graphqlId = `gid://shopify/Order/${orderId}`;
   await editOrder(graphqlId, productIds);
+  await putOrderEdited(orderId);
 };
 const editOrder = async (orderId: string, productIds: number[]) => {
   const startEditMutation = `mutation beginEdit ($orderId: ID!) {
@@ -143,3 +153,34 @@ const getWeekNumber = (d: Date): number => {
   // Return array of year and week number
   return weekNo;
 };
+
+const checkIfOrderTreated = async (orderId: number): Promise<boolean> => {
+  const param: AWS.DynamoDB.DocumentClient.GetItemInput = {
+    TableName: 'MyKosherChefTable',
+    Key: {
+      pk: `ORDER#${orderId}`,
+      sk: `ORDER#${orderId}`
+    }
+  }
+  const res = await new AWS.DynamoDB.DocumentClient().get(param).promise();
+  console.log(res);
+  if (res.Item) {
+    return true;
+  } else {
+    await putOrderEdited(orderId);
+    return false;
+  }
+}
+
+const putOrderEdited = async (orderId: number) => {
+  const param: AWS.DynamoDB.DocumentClient.PutItemInput = {
+    TableName: 'MyKosherChefTable',
+    Item: {
+      pk: `ORDER#${orderId}`,
+      sk: `ORDER#${orderId}`,
+      edited: true
+    }
+  }
+  await new AWS.DynamoDB.DocumentClient().put(param).promise();
+  return;
+}

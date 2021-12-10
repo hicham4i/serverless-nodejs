@@ -17,21 +17,25 @@ const handler: TypedEventHandler<{}> = async (event) => {
     // fetch the data from shopify to get the full list of orders that were created in the last 15 days (not sure we need that much maybe 5 or 10 is enough )
     const orders = await shopify.order.list({ limit: 250 });
     const upcomingDates = getUpcomingDates();
+    console.log("======= >UPCOMING DATES:", upcomingDates);
     const upcomingOrders = orders.filter((order) => {
       console.log(
         "TAGS",
         order.tags,
         "INLCUDED",
-        upcomingDates.includes(getDateFromTag(order.tags))
+        checkIfDateIncluded(upcomingDates, order.tags)
       );
-      return upcomingDates.includes(getDateFromTag(order.tags));
+      return checkIfDateIncluded(upcomingDates, order.tags);
     });
 
     let allProducts = [];
 
     upcomingOrders.forEach((order) => {
-      const orderProducts = getProducts(order, getDateFromTag(order.tags));
-      allProducts = allProducts.concat(orderProducts);
+      const date = checkIfDateIncluded(upcomingDates, order.tags);
+      if (date) {
+        const orderProducts = getProducts(order, date);
+        allProducts = allProducts.concat(orderProducts);
+      }
     });
     const CsvProducts = allProducts.reduce(
       (previous, current) => {
@@ -151,18 +155,7 @@ const getUpcomingDates = () => {
   }
   return upcongDates;
 };
-const getDateFromTag = (tag: string) => {
-  const split = tag.split(",");
-  if (!split) {
-    return "";
-  }
-  if (split.length === 3) {
-    return tag ? tag.split(",")[1].trim() : "";
-  }
-  if (split.length === 2) {
-    return tag ? tag.split(",")[0].trim() : "";
-  }
-};
+
 const getProducts = (order: Shopify.IOrder, date: string) => {
   const productCount = [];
   order.line_items.forEach((lineItem) => {
@@ -183,3 +176,12 @@ const getProducts = (order: Shopify.IOrder, date: string) => {
   return productCount;
 };
 export const main = middyfy(handler);
+
+const checkIfDateIncluded = (upcomingDates: string[], tags) => {
+  for (const date of upcomingDates) {
+    if (tags.includes(date)) {
+      return date;
+    }
+  }
+  return false;
+}
