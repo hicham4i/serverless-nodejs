@@ -162,7 +162,10 @@ const checkIfOrderTreated = async (orderId: number): Promise<boolean> => {
       sk: `ORDER#${orderId}`
     }
   }
-  const res = await new AWS.DynamoDB.DocumentClient().get(param).promise();
+  const res = await new AWS.DynamoDB.DocumentClient().get(param).promise().catch((err) => {
+    console.log("ERR", err);
+    throw err;
+  });
   console.log(res);
   if (res.Item) {
     return true;
