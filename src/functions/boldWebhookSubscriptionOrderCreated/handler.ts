@@ -72,7 +72,7 @@ const handler: TypedEventHandler<WebhookSubscriptionOrderCreatedEvent> = async (
 };
 const getdayAfterDate = (date: Date, dayIndex: number) => {
   var day = new Date();
-  day.setDate(date.getDate() - date.getDay() + dayIndex + 7 % 7 + 1);
+  day.setDate(date.getDate() - date.getDay() + dayIndex + 7 % 7);
   return day;
 }
 const filterProducts = async (ids: number[], date: Date): Promise<number[]> => {

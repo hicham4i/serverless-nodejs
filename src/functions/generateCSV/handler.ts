@@ -158,11 +158,19 @@ const getUpcomingDates = () => {
 
 const getProducts = (order: Shopify.IOrder, date: string) => {
   const productCount = [];
+  // console.log("REFUNDS", order.refunds.map(r => r.refund_line_items));
+  const refunds = order.refunds.map(refund => refund.refund_line_items.map(lineItem => lineItem.line_item_id)).flat();
   order.line_items.forEach((lineItem) => {
+    // console.log("LINE ITEM", lineItem.id)
+    if (refunds.includes(lineItem.id)) {
+      console.log("WE GOT A REFUND", refunds);
+      return;
+    }
     const index = productCount.findIndex(
       (prod) => prod.id === lineItem.product_id
     );
     if (index !== -1) {
+      console.log("pushed here")
       productCount[index].quantity += lineItem.quantity;
     } else {
       productCount.push({
