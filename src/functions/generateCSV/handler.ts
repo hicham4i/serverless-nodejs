@@ -84,6 +84,34 @@ const handler: TypedEventHandler<{}> = async (event) => {
           null,
           upcomingDates
         ),
+        getEntryFromProduct(
+          "Four Meals Pack Students",
+          "6628826644567",
+          null,
+          null,
+          upcomingDates
+        ),
+        getEntryFromProduct(
+          "Six Meals Pack Students",
+          "6636408209495",
+          null,
+          null,
+          upcomingDates
+        ),
+        getEntryFromProduct(
+          "Ten Meals Pack Students",
+          "6636407685207",
+          null,
+          null,
+          upcomingDates
+        ),
+        getEntryFromProduct(
+          "Twelve Meals Pack Students",
+          "6636405817431",
+          null,
+          null,
+          upcomingDates
+        ),
       ]
     );
     // console.log("🚀 ~ file: handler.ts ~ line 35 ~ CsvProducts ~ CsvProducts", CsvProducts)
