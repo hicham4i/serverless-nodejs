@@ -8,6 +8,7 @@ import Shopify from "shopify-api-node";
 import { Note, months } from "../types/types";
 import { WebhookSubscriptionCreatedEvent, BoldAPI } from "@libs/boldApi";
 import { env } from "../../env";
+import { updateOrder } from "@libs/shopifyApi";
 const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
   event
 ) => {
@@ -24,10 +25,14 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const parsedNote: Note = JSON.parse(note);
     const ids = parsedNote.ids;
     const dateObject = setDateFromNote(parsedNote);
-    const nextOrderDate = dateObject.toISOString();
+    console.log("dateObject", dateObject);
+    const firstOrderDate = dateObject.toISOString();
+    dateObject.setDate(dateObject.getDate() + 7);
+    console.log("dateObject", dateObject);
     // date of next order: dateObject.getDate() + 7 final first saturday before
     // nextOrderDate
     const saturdayBefore = new Date(getdayBeforeDate(dateObject, 0));
+    console.log("saturdayBefore", saturdayBefore);
     // dateObject.setDate(dateObject.getDate() + 7 - 5); // time when the order cannot be changed anymore
     const isoString = saturdayBefore.toISOString();
     const res1 = await boldApi.subscriptions.updateNextOrderDate(
@@ -44,9 +49,12 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     console.log(res2);
     // save day of receiving order possible thuesday, thursday, friday
     const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
-      note: JSON.stringify({ ids: ids, nextOrderDate }),
+      note: JSON.stringify({ ids: ids, firstOrderDate }),
     });
     console.log(res);
+    const nextShippingDate = setDateFromNote(parsedNote);
+    const zipcode = event.body.shipping_address.zip;
+    await updateOrder(zipcode, nextShippingDate, shopifyOrderId, ids);
     return formatJSONResponse({
       message: "ok",
     });
@@ -58,7 +66,9 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
 export const main = middyfy(handler);
 const getdayBeforeDate = (date: Date, dayIndex: number) => {
   var day = new Date();
-  day.setDate(date.getDate() + (dayIndex - 1 - date.getDay() + 7) % 7 + 1);
+  day.setFullYear(date.getFullYear());
+  day.setMonth(date.getMonth());
+  day.setDate(date.getDate() + (dayIndex - date.getDay() + 7) % 7 + 1);
   return day.setHours(0,0);
 }
 const getShopifyOrderNote = async (orderId: number) => {
@@ -78,6 +88,9 @@ export const setDateFromNote = (note: Note): Date => {
   const dateObject = new Date();
   if (typeof date.date === "string") {
     date.date = parseInt(date.date);
+  }
+  if (date.month === "January") {
+    dateObject.setFullYear(2022)
   }
   dateObject.setDate(date.date);
   dateObject.setMonth(months[date.month]);
