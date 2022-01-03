@@ -48,8 +48,10 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     );
     console.log(res2);
     // save day of receiving order possible thuesday, thursday, friday
+    const days = [ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", ];
+    const deliveryDay = days[new Date(firstOrderDate).getDay()];
     const res = await boldApi.subscriptions.partialUpdate(subscriptionId, {
-      note: JSON.stringify({ ids: ids, firstOrderDate }),
+      note: JSON.stringify({ ids: ids, firstOrderDate, deliveryDay }),
     });
     console.log(res);
     const nextShippingDate = setDateFromNote(parsedNote);
