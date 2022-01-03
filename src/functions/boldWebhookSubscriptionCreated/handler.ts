@@ -70,7 +70,7 @@ const getdayBeforeDate = (date: Date, dayIndex: number) => {
   var day = new Date();
   day.setFullYear(date.getFullYear());
   day.setMonth(date.getMonth());
-  day.setDate(date.getDate() + (dayIndex - date.getDay() + 7) % 7 + 1);
+  day.setDate(date.getDate() - (dayIndex - date.getDay() + 7) % 7 + 1);
   return day.setHours(0,0);
 }
 const getShopifyOrderNote = async (orderId: number) => {
