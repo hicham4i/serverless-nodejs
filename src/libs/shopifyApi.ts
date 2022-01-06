@@ -11,7 +11,7 @@ const shopify = new Shopify({
 export { shopify };
 
 export const updateOrder = async (
-  zipcopde: string,
+  zipcode: string,
   shippingDate: Date,
   orderId: number,
   productIds: number[]
@@ -23,11 +23,14 @@ export const updateOrder = async (
     orderId,
     productIds
   );
-  if (!zipcodes.transporter[zipcopde]) {
+  if(zipcode.includes("-")) {
+    zipcode = zipcode.split("-")[0];
+  }
+  if (!zipcodes.transporter[zipcode]) {
     console.error("zip code note recognized!");
   }
-  const transporter = zipcodes.transporter[zipcopde];
-  const daysToDelivery = zipcodes.days[zipcopde] || 2;
+  const transporter = zipcodes.transporter[zipcode];
+  const daysToDelivery = zipcodes.days[zipcode] || 2;
   shippingDate.setDate(shippingDate.getDate() - daysToDelivery);
   console.log("shipping date", shippingDate);
   const weekNumber = `Week ${getWeekNumber(shippingDate)}`;
