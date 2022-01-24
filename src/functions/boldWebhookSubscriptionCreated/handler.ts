@@ -37,13 +37,13 @@ const handler: TypedEventHandler<WebhookSubscriptionCreatedEvent> = async (
     const isoString = saturdayBefore.toISOString();
     const res1 = await boldApi.subscriptions.updateNextOrderDate(
       subscriptionId,
-      isoString.split("T")[0] + "T22:00:00Z",
+      isoString.split("T")[0] + "T08:00:00Z",
       true
     );
     console.log(res1);
     const res2 = await boldApi.subscriptions.updateNextOrderDate(
       subscriptionId,
-      isoString.split("T")[0] + "T22:00:00Z",
+      isoString.split("T")[0] + "T08:00:00Z",
       false
     );
     console.log(res2);
