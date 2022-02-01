@@ -11,35 +11,47 @@ import { env } from "../../env";
 const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
-  const body = event.body;
-  const token = `${body.token}`;  
   const shopIdentifier = '27393687639';
-  const shopUrl = 'dailycious.com';
-  const frontBoldApi = new BoldAPI(token, shopUrl, true);
   const backBoldApi = new BoldAPI(
     env.BOLD_ACCESS_TOKEN,
     shopIdentifier,
     false
   );
+  const daybefore = new Date(getNextSunday());
+  const dayAfter = new Date(getNextSunday());
+  daybefore.setDate(daybefore.getDate() - 1);
+  dayAfter.setDate(dayAfter.getDate() + 1);
+  const daybeforeTime = daybefore.getTime();
+  const dayAfterTime = dayAfter.getTime();
   const res = await backBoldApi.subscriptions.getAll(shopIdentifier, '?limit=200');
-  const activeS = res.filter(s => s.subscription_status === 'active' && s.next_order_datetime.includes('2022-02-0') && !s.next_order_datetime.includes('T08:00:00Z'))
-  .map(x => ({id: x.id,name: x.billing_address.first_name +' '+ x.billing_address.last_name, date: x.next_order_datetime}));
-  console.log('🚀 ~ file: handler.ts ~ line 18 ~ activeS', activeS);
+  const filtered =  res.reduce((prev, curr) => {
+    const date = new Date(curr.next_order_datetime).getTime();
+    if (
+      curr.subscription_status === 'active' &&
+      daybeforeTime <= date && dayAfterTime >= date &&
+      !curr.next_order_datetime.includes('T08:00:00Z')
+    ) {
+      prev.push({id: curr.id,name: curr.billing_address.first_name +' '+ curr.billing_address.last_name, date: curr.next_order_datetime})
+    }
+    return prev;
+  }, []);
+  console.log('========> ~ file: handler.ts ~ line 37 ~ filtered', filtered);
 
-  // THIS IS FOR TEST Currently the data is 
-  // {
-  //   id: 711017,
-  //   name: 'Cynthia Rodrigues',
-  //   date: '2022-02-05T23:00:00Z'
-  // }
+  filtered.forEach(async (sub) => {
+    try {
+      const updated = await backBoldApi.subscriptions.updateNextOrderDate(
+        sub.id,
+        getNextSunday(),
+        false
+      );
+      console.log('🚀 ~  ', sub.name, ' ~ updated');
+    } catch (error) {
+      console.log('🚀 ~  ', sub.name, ' ~ error');
+    }
+  });
 
-  // This will change to 2022-02-06T08:00:00Z
-  const updated = await frontBoldApi.subscriptions.updateNextOrderDate(
-    711017,
-    getNextSunday(),
-    false
-  );
-  console.log('🚀 ~ file: handler.ts ~ line 23 ~ updated', updated);
+
+
 
 
 //   console.log("test 2")
