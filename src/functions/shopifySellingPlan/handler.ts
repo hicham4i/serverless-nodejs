@@ -15,7 +15,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   const token = `${body.token}`;  
   const shopIdentifier = '27393687639';
   const shopUrl = 'dailycious.com';
-  const frontBoldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopUrl, true);
+  const frontBoldApi = new BoldAPI(token, shopUrl, true);
   const backBoldApi = new BoldAPI(
     env.BOLD_ACCESS_TOKEN,
     shopIdentifier,
