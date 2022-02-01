@@ -174,8 +174,8 @@ export class BoldAPI {
     const axiosParam: AxiosRequestConfig = {
       method,
       url: this.frontEndRequest
-        ? `${baseUrl}${endpoint}?shop_url=${shopIdentifier}${extraParams}`
-        : `${baseUrl}${endpoint}${extraParams}`,
+        ? `${baseUrl}${endpoint}?shop_url=dailycious.com${extraParams ? extraParams : ''}`
+        : `${baseUrl}${endpoint}${extraParams ? extraParams : ''}`,
       data,
       headers: {
         accept: "application/json",

@@ -11,24 +11,36 @@ import { env } from "../../env";
 const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
-  const shopIdentifier = "27393687639";
-  const bold = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopIdentifier);
-  const res = await bold.subscriptions.getAll(shopIdentifier, '?limit=200');
+  const body = event.body;
+  const token = `${body.token}`;  
+  const shopIdentifier = '27393687639';
+  const shopUrl = 'dailycious.com';
+  const frontBoldApi = new BoldAPI(env.BOLD_ACCESS_TOKEN, shopUrl, true);
+  const backBoldApi = new BoldAPI(
+    env.BOLD_ACCESS_TOKEN,
+    shopIdentifier,
+    false
+  );
+  const res = await backBoldApi.subscriptions.getAll(shopIdentifier, '?limit=200');
   const activeS = res.filter(s => s.subscription_status === 'active' && s.next_order_datetime.includes('2022-02-0') && !s.next_order_datetime.includes('T08:00:00Z'))
   .map(x => ({id: x.id,name: x.billing_address.first_name +' '+ x.billing_address.last_name, date: x.next_order_datetime}));
   console.log('🚀 ~ file: handler.ts ~ line 18 ~ activeS', activeS);
-  // const updated = await bold.subscriptions.partialUpdate(724666, {
-  //   next_order_datetime: '2022-02-06T08:00:00Z'
-  // });
-  
-  // const updated = await bold.subscriptions.updateNextOrderDate(
-  //   724666,
-  //   '2022-02-06T08:00:00Z',
-  //   false
-  // );
-  // console.log('🚀 ~ file: handler.ts ~ line 23 ~ updated', updated);
 
-// 724666
+  // THIS IS FOR TEST Currently the data is 
+  // {
+  //   id: 711017,
+  //   name: 'Cynthia Rodrigues',
+  //   date: '2022-02-05T23:00:00Z'
+  // }
+
+  // This will change to 2022-02-06T08:00:00Z
+  const updated = await frontBoldApi.subscriptions.updateNextOrderDate(
+    711017,
+    getNextSunday(),
+    false
+  );
+  console.log('🚀 ~ file: handler.ts ~ line 23 ~ updated', updated);
+
 
 //   console.log("test 2")
 //   const commitEditMutation = `query {
@@ -60,5 +72,11 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
 // })
 // console.log("res: ", JSON.stringify(res2));
 };
-
+const getNextSunday = () => {
+  let nextSunday = new Date();
+  nextSunday.setDate(nextSunday.getDate() + 7 - nextSunday.getDay());
+  const parts =  nextSunday.toISOString().split('T');
+  parts[1] = '08:00:00Z'
+  return parts.join('T');
+};
 export const main = middyfy(handler);
