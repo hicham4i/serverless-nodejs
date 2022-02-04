@@ -17,6 +17,19 @@ export class BoldAPI {
       ).then((res) => res.subscription);
     },
 
+    getAll: (
+      shopIdentifier?: string,
+      params?: any
+    ): Promise<Subscription[]> => {
+      return this.makeBoldRequest(
+        "get",
+        `subscriptions`,
+        undefined,
+        shopIdentifier,
+        params
+      ).then((res) => res.subscriptions);
+    },
+
     partialUpdate: (
       subscriptionId: number,
       updateData: Partial<Omit<Subscription, "id">>,
@@ -146,7 +159,8 @@ export class BoldAPI {
     method: "get" | "post" | "delete" | "put" | "patch",
     endpoint: string, // does not include v1/shops/${shopIdentifier}/ part
     data?: any,
-    shopIdentifier?: string
+    shopIdentifier?: string,
+    extraParams?: string
   ) {
     shopIdentifier = shopIdentifier || this.shopIdentifier;
     if (!shopIdentifier) {
@@ -160,8 +174,8 @@ export class BoldAPI {
     const axiosParam: AxiosRequestConfig = {
       method,
       url: this.frontEndRequest
-        ? `${baseUrl}${endpoint}?shop_url=${shopIdentifier}`
-        : `${baseUrl}${endpoint}`,
+        ? `${baseUrl}${endpoint}?shop_url=dailycious.com${extraParams ? extraParams : ''}`
+        : `${baseUrl}${endpoint}${extraParams ? extraParams : ''}`,
       data,
       headers: {
         accept: "application/json",
