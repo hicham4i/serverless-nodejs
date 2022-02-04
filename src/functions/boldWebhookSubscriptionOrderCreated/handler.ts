@@ -148,20 +148,20 @@ const getCurrentCollection = async (dateObject: Date): Promise<IProduct[]> => {
   );
   const date = { month, date: parseInt(dateInt) };
   const orderDate = new Date();
-  orderDate.setMonth(months[date.month.toLowerCase()]);
-  orderDate.setDate(date.date);
+  orderDate.setMonth(months[date.month.toLowerCase()], date.date);
+  // orderDate.setDate(date.date);
   const day = orderDate.getDay();
   const mondayOffset = day !== 0 ? day - 1 : 6;
   const sundayOffset = day !== 0 ? 7 - day : 0;
   const monday = new Date();
-  monday.setMonth(months[date.month.toLowerCase()]);
-  monday.setDate(orderDate.getDate() - mondayOffset);
+  monday.setMonth(months[date.month.toLowerCase()], orderDate.getDate() - mondayOffset);
+  //monday.setDate(orderDate.getDate() - mondayOffset);
   const mondayMonth = new Intl.DateTimeFormat("en-US", optionsMonth).format(
     monday
   );
   const sunday = new Date();
-  sunday.setMonth(months[date.month.toLowerCase()]);
-  sunday.setDate(orderDate.getDate() + sundayOffset);
+  sunday.setMonth(months[date.month.toLowerCase()], orderDate.getDate() + sundayOffset);
+  // sunday.setDate(orderDate.getDate() + sundayOffset);
   const sundayMonth = new Intl.DateTimeFormat("en-US", optionsMonth).format(
     sunday
   );
@@ -169,7 +169,7 @@ const getCurrentCollection = async (dateObject: Date): Promise<IProduct[]> => {
   const menuUrl = `${mondayMonth.toLowerCase()}-${monday.getDate()}-${sundayMonth}-${sunday.getDate()}`;
   console.log("MENU URL", menuUrl);
   return await axios
-    .get(`https://dailycious.com/collections/${menuUrl}/products.json?limit=250`)
+    .get(`https://dailycious.com/collections/january-31-february-6-2022/products.json?limit=250`)
     .then((res) => res.data.products as IProduct[]);
 };
 

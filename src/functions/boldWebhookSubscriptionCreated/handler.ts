@@ -69,8 +69,8 @@ export const main = middyfy(handler);
 const getdayBeforeDate = (date: Date, dayIndex: number) => {
   var day = new Date();
   day.setFullYear(date.getFullYear());
-  day.setMonth(date.getMonth());
-  day.setDate(date.getDate() - date.getDay() + dayIndex + 7 % 7);
+  day.setMonth(date.getMonth(), date.getDate() - date.getDay() + dayIndex + 7 % 7);
+  // day.setDate(date.getDate() - date.getDay() + dayIndex + 7 % 7);
   return day.setHours(0,0);
 }
 const getShopifyOrderNote = async (orderId: number) => {
@@ -94,7 +94,8 @@ export const setDateFromNote = (note: Note): Date => {
   if (date.month === "January") {
     dateObject.setFullYear(2022)
   }
-  dateObject.setDate(date.date);
-  dateObject.setMonth(months[date.month]);
+  dateObject.setMonth(months[date.month], date.date);
+  //dateObject.setDate(date.date);
+
   return dateObject;
 };
