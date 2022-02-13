@@ -169,7 +169,7 @@ const getCurrentCollection = async (dateObject: Date): Promise<IProduct[]> => {
   const menuUrl = `${mondayMonth.toLowerCase()}-${monday.getDate()}-${sundayMonth}-${sunday.getDate()}`;
   console.log("MENU URL", menuUrl);
   return await axios
-    .get(`https://dailycious.com/collections/january-31-february-6-2022/products.json?limit=250`)
+    .get(`https://dailycious.com/collections/${menuUrl}/products.json?limit=250`)
     .then((res) => res.data.products as IProduct[]);
 };
 
